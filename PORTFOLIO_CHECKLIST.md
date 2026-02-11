@@ -74,34 +74,34 @@ Use this file to track your progress. Check off items as you complete them.
 - [x] Test: `ng build` completes successfully with Tailwind working
 
 ### 1.4 Content Pipeline Setup
-- [ ] Create `scripts/build-content.ts`
-- [ ] Install content processing dependencies (in root or scripts):
-  - [ ] `gray-matter` (frontmatter parsing)
-  - [ ] `marked` (Markdown → HTML)
-  - [ ] `shiki` (syntax highlighting)
-  - [ ] `reading-time` (calculate read time)
-- [ ] Create sample blog post: `content/blog/hello-world/`
-  - [ ] Create directory: `content/blog/hello-world/`
-  - [ ] Add `index.md` with frontmatter (title, slug, date, tags, excerpt, published)
-  - [ ] Add sample content with code blocks
-  - [ ] Add sample images to demonstrate directory structure
-- [ ] Create `content/projects.json` with 1-2 sample projects
-- [ ] Create `content/skills.json` with skill categories
-- [ ] Implement build script:
-  - [ ] Scan `content/blog/` for directories (each directory = one post)
-  - [ ] Read `index.md` from each post directory
-  - [ ] Parse frontmatter with `gray-matter`
-  - [ ] Resolve relative image paths (e.g., `./cover.webp` → full path)
-  - [ ] Copy post images to `generated/blog/{slug}/` directory
-  - [ ] Convert markdown to HTML with `marked`
-  - [ ] Apply syntax highlighting with `shiki`
-  - [ ] Calculate reading time
-  - [ ] Extract table of contents from headings
-  - [ ] Generate `generated/blog-index.json` (metadata only)
-  - [ ] Generate `generated/blog/{slug}/index.json` (full content + metadata)
-  - [ ] Copy `projects.json` and `skills.json` to `generated/`
-- [ ] Test: `npm run build:content` produces correct output
-- [ ] Add `generated/` to `.gitignore`
+- [x] Create `scripts/build-content.ts`
+- [x] Install content processing dependencies (in root or scripts):
+  - [x] `gray-matter` (frontmatter parsing)
+  - [x] `marked` (Markdown → HTML)
+  - [x] `shiki` (syntax highlighting)
+  - [x] `reading-time` (calculate read time)
+  - [x] `tsx` (TypeScript execution)
+- [x] Create sample blog post: `content/blog/hello-world/`
+  - [x] Create directory: `content/blog/hello-world/`
+  - [x] Add `index.md` with frontmatter (title, slug, date, tags, excerpt, published)
+  - [x] Add sample content with code blocks
+- [x] Create `content/projects.json` with 1-2 sample projects
+- [x] Create `content/skills.json` with skill categories
+- [x] Implement build script:
+  - [x] Scan `content/blog/` for directories (each directory = one post)
+  - [x] Read `index.md` from each post directory
+  - [x] Parse frontmatter with `gray-matter`
+  - [x] Resolve relative image paths
+  - [x] Copy post images to `generated/blog/{slug}/` directory
+  - [x] Convert markdown to HTML with `marked`
+  - [x] Apply syntax highlighting with `shiki`
+  - [x] Calculate reading time
+  - [x] Extract table of contents from headings
+  - [x] Generate `generated/blog-index.json` (metadata only)
+  - [x] Generate `generated/blog/{slug}/index.json` (full content + metadata)
+  - [x] Copy `projects.json` and `skills.json` to `generated/`
+- [x] Test: `npm run build:content` produces correct output
+- [x] Add `generated/` to `.gitignore`
 
 ---
 
@@ -816,20 +816,20 @@ Use this file to track your progress. Check off items as you complete them.
 ## Progress Summary
 
 ### Phase Status
-- [ ] Phase 1: Project Setup & Foundation ___/4 sections
-- [ ] Phase 2: Layout & Core Infrastructure ___/6 sections
-- [ ] Phase 3: Home Page ___/6 sections
-- [ ] Phase 4: Content Pages ___/7 sections
-- [ ] Phase 5: API Development ___/5 sections
-- [ ] Phase 6: SEO & Performance ___/3 sections
-- [ ] Phase 7: Polish & UX ___/5 sections
-- [ ] Phase 8: Deployment ___/5 sections
-- [ ] Phase 9: Content & Launch ___/3 sections
+- [x] Phase 1: Project Setup & Foundation 4/4 sections ✓
+- [ ] Phase 2: Layout & Core Infrastructure 0/6 sections
+- [ ] Phase 3: Home Page 0/6 sections
+- [ ] Phase 4: Content Pages 0/7 sections
+- [ ] Phase 5: API Development 0/5 sections
+- [ ] Phase 6: SEO & Performance 0/3 sections
+- [ ] Phase 7: Polish & UX 0/5 sections
+- [ ] Phase 8: Deployment 0/5 sections
+- [ ] Phase 9: Content & Launch 0/3 sections
 
 ### Overall Progress
 **Total Tasks: ~200**
-**Completed: ___**
-**Percentage: ___%**
+**Completed: 4/9 phases (Phase 1 complete)**
+**Percentage: ~10%**
 
 **Estimated Timeline:**
 - Week 1: Setup + Layout + Home page
@@ -845,6 +845,12 @@ Use this file to track your progress. Check off items as you complete them.
 
 ### Known Issues
 - None currently
+
+### Completed
+- Phase 1.1: Repository & Workspace Setup ✓
+- Phase 1.2: NestJS API Setup ✓
+- Phase 1.3: Angular Frontend Setup ✓
+- Phase 1.4: Content Pipeline Setup ✓
 
 ### Design Inspiration
 - (Add portfolio sites you like for reference)
