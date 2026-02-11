@@ -1,0 +1,47 @@
+{
+  "categories": [
+    {
+      "name": "Languages",
+      "skills": [
+        { "name": "TypeScript", "level": "expert", "icon": "typescript" },
+        { "name": "JavaScript", "level": "expert", "icon": "javascript" },
+        { "name": "Python", "level": "intermediate", "icon": "python" },
+        { "name": "Rust", "level": "beginner", "icon": "rust" },
+        { "name": "SQL", "level": "intermediate", "icon": "database" }
+      ]
+    },
+    {
+      "name": "Frontend",
+      "skills": [
+        { "name": "Angular", "level": "expert", "icon": "angular" },
+        { "name": "React", "level": "intermediate", "icon": "react" },
+        { "name": "Tailwind CSS", "level": "expert", "icon": "tailwindcss" },
+        { "name": "HTML5", "level": "expert", "icon": "html5" },
+        { "name": "CSS3", "level": "expert", "icon": "css3" },
+        { "name": "RxJS", "level": "intermediate", "icon": "rxjs" }
+      ]
+    },
+    {
+      "name": "Backend",
+      "skills": [
+        { "name": "Node.js", "level": "expert", "icon": "nodejs" },
+        { "name": "NestJS", "level": "expert", "icon": "nestjs" },
+        { "name": "Express", "level": "intermediate", "icon": "express" },
+        { "name": "PostgreSQL", "level": "intermediate", "icon": "postgresql" },
+        { "name": "MongoDB", "level": "intermediate", "icon": "mongodb" },
+        { "name": "Redis", "level": "beginner", "icon": "redis" }
+      ]
+    },
+    {
+      "name": "DevOps & Tools",
+      "skills": [
+        { "name": "Docker", "level": "intermediate", "icon": "docker" },
+        { "name": "Git", "level": "expert", "icon": "git" },
+        { "name": "GitHub Actions", "level": "intermediate", "icon": "github" },
+        { "name": "Vercel", "level": "intermediate", "icon": "vercel" },
+        { "name": "Linux", "level": "intermediate", "icon": "linux" },
+        { "name": "VS Code", "level": "expert", "icon": "vscode" }
+      ]
+    }
+  ]
+}

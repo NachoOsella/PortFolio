@@ -1,0 +1,71 @@
+[
+  {
+    "id": "study-focus-tracker",
+    "title": "Study Focus Tracker",
+    "description": "A microservices-based platform for tracking study sessions, managing focus time, and analyzing productivity patterns. Built with Node.js, NestJS, and PostgreSQL.",
+    "longDescription": "Study Focus Tracker is a comprehensive productivity platform designed to help students and professionals manage their study sessions effectively. The application features real-time session tracking, detailed analytics, goal setting, and team collaboration features. Built with a microservices architecture using NestJS, it handles thousands of concurrent users with excellent performance.",
+    "image": "./assets/projects/study-tracker.webp",
+    "category": "Full-Stack",
+    "technologies": ["Node.js", "NestJS", "PostgreSQL", "Redis", "Docker", "React", "TypeScript"],
+    "featured": true,
+    "links": {
+      "live": "https://studytracker.example.com",
+      "github": "https://github.com/username/study-focus-tracker"
+    },
+    "highlights": [
+      "Microservices architecture with 5 independent services",
+      "Real-time WebSocket connections for live session tracking",
+      "Advanced analytics dashboard with D3.js visualizations",
+      "JWT-based authentication with refresh token rotation",
+      "Docker Compose setup for easy local development",
+      "Comprehensive test suite with 90%+ coverage"
+    ],
+    "date": "2025-08-15"
+  },
+  {
+    "id": "developer-portfolio",
+    "title": "Developer Portfolio & Blog",
+    "description": "This very portfolio site you're viewing! A full-stack application with Angular SSR, NestJS API, custom markdown pipeline, and admin dashboard.",
+    "longDescription": "A modern developer portfolio built with Angular and NestJS, featuring server-side rendering for optimal SEO, a custom content pipeline that processes markdown at build time, and a secure admin dashboard for content management. The site achieves excellent Core Web Vitals scores and follows accessibility best practices.",
+    "image": "./assets/projects/portfolio.webp",
+    "category": "Full-Stack",
+    "technologies": ["Angular 21", "NestJS", "Tailwind CSS", "TypeScript", "Shiki", "Vercel"],
+    "featured": true,
+    "links": {
+      "live": "https://portfolio.example.com",
+      "github": "https://github.com/NachoOsella/PortFolio"
+    },
+    "highlights": [
+      "Angular SSR with server-side rendering for SEO",
+      "Build-time markdown processing with syntax highlighting",
+      "JWT-secured admin dashboard for blog management",
+      "Dark/light mode with system preference detection",
+      "Contact form with rate limiting and email integration",
+      "Lighthouse scores: 95+ Performance, 100 Accessibility"
+    ],
+    "date": "2026-02-11"
+  },
+  {
+    "id": "task-manager-cli",
+    "title": "Task Manager CLI",
+    "description": "A powerful command-line task management tool built with Rust. Features include project organization, priority levels, due dates, and GitHub integration.",
+    "longDescription": "A fast and intuitive CLI tool for managing tasks and projects from the terminal. Built with Rust for performance and reliability, it integrates with GitHub Issues and supports multiple project workspaces. The tool features a beautiful TUI (Terminal User Interface) built with ratatui.",
+    "image": "./assets/projects/task-cli.webp",
+    "category": "CLI Tool",
+    "technologies": ["Rust", "SQLite", "GitHub API", "ratatui"],
+    "featured": false,
+    "links": {
+      "live": null,
+      "github": "https://github.com/username/task-manager-cli"
+    },
+    "highlights": [
+      "Blazing fast performance with Rust",
+      "Beautiful terminal UI with keyboard navigation",
+      "SQLite persistence with migrations",
+      "GitHub Issues synchronization",
+      "Cross-platform support (Linux, macOS, Windows)",
+      "Comprehensive shell completions"
+    ],
+    "date": "2025-11-20"
+  }
+]
