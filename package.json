@@ -1,0 +1,37 @@
+{
+  "name": "developer-portfolio",
+  "version": "1.0.0",
+  "description": "Full-stack developer portfolio with blog, admin dashboard, and NestJS API",
+  "private": true,
+  "workspaces": [
+    "api",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build:content && npm run build:api && npm run build:frontend",
+    "build:content": "echo 'Building content...' && mkdir -p generated && node scripts/build-content.js",
+    "build:api": "cd api && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:frontend\"",
+    "dev:api": "cd api && npm run start:dev",
+    "dev:frontend": "cd frontend && ng serve",
+    "start": "cd api && npm run start:prod",
+    "test": "npm run test:api && npm run test:frontend",
+    "test:api": "cd api && npm run test",
+    "test:frontend": "cd frontend && ng test",
+    "lint": "npm run lint:api && npm run lint:frontend",
+    "lint:api": "cd api && npm run lint",
+    "lint:frontend": "cd frontend && ng lint"
+  },
+  "keywords": [
+    "portfolio",
+    "angular",
+    "nestjs",
+    "blog"
+  ],
+  "author": "Developer",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
