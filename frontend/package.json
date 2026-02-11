@@ -7,19 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "lint": "eslint \"src/**/*.{ts,html}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,html}\" --fix && prettier --write \"src/**/*.{ts,html,css}\"",
     "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
-  },
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
   },
   "private": true,
   "packageManager": "npm@11.8.0",
@@ -41,13 +31,18 @@
     "@angular/build": "^21.1.4",
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.1.0",
+    "@eslint/js": "^9.38.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "angular-eslint": "^21.0.0",
+    "eslint": "^9.38.0",
     "jsdom": "^27.1.0",
     "lucide-angular": "^0.563.0",
     "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4.1.18",
+    "typescript-eslint": "^8.46.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

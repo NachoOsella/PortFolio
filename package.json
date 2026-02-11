@@ -20,8 +20,11 @@
     "test:api": "cd api && npm run test",
     "test:frontend": "cd frontend && ng test",
     "lint": "npm run lint:api && npm run lint:frontend",
+    "lint:fix": "npm run lint:fix:api && npm run lint:fix:frontend",
     "lint:api": "cd api && npm run lint",
-    "lint:frontend": "cd frontend && ng lint"
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:fix:api": "cd api && npm run lint:fix",
+    "lint:fix:frontend": "cd frontend && npm run lint:fix"
   },
   "keywords": [
     "portfolio",

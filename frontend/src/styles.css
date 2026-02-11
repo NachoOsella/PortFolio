@@ -1,21 +1,21 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --color-primary: #3b82f6;
+    --color-primary-dark: #2563eb;
 }
 
 html {
-  font-family: var(--font-sans);
+    font-family: var(--font-sans);
 }
 
 .dark {
-  color-scheme: dark;
+    color-scheme: dark;
 }
 
 body {
-  @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100;
 }
