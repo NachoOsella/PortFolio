@@ -1,17 +1,31 @@
 :host {
     display: block;
+    height: 100%;
 }
 
 .project-card {
     border: 1px solid rgba(255, 255, 255, 0.06);
-    background: transparent;
-    transition: border-color 0.15s ease;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.01), transparent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 0 1px transparent;
 }
 
 .project-card:hover {
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1),
+                0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
 }
 
 .project-thumb {
     background: #18181b;
+}
+
+.pattern-bg {
+    background-color: #09090b;
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 24px 24px, 24px 24px;
 }
