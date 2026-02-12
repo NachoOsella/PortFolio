@@ -1,47 +1,65 @@
+
 {
   "categories": [
     {
-      "name": "Languages",
+      "name": "Core Languages",
       "skills": [
-        { "name": "TypeScript", "level": "expert", "icon": "typescript" },
-        { "name": "JavaScript", "level": "expert", "icon": "javascript" },
-        { "name": "Python", "level": "intermediate", "icon": "python" },
-        { "name": "Rust", "level": "beginner", "icon": "rust" },
-        { "name": "SQL", "level": "intermediate", "icon": "database" }
+        { "name": "Java", "level": "expert", "icon": "java" },
+        { "name": "TypeScript", "level": "advanced", "icon": "typescript" },
+        { "name": "SQL", "level": "advanced", "icon": "database" }
       ]
     },
     {
-      "name": "Frontend",
+      "name": "Backend & Architecture",
       "skills": [
-        { "name": "Angular", "level": "expert", "icon": "angular" },
-        { "name": "React", "level": "intermediate", "icon": "react" },
-        { "name": "Tailwind CSS", "level": "expert", "icon": "tailwindcss" },
-        { "name": "HTML5", "level": "expert", "icon": "html5" },
-        { "name": "CSS3", "level": "expert", "icon": "css3" },
-        { "name": "RxJS", "level": "intermediate", "icon": "rxjs" }
+        { "name": "Spring Boot", "level": "expert", "icon": "spring" },
+        { "name": "Spring Cloud Gateway", "level": "advanced", "icon": "spring" },
+        { "name": "Spring Security", "level": "advanced", "icon": "spring" },
+        { "name": "JPA / Hibernate", "level": "advanced", "icon": "database" },
+        { "name": "NestJS", "level": "medium", "icon": "nestjs" },
+        { "name": "REST API Design", "level": "expert", "icon": "api" }
       ]
     },
     {
-      "name": "Backend",
+      "name": "Architecture Patterns",
       "skills": [
-        { "name": "Node.js", "level": "expert", "icon": "nodejs" },
-        { "name": "NestJS", "level": "expert", "icon": "nestjs" },
-        { "name": "Express", "level": "intermediate", "icon": "express" },
-        { "name": "PostgreSQL", "level": "intermediate", "icon": "postgresql" },
-        { "name": "MongoDB", "level": "intermediate", "icon": "mongodb" },
-        { "name": "Redis", "level": "beginner", "icon": "redis" }
+        { "name": "Microservices Architecture", "level": "advanced", "icon": "microservices" },
+        { "name": "API Gateway Pattern", "level": "advanced", "icon": "gateway" },
+        { "name": "Clean Architecture", "level": "advanced", "icon": "architecture" },
+        { "name": "Domain-Driven Design (DDD)", "level": "advanced", "icon": "ddd" }
       ]
     },
     {
-      "name": "DevOps & Tools",
+      "name": "Observability & Infrastructure",
       "skills": [
-        { "name": "Docker", "level": "intermediate", "icon": "docker" },
-        { "name": "Git", "level": "expert", "icon": "git" },
-        { "name": "GitHub Actions", "level": "intermediate", "icon": "github" },
-        { "name": "Vercel", "level": "intermediate", "icon": "vercel" },
-        { "name": "Linux", "level": "intermediate", "icon": "linux" },
-        { "name": "VS Code", "level": "expert", "icon": "vscode" }
+        { "name": "Prometheus", "level": "intermediate", "icon": "prometheus" },
+        { "name": "Grafana", "level": "intermediate", "icon": "grafana" },
+        { "name": "Docker & Docker Compose", "level": "advanced", "icon": "docker" },
+        { "name": "Nginx (Reverse Proxy)", "level": "intermediate", "icon": "nginx" },
+        { "name": "Linux (Arch)", "level": "advanced", "icon": "linux" }
+      ]
+    },
+    {
+      "name": "Frontend (Complementary)",
+      "skills": [
+        { "name": "Angular (Standalone + Signals)", "level": "medium", "icon": "angular" },
+        { "name": "RxJS", "level": "medium", "icon": "rxjs" },
+        { "name": "Tailwind CSS", "level": "medium", "icon": "tailwindcss" },
+        { "name": "HTML5", "level": "medium", "icon": "html5" },
+        { "name": "CSS3", "level": "medium", "icon": "css3" }
+      ]
+    },
+    {
+      "name": "Soft Skills & Methodologies",
+      "skills": [
+        { "name": "English (C1 - Advanced)", "level": "expert", "icon": "english" },
+        { "name": "Scrum (PSM I)", "level": "expert", "icon": "scrum" },
+        { "name": "Agile Methodology", "level": "expert", "icon": "agile" },
+        { "name": "Team Collaboration", "level": "expert", "icon": "teamwork" },
+        { "name": "Problem Solving", "level": "expert", "icon": "problemsolving" },
+        { "name": "Technical Communication", "level": "advanced", "icon": "communication" }
       ]
     }
   ]
 }
+

@@ -6,7 +6,7 @@ tags: ["portfolio", "angular", "nestjs", "tutorial"]
 excerpt: "Welcome to my new developer portfolio! In this post, I'll share the journey of building this site using Angular, NestJS, and modern web technologies."
 published: true
 featured: true
-coverImage: "./cover.webp"
+coverImage: "./2026-02-12-115754_hyprshot.png"
 ---
 
 # Hello World!
