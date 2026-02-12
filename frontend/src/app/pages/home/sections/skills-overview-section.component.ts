@@ -1,5 +1,6 @@
-import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs';
 import { SkillBadgeComponent } from '../../../shared/components/skill-badge/skill-badge.component';
 import { SectionHeadingComponent } from '../../../shared/components/section-heading/section-heading.component';
 import { SkillCategory } from '../../../shared/models/skill.model';
@@ -12,30 +13,31 @@ import { ApiService } from '../../../core/services/api.service';
     templateUrl: './skills-overview-section.component.html',
     styleUrl: './skills-overview-section.component.css',
 })
-export class SkillsOverviewSectionComponent {
+export class SkillsOverviewSectionComponent implements OnInit {
     private readonly api = inject(ApiService);
-    private readonly platformId = inject(PLATFORM_ID);
+    private readonly http = inject(HttpClient);
 
     skillCategories = signal<SkillCategory[]>([]);
     isLoading = signal(true);
 
-    constructor() {
-        if (isPlatformBrowser(this.platformId)) {
-            this.loadSkills();
-        } else {
-            this.isLoading.set(false);
-        }
+    ngOnInit(): void {
+        this.loadSkills();
     }
 
     private loadSkills(): void {
-        this.api.get<{ categories: SkillCategory[] }>('skills').subscribe({
-            next: (data) => {
-                this.skillCategories.set(data.categories);
-                this.isLoading.set(false);
-            },
-            error: () => {
-                this.isLoading.set(false);
-            },
-        });
+        this.isLoading.set(true);
+
+        this.http
+            .get<{ categories: SkillCategory[] }>('/generated/skills.json')
+            .pipe(catchError(() => this.api.get<{ categories: SkillCategory[] }>('/skills')))
+            .subscribe({
+                next: (data) => {
+                    this.skillCategories.set(data.categories);
+                    this.isLoading.set(false);
+                },
+                error: () => {
+                    this.isLoading.set(false);
+                },
+            });
     }
 }

@@ -1,6 +1,5 @@
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { ProjectCardComponent } from '../../../shared/components/project-card/project-card.component';
 import { TagFilterComponent } from '../../../shared/components/tag-filter/tag-filter.component';
 import { SectionHeadingComponent } from '../../../shared/components/section-heading/section-heading.component';
