@@ -1,11 +1,11 @@
 <footer class="border-t border-white/[0.06]">
-    <div class="mx-auto max-w-6xl px-6 py-16">
-        <div class="grid grid-cols-1 gap-12 md:grid-cols-3">
+    <div class="mx-auto max-w-6xl px-6 py-10">
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div>
                 <a routerLink="/" class="text-lg font-semibold tracking-tight text-[#fafafa]">
                     Nacho<span class="text-[#3b82f6]">.</span>dev
                 </a>
-                <p class="mt-3 text-sm leading-relaxed text-[#71717a]">
+                <p class="mt-2 text-sm text-[#71717a]">
                     Full-stack developer passionate about building modern web applications.
                 </p>
             </div>
@@ -14,7 +14,7 @@
                 <h3 class="text-xs font-semibold uppercase tracking-wider text-[#fafafa]">
                     Navigation
                 </h3>
-                <ul class="mt-4 space-y-2">
+                <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1">
                     @for (link of quickLinks; track link.path) {
                         <li>
                             <a
@@ -32,23 +32,23 @@
                 <h3 class="text-xs font-semibold uppercase tracking-wider text-[#fafafa]">
                     Connect
                 </h3>
-                <div class="mt-4 flex gap-3">
+                <div class="mt-3 flex gap-2">
                     @for (social of socialLinks; track social.label) {
                         <a
                             [href]="social.href"
                             target="_blank"
                             rel="noopener noreferrer"
                             [attr.aria-label]="social.label"
-                            class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-[#71717a] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                            class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/10 text-[#71717a] transition-colors hover:border-white/20 hover:text-[#fafafa]"
                         >
-                            <lucide-icon [img]="social.icon" [size]="18" />
+                            <lucide-icon [img]="social.icon" [size]="16" />
                         </a>
                     }
                 </div>
             </div>
         </div>
 
-        <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/[0.06] pt-8 sm:flex-row">
+        <div class="mt-8 flex flex-col items-center justify-between gap-2 border-t border-white/[0.06] pt-6 sm:flex-row">
             <p class="text-sm text-[#52525b]">
                 &copy; {{ currentYear }} Nacho. All rights reserved.
             </p>
