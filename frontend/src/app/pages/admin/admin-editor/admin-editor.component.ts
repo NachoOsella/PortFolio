@@ -2,10 +2,11 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MarkdownModule } from 'ngx-markdown';
 import { ApiService } from '../../../core/services/api.service';
 import { SeoService } from '../../../core/services/seo.service';
 import { BlogPost } from '../../../shared/models/blog.model';
-import { ArrowLeft, Eye, EyeOff, Save, Send, LucideAngularModule } from 'lucide-angular';
+import { ArrowLeft, Save, Send, LucideAngularModule } from 'lucide-angular';
 
 
 interface PostForm {
@@ -22,7 +23,7 @@ interface PostForm {
 @Component({
     selector: 'app-admin-editor',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule],
+    imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, MarkdownModule],
     templateUrl: './admin-editor.component.html',
     styleUrl: './admin-editor.component.css',
 })
@@ -36,7 +37,6 @@ export class AdminEditorComponent implements OnInit {
     originalSlug = signal<string>('');
     isLoading = signal(false);
     isSaving = signal(false);
-    showPreview = signal(false);
     saveStatus = signal<'idle' | 'success' | 'error'>('idle');
     saveMessage = signal('');
     errors = signal<Record<string, string>>({});
@@ -52,7 +52,7 @@ export class AdminEditorComponent implements OnInit {
         coverImage: '',
     });
 
-    icons = { ArrowLeft, Eye, EyeOff, Save, Send };
+    icons = { ArrowLeft, Save, Send };
 
     wordCount = computed(() => {
         return this.form().content.trim().split(/\s+/).filter(Boolean).length;
@@ -175,10 +175,6 @@ export class AdminEditorComponent implements OnInit {
                 this.saveMessage.set('Failed to save. Please try again.');
             },
         });
-    }
-
-    togglePreview(): void {
-        this.showPreview.update((v) => !v);
     }
 
     canDeactivate(): boolean {

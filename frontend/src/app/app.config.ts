@@ -6,6 +6,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideMarkdown } from 'ngx-markdown';
 
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
@@ -17,5 +18,6 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
         provideAnimations(),
         provideClientHydration(withEventReplay()),
+        provideMarkdown(),
     ],
 };

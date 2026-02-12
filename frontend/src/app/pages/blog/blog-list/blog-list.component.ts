@@ -8,8 +8,12 @@ import { ApiService } from '../../../core/services/api.service';
 import { SeoService } from '../../../core/services/seo.service';
 import { BlogPost } from '../../../shared/models/blog.model';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs';
+import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { Search, LucideAngularModule } from 'lucide-angular';
+
+type BlogPostPayload = Partial<BlogPost> & {
+    meta?: Partial<BlogPost>;
+};
 
 @Component({
     selector: 'app-blog-list',
@@ -39,18 +43,27 @@ export class BlogListComponent implements OnInit {
     icons = { Search };
 
     allTags = computed(() => {
-        const tags = new Set<string>();
+        const tags = new Map<string, string>();
         this.posts().forEach((post) => {
-            post.tags.forEach((tag) => tags.add(tag));
+            post.tags.forEach((tag) => {
+                const normalized = tag.trim().toLowerCase();
+                if (!normalized || normalized === 'all' || tags.has(normalized)) {
+                    return;
+                }
+
+                tags.set(normalized, normalized);
+            });
         });
-        return ['all', ...Array.from(tags).sort()];
+        return Array.from(tags.values()).sort();
     });
 
     filteredPosts = computed(() => {
         let result = this.posts();
 
         if (this.selectedTag() !== 'all') {
-            result = result.filter((post) => post.tags.includes(this.selectedTag()));
+            result = result.filter((post) =>
+                post.tags.some((tag) => tag.toLowerCase() === this.selectedTag())
+            );
         }
 
         if (this.searchQuery().trim()) {
@@ -62,7 +75,7 @@ export class BlogListComponent implements OnInit {
             );
         }
 
-        return result.sort(
+        return [...result].sort(
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
     });
@@ -77,7 +90,7 @@ export class BlogListComponent implements OnInit {
     }
 
     onTagSelected(tag: string): void {
-        this.selectedTag.set(tag);
+        this.selectedTag.set(tag.toLowerCase());
     }
 
     onSearchChange(event: Event): void {
@@ -90,10 +103,33 @@ export class BlogListComponent implements OnInit {
         this.error.set(null);
 
         this.http.get<BlogPost[]>('/generated/blog-index.json').pipe(
-            catchError(() => this.api.get<BlogPost[]>('/blog'))
+            catchError(() => this.api.get<BlogPost[]>('/blog')),
+            switchMap((data) => {
+                const publishedPosts = data.filter((post) => post.published);
+                if (!publishedPosts.length) {
+                    return of([] as BlogPost[]);
+                }
+
+                const coverSyncRequests = publishedPosts.map((post) =>
+                    this.http
+                        .get<BlogPostPayload>(`/generated/blog/${post.slug}/index.json`)
+                        .pipe(
+                            map((fullPost) => {
+                                const fullPostCover = fullPost.meta?.coverImage ?? fullPost.coverImage;
+                                return this.normalizePost({
+                                    ...post,
+                                    coverImage: fullPostCover ?? post.coverImage,
+                                });
+                            }),
+                            catchError(() => of(this.normalizePost(post)))
+                        )
+                );
+
+                return forkJoin(coverSyncRequests);
+            })
         ).subscribe({
             next: (data) => {
-                this.posts.set(data.filter((post) => post.published));
+                this.posts.set(data);
                 this.isLoading.set(false);
             },
             error: () => {
@@ -101,5 +137,29 @@ export class BlogListComponent implements OnInit {
                 this.isLoading.set(false);
             },
         });
+    }
+
+    private normalizePost(post: BlogPost): BlogPost {
+        return {
+            ...post,
+            tags: post.tags.map((tag) => tag.trim().toLowerCase()).filter(Boolean),
+            coverImage: this.normalizeCoverImage(post.coverImage, post.slug),
+        };
+    }
+
+    private normalizeCoverImage(coverImage: string | undefined, slug: string): string | undefined {
+        if (!coverImage) {
+            return undefined;
+        }
+
+        if (/^https?:\/\//.test(coverImage) || coverImage.startsWith('/')) {
+            return coverImage;
+        }
+
+        if (coverImage.startsWith('./')) {
+            return `/generated/blog/${slug}/${coverImage.slice(2)}`;
+        }
+
+        return `/generated/blog/${slug}/${coverImage}`;
     }
 }
