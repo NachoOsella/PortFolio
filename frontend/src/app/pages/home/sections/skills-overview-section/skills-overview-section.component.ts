@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs';
-import { SkillBadgeComponent } from '../../../shared/components/skill-badge/skill-badge.component';
-import { SectionHeadingComponent } from '../../../shared/components/section-heading/section-heading.component';
-import { SkillCategory } from '../../../shared/models/skill.model';
-import { ApiService } from '../../../core/services/api.service';
+import { SkillBadgeComponent } from '../../../../shared/components/skill-badge/skill-badge.component';
+import { SectionHeadingComponent } from '../../../../shared/components/section-heading/section-heading.component';
+import { SkillCategory } from '../../../../shared/models/skill.model';
+import { ApiService } from '../../../../core/services/api.service';
 
 @Component({
     selector: 'app-skills-overview-section',

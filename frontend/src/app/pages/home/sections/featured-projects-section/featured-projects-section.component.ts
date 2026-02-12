@@ -3,10 +3,10 @@ import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LucideAngularModule, ArrowRight } from 'lucide-angular';
 import { catchError } from 'rxjs';
-import { ProjectCardComponent } from '../../../shared/components/project-card/project-card.component';
-import { SectionHeadingComponent } from '../../../shared/components/section-heading/section-heading.component';
-import { ApiService } from '../../../core/services/api.service';
-import { Project } from '../../../shared/models/project.model';
+import { ProjectCardComponent } from '../../../../shared/components/project-card/project-card.component';
+import { SectionHeadingComponent } from '../../../../shared/components/section-heading/section-heading.component';
+import { ApiService } from '../../../../core/services/api.service';
+import { Project } from '../../../../shared/models/project.model';
 
 @Component({
     selector: 'app-featured-projects-section',

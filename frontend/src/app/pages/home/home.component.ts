@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { SeoService } from '../../core/services/seo.service';
-import { HeroSectionComponent } from './sections/hero-section.component';
-import { FeaturedProjectsSectionComponent } from './sections/featured-projects-section.component';
-import { SkillsOverviewSectionComponent } from './sections/skills-overview-section.component';
-import { LatestPostsSectionComponent } from './sections/latest-posts-section.component';
-import { CtaSectionComponent } from './sections/cta-section.component';
+import { HeroSectionComponent } from './sections/hero-section/hero-section.component';
+import { FeaturedProjectsSectionComponent } from './sections/featured-projects-section/featured-projects-section.component';
+import { SkillsOverviewSectionComponent } from './sections/skills-overview-section/skills-overview-section.component';
+import { LatestPostsSectionComponent } from './sections/latest-posts-section/latest-posts-section.component';
+import { CtaSectionComponent } from './sections/cta-section/cta-section.component';
 
 @Component({
     selector: 'app-home',
@@ -43,11 +43,6 @@ export class HomeComponent implements OnInit {
             type: 'website',
             url,
             siteName: 'Ignacio Portfolio',
-        });
-        this.seo.setTwitterCard({
-            card: 'summary_large_image',
-            title,
-            description,
         });
         this.seo.setJsonLd({
             '@context': 'https://schema.org',

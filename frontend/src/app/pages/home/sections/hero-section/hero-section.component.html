@@ -1,0 +1,109 @@
+<section class="relative px-6 pt-24 pb-16 sm:pt-28 sm:pb-16 overflow-hidden">
+    <!-- Background Mesh -->
+    <div class="hero-bg">
+        <div class="hero-glow"></div>
+        <div class="hero-glow-2"></div>
+    </div>
+
+    <div class="relative z-10 mx-auto max-w-6xl">
+        <div class="flex flex-col items-start gap-12 lg:flex-row lg:items-center lg:justify-between">
+            <div class="max-w-2xl animate-fade-in-up">
+                <div class="flex items-center gap-3">
+                    <span class="relative flex h-3 w-3">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
+                    </span>
+                    <span class="text-sm font-medium text-[#71717a]">Available for work</span>
+                </div>
+                <p class="mt-4 text-sm font-medium tracking-wide text-[#71717a] uppercase">Hello, I'm</p>
+                <h1 class="mt-2 text-5xl font-bold tracking-tight text-[#fafafa] sm:text-6xl lg:text-7xl">
+                    <span class="text-gradient">Ignacio</span><span class="text-[#3b82f6]">.</span>
+                </h1>
+                <p class="mt-4 text-2xl font-medium text-[#a1a1aa] sm:text-3xl">
+                    Full-Stack Developer
+                </p>
+                <p class="mt-6 max-w-xl text-lg leading-relaxed text-[#71717a]">
+                    I build modern, scalable web applications with clean code and intuitive user
+                    experiences. Passionate about TypeScript, Angular, and NestJS.
+                </p>
+
+                <div class="mt-8 flex items-center gap-3 text-sm text-[#71717a]">
+                    <lucide-icon [img]="icons.MapPin" [size]="16" />
+                    <span>Córdoba, Argentina</span>
+                </div>
+
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <a
+                        routerLink="/projects"
+                        class="inline-flex h-10 items-center gap-2 rounded-md bg-[#3b82f6] px-5 text-sm font-medium text-white transition-all hover:bg-[#2563eb] hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
+                    >
+                        View Projects
+                        <lucide-icon [img]="icons.ArrowRight" [size]="16" />
+                    </a>
+                    <a
+                        routerLink="/blog"
+                        class="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#fafafa] transition-colors hover:border-white/20 hover:bg-white/[0.03]"
+                    >
+                        Read Blog
+                    </a>
+                </div>
+
+                <div class="mt-10 flex items-center gap-3">
+                    @for (social of socialLinks; track social.label) {
+                        <a
+                            [href]="social.href"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            [attr.aria-label]="social.label"
+                            class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/10 text-[#71717a] transition-colors hover:border-white/20 hover:text-[#fafafa] hover:bg-white/[0.02]"
+                        >
+                            <lucide-icon [img]="social.icon" [size]="18" />
+                        </a>
+                    }
+                    <a
+                        href="/assets/resume.pdf"
+                        download
+                        class="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 px-4 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa] hover:bg-white/[0.02]"
+                    >
+                        <lucide-icon [img]="icons.FileText" [size]="16" />
+                        Download Resume
+                    </a>
+                </div>
+            </div>
+
+            <div class="hidden lg:block">
+                <div class="relative">
+                    <!-- Profile Photo Card -->
+                    <div class="glass-card relative h-72 w-72 overflow-hidden rounded-2xl">
+                        <div class="glass-card-border"></div>
+                        <img
+                            src="assets/profile.jpg"
+                            alt="Ignacio profile photo"
+                            class="h-full w-full object-cover"
+                        />
+                    </div>
+
+                    <!-- Floating tech icons (on top of profile) -->
+                    <div class="floating-icon floating-icon-1">
+                        <img src="https://cdn.simpleicons.org/angular" alt="Angular" class="h-6 w-6" />
+                    </div>
+                    <div class="floating-icon floating-icon-2">
+                        <img src="https://cdn.simpleicons.org/typescript" alt="TypeScript" class="h-6 w-6" />
+                    </div>
+                    <div class="floating-icon floating-icon-3">
+                        <img src="https://cdn.simpleicons.org/nodedotjs" alt="Node.js" class="h-6 w-6" />
+                    </div>
+                    <div class="floating-icon floating-icon-4">
+                        <img src="https://cdn.simpleicons.org/nestjs" alt="NestJS" class="h-6 w-6" />
+                    </div>
+                    <div class="floating-icon floating-icon-5">
+                        <img src="https://cdn.simpleicons.org/springboot" alt="Spring Boot" class="h-6 w-6" />
+                    </div>
+
+                    <!-- Decorative blur behind card -->
+                    <div class="absolute -inset-4 -z-10 rounded-full bg-blue-500/20 blur-3xl opacity-20"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

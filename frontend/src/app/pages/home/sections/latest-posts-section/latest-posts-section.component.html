@@ -1,4 +1,4 @@
-<section class="px-6 py-20">
+<section class="px-6 py-16">
     <div class="mx-auto max-w-6xl">
         <app-section-heading
             title="Latest Posts"
@@ -6,7 +6,7 @@
         />
 
         @if (isLoading()) {
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 @for (i of [1, 2, 3]; track i) {
                     <div class="h-96 animate-pulse rounded-lg bg-[#18181b]"></div>
                 }
@@ -16,7 +16,7 @@
                 <p class="text-[#71717a]">No blog posts yet. Check back soon!</p>
             </div>
         } @else {
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 @for (post of latestPosts(); track post.slug) {
                     <app-blog-card [post]="post" class="h-full" />
                 }
