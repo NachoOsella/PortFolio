@@ -5,6 +5,6 @@ export interface SkillCategory {
 
 export interface Skill {
     name: string;
-    level: 'beginner' | 'intermediate' | 'expert';
+    level: 'beginner' | 'intermediate' | 'medium' | 'advanced' | 'expert';
     icon: string;
 }

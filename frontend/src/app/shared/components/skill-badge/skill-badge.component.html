@@ -1,22 +1,36 @@
 <div
-    class="group flex h-11 items-center gap-3 rounded-md border border-white/[0.06] bg-transparent px-3 transition-colors hover:border-white/[0.12]"
+    class="skill-row group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-white/[0.02]"
     [attr.title]="skill().name + ' - ' + skill().level"
 >
-    <span
-        class="inline-flex h-6 min-w-6 items-center justify-center rounded bg-white/[0.03] px-1.5 text-[11px] font-semibold uppercase tracking-wide text-[#a1a1aa]"
-        aria-hidden="true"
-    >
-        {{ skill().icon || skill().name.charAt(0) }}
-    </span>
-    <span class="text-sm font-medium text-[#a1a1aa]">
-        {{ skill().name }}
-    </span>
-    @if (showLevel()) {
-        <span
-            class="ml-auto rounded bg-white/[0.03] px-2 py-0.5 text-[11px] font-medium text-[#71717a]"
-            [class]="levelClass()"
-        >
-            {{ skill().level }}
-        </span>
-    }
+    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10">
+        <img
+            [src]="iconUrl"
+            [alt]="skill().name"
+            class="h-5 w-5 object-contain"
+            (error)="imgError = true"
+            [style.display]="imgError ? 'none' : 'block'"
+        />
+        
+        @if (imgError) {
+            <lucide-icon [img]="fallbackIcon" [size]="16" class="text-[#9ca3af]" />
+        }
+    </div>
+
+    <div class="min-w-0 flex-1">
+        <div class="flex items-center justify-between">
+            <span class="truncate text-sm font-medium text-[#fafafa]">{{ skill().name }}</span>
+            @if (showLevel()) {
+                <span class="text-xs text-[#71717a]">{{ levelValue }}%</span>
+            }
+        </div>
+        
+        @if (showLevel()) {
+            <div class="progress-track mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/[0.05]">
+                <div 
+                    class="progress-fill h-full rounded-full bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]" 
+                    [style.width.%]="levelValue"
+                ></div>
+            </div>
+        }
+    </div>
 </div>

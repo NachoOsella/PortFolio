@@ -33,8 +33,12 @@ export class ProjectsListComponent implements OnInit {
 
     categories = computed(() => {
         const cats = new Set<string>();
-        this.projects().forEach((p) => cats.add(p.category));
-        return ['all', ...Array.from(cats).sort()];
+        this.projects().forEach((p) => {
+            if (p.category && p.category.toLowerCase() !== 'all') {
+                cats.add(p.category);
+            }
+        });
+        return Array.from(cats).sort();
     });
 
     filteredProjects = computed(() => {

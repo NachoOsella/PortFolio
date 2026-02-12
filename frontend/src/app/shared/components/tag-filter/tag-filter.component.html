@@ -10,7 +10,7 @@
     >
         All
     </button>
-    @for (tag of tags(); track tag) {
+    @for (tag of visibleTags(); track tag) {
         <button
             (click)="selectTag(tag)"
             class="min-h-11 rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
