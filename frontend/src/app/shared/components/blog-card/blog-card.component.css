@@ -1,0 +1,9 @@
+:host {
+    display: block;
+}
+
+.blog-card {
+    border-color: rgb(51 65 85 / 0.55);
+    background: linear-gradient(180deg, rgb(15 23 42 / 0.9), rgb(2 6 23 / 0.95));
+    box-shadow: 0 20px 40px rgb(2 6 23 / 0.25);
+}

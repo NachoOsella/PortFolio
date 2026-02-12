@@ -1,0 +1,9 @@
+<button
+    (click)="scrollToTop()"
+    class="back-to-top fixed bottom-6 right-6 z-40 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-slate-600 bg-slate-900/90 text-slate-100 shadow-xl transition-all duration-300 hover:border-cyan-400 hover:text-cyan-200"
+    [class.back-to-top-visible]="visible()"
+    [attr.aria-hidden]="!visible()"
+    aria-label="Back to top"
+>
+    <lucide-icon [img]="icons.ChevronUp" [size]="20" />
+</button>

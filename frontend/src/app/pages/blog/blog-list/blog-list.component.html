@@ -1,0 +1,59 @@
+<section class="mx-auto max-w-6xl px-6 py-20">
+    <app-section-heading
+        title="Blog"
+        subtitle="Thoughts on code, projects, and continuous learning."
+    />
+
+    @if (isLoading()) {
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+                <div class="h-96 animate-pulse rounded-lg bg-[#18181b]"></div>
+            }
+        </div>
+    } @else if (error()) {
+        <div class="rounded-lg border border-red-500/20 bg-red-500/10 p-8 text-center">
+            <p class="text-red-400">{{ error() }}</p>
+        </div>
+    } @else {
+        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <app-tag-filter
+                [tags]="allTags()"
+                [selectedTag]="selectedTag()"
+                (tagSelected)="onTagSelected($event)"
+            />
+
+            <div class="relative">
+                <lucide-icon
+                    [img]="icons.Search"
+                    [size]="18"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-[#52525b]"
+                />
+                <input
+                    type="text"
+                    [value]="searchQuery()"
+                    (input)="onSearchChange($event)"
+                    placeholder="Search posts..."
+                    class="h-10 w-full rounded-md border border-white/10 bg-transparent pl-10 pr-4 text-sm text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none sm:w-64"
+                />
+            </div>
+        </div>
+
+        @if (filteredPosts().length === 0) {
+            <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-12 text-center">
+                <p class="text-[#71717a]">
+                    @if (searchQuery()) {
+                        No posts match your search.
+                    } @else {
+                        No posts found in this category.
+                    }
+                </p>
+            </div>
+        } @else {
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                @for (post of filteredPosts(); track post.slug) {
+                    <app-blog-card [post]="post" class="h-full" />
+                }
+            </div>
+        }
+    }
+</section>

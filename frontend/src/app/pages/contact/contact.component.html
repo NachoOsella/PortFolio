@@ -1,0 +1,183 @@
+<section class="mx-auto max-w-4xl px-6 py-20">
+    <app-section-heading
+        title="Get in Touch"
+        subtitle="Have a project in mind or want to collaborate? I'd love to hear from you."
+    />
+
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-2">
+        <div>
+            @if (submitStatus() === 'success') {
+                <div class="rounded-lg border border-green-500/20 bg-green-500/10 p-6">
+                    <p class="text-green-400">{{ submitMessage() }}</p>
+                </div>
+            } @else {
+                <form (ngSubmit)="onSubmit()" class="space-y-6">
+                    <input
+                        type="text"
+                        [(ngModel)]="form().honeypot"
+                        name="honeypot"
+                        class="hidden"
+                        tabindex="-1"
+                        autocomplete="off"
+                    />
+
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-[#a1a1aa]">
+                            Name
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            [value]="form().name"
+                            (input)="updateField('name', $any($event.target).value)"
+                            required
+                            minlength="2"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none"
+                            [class.border-red-500]="errors()['name']"
+                            placeholder="Your name"
+                        />
+                        @if (errors()['name']) {
+                            <p class="mt-1 text-sm text-red-400">{{ errors()['name'] }}</p>
+                        }
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-[#a1a1aa]">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            [value]="form().email"
+                            (input)="updateField('email', $any($event.target).value)"
+                            required
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none"
+                            [class.border-red-500]="errors()['email']"
+                            placeholder="your@email.com"
+                        />
+                        @if (errors()['email']) {
+                            <p class="mt-1 text-sm text-red-400">{{ errors()['email'] }}</p>
+                        }
+                    </div>
+
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-[#a1a1aa]">
+                            Subject
+                        </label>
+                        <input
+                            type="text"
+                            id="subject"
+                            name="subject"
+                            [value]="form().subject"
+                            (input)="updateField('subject', $any($event.target).value)"
+                            required
+                            minlength="5"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none"
+                            [class.border-red-500]="errors()['subject']"
+                            placeholder="What's this about?"
+                        />
+                        @if (errors()['subject']) {
+                            <p class="mt-1 text-sm text-red-400">{{ errors()['subject'] }}</p>
+                        }
+                    </div>
+
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-[#a1a1aa]">
+                            Message
+                        </label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            [value]="form().message"
+                            (input)="updateField('message', $any($event.target).value)"
+                            required
+                            minlength="20"
+                            rows="6"
+                            class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none"
+                            [class.border-red-500]="errors()['message']"
+                            placeholder="Tell me about your project or question..."
+                        ></textarea>
+                        @if (errors()['message']) {
+                            <p class="mt-1 text-sm text-red-400">{{ errors()['message'] }}</p>
+                        }
+                    </div>
+
+                    @if (submitStatus() === 'error') {
+                        <div class="rounded-lg border border-red-500/20 bg-red-500/10 p-4">
+                            <p class="text-sm text-red-400">{{ submitMessage() }}</p>
+                        </div>
+                    }
+
+                    <button
+                        type="submit"
+                        [disabled]="isSubmitting()"
+                        class="inline-flex h-11 items-center gap-2 rounded-md bg-[#3b82f6] px-6 text-sm font-medium text-white transition-colors hover:bg-[#2563eb] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        @if (isSubmitting()) {
+                            <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Sending...
+                        } @else {
+                            <lucide-icon [img]="icons.Send" [size]="16" />
+                            Send Message
+                        }
+                    </button>
+                </form>
+            }
+        </div>
+
+        <div class="space-y-8">
+            <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-6">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+                    Email
+                </h3>
+                <a
+                    href="mailto:hello@nacho.dev"
+                    class="mt-3 inline-flex items-center gap-2 text-[#a1a1aa] transition-colors hover:text-[#3b82f6]"
+                >
+                    <lucide-icon [img]="icons.Mail" [size]="18" />
+                    hello@nacho.dev
+                </a>
+            </div>
+
+            <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-6">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+                    Social
+                </h3>
+                <div class="mt-3 flex flex-col gap-3">
+                    <a
+                        href="https://github.com/yourusername"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 text-[#a1a1aa] transition-colors hover:text-[#fafafa]"
+                    >
+                        <lucide-icon [img]="icons.Github" [size]="18" />
+                        GitHub
+                    </a>
+                    <a
+                        href="https://linkedin.com/in/yourusername"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 text-[#a1a1aa] transition-colors hover:text-[#fafafa]"
+                    >
+                        <lucide-icon [img]="icons.Linkedin" [size]="18" />
+                        LinkedIn
+                    </a>
+                </div>
+            </div>
+
+            <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-6">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+                    Response Time
+                </h3>
+                <p class="mt-3 text-[#a1a1aa]">
+                    I typically respond within 24-48 hours. For urgent matters, please mention it in the subject line.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

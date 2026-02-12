@@ -1,0 +1,22 @@
+.toolbar-btn {
+    display: inline-flex;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    color: #cbd5e1;
+    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.toolbar-btn:hover {
+    border-color: #475569;
+    background-color: #1e293b;
+}
+
+.editor-textarea {
+    min-height: 300px;
+    tab-size: 2;
+    background: linear-gradient(180deg, rgb(15 23 42), rgb(2 6 23));
+}

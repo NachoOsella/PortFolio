@@ -1,0 +1,37 @@
+<section class="mx-auto max-w-6xl px-6 py-20">
+    <app-section-heading
+        title="Projects"
+        subtitle="A collection of my work across web applications, CLI tools, and open-source contributions."
+    />
+
+    @if (isLoading()) {
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+                <div class="h-96 animate-pulse rounded-lg bg-[#18181b]"></div>
+            }
+        </div>
+    } @else if (error()) {
+        <div class="rounded-lg border border-red-500/20 bg-red-500/10 p-8 text-center">
+            <p class="text-red-400">{{ error() }}</p>
+        </div>
+    } @else {
+        <app-tag-filter
+            [tags]="categories()"
+            [selectedTag]="selectedCategory()"
+            (tagSelected)="onCategorySelected($event)"
+            class="mb-8 block"
+        />
+
+        @if (filteredProjects().length === 0) {
+            <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-12 text-center">
+                <p class="text-[#71717a]">No projects found in this category.</p>
+            </div>
+        } @else {
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                @for (project of filteredProjects(); track project.id) {
+                    <app-project-card [project]="project" class="h-full" />
+                }
+            </div>
+        }
+    }
+</section>

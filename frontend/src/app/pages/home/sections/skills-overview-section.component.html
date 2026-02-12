@@ -1,0 +1,31 @@
+<section class="px-6 py-20">
+    <div class="mx-auto max-w-6xl">
+        <app-section-heading
+            title="Tech Stack"
+            subtitle="Technologies and tools I use to build modern applications."
+        />
+
+        @if (isLoading()) {
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                @for (i of [1, 2, 3, 4]; track i) {
+                    <div class="h-64 animate-pulse rounded-lg bg-[#18181b]"></div>
+                }
+            </div>
+        } @else {
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                @for (category of skillCategories(); track category.name) {
+                    <div class="rounded-lg border border-white/[0.06] bg-transparent p-6">
+                        <h3 class="mb-4 text-xs font-semibold uppercase tracking-wider text-[#71717a]">
+                            {{ category.name }}
+                        </h3>
+                        <div class="flex flex-col gap-2">
+                            @for (skill of category.skills; track skill.name) {
+                                <app-skill-badge [skill]="skill" [showLevel]="false" />
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

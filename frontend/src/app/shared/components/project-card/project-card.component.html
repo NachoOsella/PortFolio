@@ -1,0 +1,83 @@
+<article class="project-card group flex h-full flex-col overflow-hidden rounded-lg">
+    <div class="project-thumb relative aspect-video overflow-hidden">
+        @if (project().image) {
+            <img
+                [src]="project().image"
+                [alt]="project().title"
+                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            />
+        } @else {
+            <div
+                class="flex h-full w-full items-center justify-center text-4xl font-semibold text-[#3f3f46]"
+            >
+                {{ project().title.charAt(0) }}
+            </div>
+        }
+        <span
+            class="absolute left-4 top-4 rounded bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#fafafa] backdrop-blur-sm"
+        >
+            {{ project().category }}
+        </span>
+    </div>
+
+    <div class="flex flex-1 flex-col p-5">
+        <h3 class="text-lg font-semibold text-[#fafafa] transition-colors group-hover:text-[#3b82f6]">
+            <a [routerLink]="['/projects', project().id]">{{ project().title }}</a>
+        </h3>
+        <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-[#71717a]">
+            {{ project().description }}
+        </p>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+            @for (tech of project().technologies.slice(0, 4); track tech) {
+                <span
+                    class="rounded bg-white/[0.03] px-2.5 py-1 text-xs font-medium text-[#71717a]"
+                >
+                    {{ tech }}
+                </span>
+            }
+            @if (project().technologies.length > 4) {
+                <span
+                    class="rounded bg-white/[0.03] px-2.5 py-1 text-xs font-medium text-[#52525b]"
+                >
+                    +{{ project().technologies.length - 4 }}
+                </span>
+            }
+        </div>
+
+        <div class="mt-5 flex items-center justify-between gap-3 pt-4 border-t border-white/[0.06]">
+            <div class="flex items-center gap-2">
+                @if (project().links.github) {
+                    <a
+                        [href]="project().links.github"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-[#71717a] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                        aria-label="View source code"
+                    >
+                        <lucide-icon [img]="icons.Github" [size]="16" />
+                    </a>
+                }
+                @if (project().links.live) {
+                    <a
+                        [href]="project().links.live"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-[#71717a] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                        aria-label="Open live project"
+                    >
+                        <lucide-icon [img]="icons.ExternalLink" [size]="16" />
+                    </a>
+                }
+            </div>
+
+            <a
+                [routerLink]="['/projects', project().id]"
+                class="inline-flex h-9 items-center gap-1 rounded-md border border-white/10 px-4 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+            >
+                Details
+                <lucide-icon [img]="icons.ArrowRight" [size]="14" />
+            </a>
+        </div>
+    </div>
+</article>

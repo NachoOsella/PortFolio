@@ -1,0 +1,36 @@
+<section class="px-6 py-20">
+    <div class="mx-auto max-w-6xl">
+        <app-section-heading
+            title="Latest Posts"
+            subtitle="Thoughts on code, projects, and continuous learning."
+        />
+
+        @if (isLoading()) {
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                @for (i of [1, 2, 3]; track i) {
+                    <div class="h-96 animate-pulse rounded-lg bg-[#18181b]"></div>
+                }
+            </div>
+        } @else if (latestPosts().length === 0) {
+            <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-8 text-center">
+                <p class="text-[#71717a]">No blog posts yet. Check back soon!</p>
+            </div>
+        } @else {
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                @for (post of latestPosts(); track post.slug) {
+                    <app-blog-card [post]="post" class="h-full" />
+                }
+            </div>
+
+            <div class="mt-12 text-center">
+                <a
+                    routerLink="/blog"
+                    class="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                >
+                    Read All Posts
+                    <lucide-icon [img]="icons.ArrowRight" [size]="16" />
+                </a>
+            </div>
+        }
+    </div>
+</section>

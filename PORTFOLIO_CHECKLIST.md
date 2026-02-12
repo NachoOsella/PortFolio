@@ -108,164 +108,164 @@ Use this file to track your progress. Check off items as you complete them.
 ## Phase 2: Layout & Core Infrastructure
 
 ### 2.1 Angular App Configuration
-- [ ] Create `app.config.ts` (standalone config):
-  - [ ] Configure HttpClient with `provideHttpClient(withFetch())`
-  - [ ] Configure Router with `provideRouter(routes)`
-  - [ ] Configure Angular animations
-  - [ ] Configure SSR transfer state
-- [ ] Create `app.routes.ts`:
-  - [ ] `/` → Home (eager)
-  - [ ] `/projects` → Projects list (lazy)
-  - [ ] `/projects/:id` → Project detail (lazy)
-  - [ ] `/blog` → Blog list (lazy)
-  - [ ] `/blog/:slug` → Blog post (lazy)
-  - [ ] `/about` → About (lazy)
-  - [ ] `/contact` → Contact (lazy)
-  - [ ] `/admin` → Admin Dashboard (lazy, guarded)
-  - [ ] `/admin/login` → Admin Login (lazy)
-  - [ ] `/admin/new` → New Post Editor (lazy, guarded)
-  - [ ] `/admin/edit/:slug` → Edit Post (lazy, guarded)
-  - [ ] `**` → 404 redirect to home
+- [x] Create `app.config.ts` (standalone config):
+  - [x] Configure HttpClient with `provideHttpClient(withFetch())`
+  - [x] Configure Router with `provideRouter(routes)`
+  - [x] Configure Angular animations
+  - [x] Configure SSR transfer state
+- [x] Create `app.routes.ts`:
+  - [x] `/` → Home (eager)
+  - [x] `/projects` → Projects list (lazy)
+  - [x] `/projects/:id` → Project detail (lazy)
+  - [x] `/blog` → Blog list (lazy)
+  - [x] `/blog/:slug` → Blog post (lazy)
+  - [x] `/about` → About (lazy)
+  - [x] `/contact` → Contact (lazy)
+  - [x] `/admin` → Admin Dashboard (lazy, guarded)
+  - [x] `/admin/login` → Admin Login (lazy)
+  - [x] `/admin/new` → New Post Editor (lazy, guarded)
+  - [x] `/admin/edit/:slug` → Edit Post (lazy, guarded)
+  - [x] `**` → 404 redirect to home
 
 ### 2.2 Core Services
-- [ ] Create `core/services/api.service.ts`
-  - [ ] Inject `HttpClient`
-  - [ ] Base URL configuration (environment-based)
-  - [ ] GET method with generic typing
-  - [ ] POST method with generic typing
-  - [ ] Error handling (catchError, retry)
-- [ ] Create `core/services/seo.service.ts`
-  - [ ] Inject `Title`, `Meta` services
-  - [ ] `updateTitle(title: string)` method
-  - [ ] `updateMetaTags(config)` method
-  - [ ] `setOpenGraph(config)` method
-  - [ ] `setTwitterCard(config)` method
-  - [ ] `setJsonLd(data)` method (structured data)
-- [ ] Create `core/services/theme.service.ts`
-  - [ ] Check `localStorage` for saved preference
-  - [ ] Check `prefers-color-scheme` media query
-  - [ ] Toggle dark/light mode
-  - [ ] Apply `dark` class to `<html>`
-  - [ ] Persist preference to `localStorage`
-  - [ ] Expose `isDark$` observable (BehaviorSubject)
-- [ ] Create `core/interceptors/error.interceptor.ts`
-  - [ ] Log errors
-  - [ ] Handle common HTTP errors
+- [x] Create `core/services/api.service.ts`
+  - [x] Inject `HttpClient`
+  - [x] Base URL configuration (environment-based)
+  - [x] GET method with generic typing
+  - [x] POST method with generic typing
+  - [x] Error handling (catchError, retry)
+- [x] Create `core/services/seo.service.ts`
+  - [x] Inject `Title`, `Meta` services
+  - [x] `updateTitle(title: string)` method
+  - [x] `updateMetaTags(config)` method
+  - [x] `setOpenGraph(config)` method
+  - [x] `setTwitterCard(config)` method
+  - [x] `setJsonLd(data)` method (structured data)
+- [x] Create `core/services/theme.service.ts`
+  - [x] Check `localStorage` for saved preference
+  - [x] Check `prefers-color-scheme` media query
+  - [x] Toggle dark/light mode
+  - [x] Apply `dark` class to `<html>`
+  - [x] Persist preference to `localStorage`
+  - [x] Expose `isDark$` observable (BehaviorSubject)
+- [x] Create `core/interceptors/error.interceptor.ts`
+  - [x] Log errors
+  - [x] Handle common HTTP errors
 
 ### 2.3 Layout Components
-- [ ] Create `layout/layout.component.ts`
-  - [ ] Shell component with header + main + footer
-  - [ ] Router outlet in main area
-- [ ] Create `layout/header/header.component.ts`
-  - [ ] Logo/name (links to home)
-  - [ ] Navigation links: Home, Projects, Blog, About, Contact
-  - [ ] Theme toggle button (sun/moon icon)
-  - [ ] Resume download link
-  - [ ] Mobile hamburger menu
-  - [ ] Mobile slide-out navigation
-  - [ ] Sticky header with backdrop blur on scroll
-  - [ ] Active route highlighting
-- [ ] Create `layout/footer/footer.component.ts`
-  - [ ] Copyright notice
-  - [ ] Social links (GitHub, LinkedIn, Twitter/X, Email)
-  - [ ] "Built with" tech credits
-  - [ ] Quick navigation links
+- [x] Create `layout/layout.component.ts`
+  - [x] Shell component with header + main + footer
+  - [x] Router outlet in main area
+- [x] Create `layout/header/header.component.ts`
+  - [x] Logo/name (links to home)
+  - [x] Navigation links: Home, Projects, Blog, About, Contact
+  - [x] Theme toggle button (sun/moon icon)
+  - [x] Resume download link
+  - [x] Mobile hamburger menu
+  - [x] Mobile slide-out navigation
+  - [x] Sticky header with backdrop blur on scroll
+  - [x] Active route highlighting
+- [x] Create `layout/footer/footer.component.ts`
+  - [x] Copyright notice
+  - [x] Social links (GitHub, LinkedIn, Twitter/X, Email)
+  - [x] "Built with" tech credits
+  - [x] Quick navigation links
 
 ### 2.4 Shared Components
-- [ ] Create `shared/components/project-card.component.ts`
-  - [ ] Project image/thumbnail
-  - [ ] Title and short description
-  - [ ] Technology tags
-  - [ ] Links (live, GitHub)
-  - [ ] Hover effect / animation
-- [ ] Create `shared/components/blog-card.component.ts`
-  - [ ] Cover image (optional)
-  - [ ] Title
-  - [ ] Date + reading time
-  - [ ] Excerpt
-  - [ ] Tags
-  - [ ] Hover effect
-- [ ] Create `shared/components/skill-badge.component.ts`
-  - [ ] Icon + name
-  - [ ] Optional proficiency indicator
-  - [ ] Tooltip with details
-- [ ] Create `shared/components/tag-filter.component.ts`
-  - [ ] List of tag buttons
-  - [ ] Active state styling
-  - [ ] Emit selected tag
-  - [ ] "All" option
-- [ ] Create `shared/components/back-to-top.component.ts`
-  - [ ] Show after scrolling 300px
-  - [ ] Smooth scroll to top
-  - [ ] Fade in/out animation
-- [ ] Create `shared/components/section-heading.component.ts`
-  - [ ] Consistent heading style across pages
-  - [ ] Optional subtitle
-- [ ] Create `shared/components/markdown-editor.component.ts` (for admin)
-  - [ ] Textarea for markdown input
-  - [ ] Toolbar with common markdown shortcuts (bold, italic, code, link)
-  - [ ] Word count display
-  - [ ] Auto-resize or fixed height options
-  - [ ] Tab key support for indentation
-- [ ] Create `shared/components/markdown-preview.component.ts` (for admin)
-  - [ ] Render markdown to HTML preview
-  - [ ] Syntax highlighting in preview
-  - [ ] Sync scroll with editor (optional)
+- [x] Create `shared/components/project-card.component.ts`
+  - [x] Project image/thumbnail
+  - [x] Title and short description
+  - [x] Technology tags
+  - [x] Links (live, GitHub)
+  - [x] Hover effect / animation
+- [x] Create `shared/components/blog-card.component.ts`
+  - [x] Cover image (optional)
+  - [x] Title
+  - [x] Date + reading time
+  - [x] Excerpt
+  - [x] Tags
+  - [x] Hover effect
+- [x] Create `shared/components/skill-badge.component.ts`
+  - [x] Icon + name
+  - [x] Optional proficiency indicator
+  - [x] Tooltip with details
+- [x] Create `shared/components/tag-filter.component.ts`
+  - [x] List of tag buttons
+  - [x] Active state styling
+  - [x] Emit selected tag
+  - [x] "All" option
+- [x] Create `shared/components/back-to-top.component.ts`
+  - [x] Show after scrolling 300px
+  - [x] Smooth scroll to top
+  - [x] Fade in/out animation
+- [x] Create `shared/components/section-heading.component.ts`
+  - [x] Consistent heading style across pages
+  - [x] Optional subtitle
+- [x] Create `shared/components/markdown-editor.component.ts` (for admin)
+  - [x] Textarea for markdown input
+  - [x] Toolbar with common markdown shortcuts (bold, italic, code, link)
+  - [x] Word count display
+  - [x] Auto-resize or fixed height options
+  - [x] Tab key support for indentation
+- [x] Create `shared/components/markdown-preview.component.ts` (for admin)
+  - [x] Render markdown to HTML preview
+  - [x] Syntax highlighting in preview
+  - [x] Sync scroll with editor (optional)
 
 ---
 
 ## Phase 3: Home Page
 
 ### 3.1 Home Page Component
-- [ ] Create `pages/home/home.component.ts`
-  - [ ] Compose sections
-  - [ ] Set SEO meta tags (title, description, og tags)
-  - [ ] Load featured projects and latest posts data
+- [x] Create `pages/home/home.component.ts`
+  - [x] Compose sections
+  - [x] Set SEO meta tags (title, description, og tags)
+  - [x] Load featured projects and latest posts data
 
 ### 3.2 Hero Section
-- [ ] Create `pages/home/sections/hero.component.ts`
-  - [ ] Greeting text with your name
-  - [ ] Title/role ("Full-Stack Developer")
-  - [ ] Short tagline (1-2 sentences about what you do)
-  - [ ] CTA buttons: "View Projects" + "Read Blog"
-  - [ ] Social media links (GitHub, LinkedIn, Twitter/X)
-  - [ ] Subtle entrance animation (fade in + slide up)
-  - [ ] Optional: animated typing effect for tagline
-  - [ ] Optional: gradient text or accent color highlights
-  - [ ] Responsive: stack vertically on mobile
+- [x] Create `pages/home/sections/hero.component.ts`
+  - [x] Greeting text with your name
+  - [x] Title/role ("Full-Stack Developer")
+  - [x] Short tagline (1-2 sentences about what you do)
+  - [x] CTA buttons: "View Projects" + "Read Blog"
+  - [x] Social media links (GitHub, LinkedIn, Twitter/X)
+  - [x] Subtle entrance animation (fade in + slide up)
+  - [~] Optional: animated typing effect for tagline
+  - [~] Optional: gradient text or accent color highlights
+  - [x] Responsive: stack vertically on mobile
 
 ### 3.3 Featured Projects Section
-- [ ] Create `pages/home/sections/featured-projects.component.ts`
-  - [ ] Section heading: "Featured Projects"
-  - [ ] Display 3 featured projects (from projects.json where `featured: true`)
-  - [ ] Use `project-card` shared component
-  - [ ] Grid layout: 3 columns desktop, 2 tablet, 1 mobile
-  - [ ] Staggered fade-in animation on scroll
-  - [ ] "View All Projects →" link at bottom
+- [x] Create `pages/home/sections/featured-projects.component.ts`
+  - [x] Section heading: "Featured Projects"
+  - [x] Display 3 featured projects (from projects.json where `featured: true`)
+  - [x] Use `project-card` shared component
+  - [x] Grid layout: 3 columns desktop, 2 tablet, 1 mobile
+  - [~] Staggered fade-in animation on scroll
+  - [x] "View All Projects →" link at bottom
 
 ### 3.4 Skills Overview Section
-- [ ] Create `pages/home/sections/skills-overview.component.ts`
-  - [ ] Section heading: "Tech Stack"
-  - [ ] Load skills from `skills.json`
-  - [ ] Display by category (Languages, Frontend, Backend, DevOps)
-  - [ ] Use `skill-badge` components
-  - [ ] Grid or flex layout
-  - [ ] Fade-in animation on scroll
+- [x] Create `pages/home/sections/skills-overview.component.ts`
+  - [x] Section heading: "Tech Stack"
+  - [x] Load skills from `skills.json`
+  - [x] Display by category (Languages, Frontend, Backend, DevOps)
+  - [x] Use `skill-badge` components
+  - [x] Grid or flex layout
+  - [~] Fade-in animation on scroll
 
 ### 3.5 Latest Blog Posts Section
-- [ ] Create `pages/home/sections/latest-posts.component.ts`
-  - [ ] Section heading: "Latest Posts"
-  - [ ] Display 3 most recent blog posts
-  - [ ] Use `blog-card` shared component
-  - [ ] "Read All Posts →" link at bottom
-  - [ ] Staggered animation
+- [x] Create `pages/home/sections/latest-posts.component.ts`
+  - [x] Section heading: "Latest Posts"
+  - [x] Display 3 most recent blog posts
+  - [x] Use `blog-card` shared component
+  - [x] "Read All Posts →" link at bottom
+  - [~] Staggered animation
 
 ### 3.6 CTA Section
-- [ ] Create `pages/home/sections/cta.component.ts`
-  - [ ] Call-to-action text: "Let's work together" or "Interested in collaborating?"
-  - [ ] Buttons: "Get in Touch" + "Download Resume"
-  - [ ] Background accent color or subtle gradient
-  - [ ] Clean, centered layout
+- [x] Create `pages/home/sections/cta.component.ts`
+  - [x] Call-to-action text: "Interested in collaborating?"
+  - [x] Buttons: "Get in Touch" + "Download Resume"
+  - [x] Background accent color or subtle gradient
+  - [x] Clean, centered layout
 
 ---
 
@@ -817,8 +817,8 @@ Use this file to track your progress. Check off items as you complete them.
 
 ### Phase Status
 - [x] Phase 1: Project Setup & Foundation 4/4 sections ✓
-- [ ] Phase 2: Layout & Core Infrastructure 0/6 sections
-- [ ] Phase 3: Home Page 0/6 sections
+- [x] Phase 2: Layout & Core Infrastructure 4/4 sections ✓
+- [x] Phase 3: Home Page 6/6 sections ✓
 - [ ] Phase 4: Content Pages 0/7 sections
 - [ ] Phase 5: API Development 0/5 sections
 - [ ] Phase 6: SEO & Performance 0/3 sections
@@ -828,8 +828,8 @@ Use this file to track your progress. Check off items as you complete them.
 
 ### Overall Progress
 **Total Tasks: ~200**
-**Completed: 4/9 phases (Phase 1 complete)**
-**Percentage: ~10%**
+**Completed: 3/9 phases fully complete (Phases 1, 2, and 3 complete)**
+**Percentage: ~33%**
 
 **Estimated Timeline:**
 - Week 1: Setup + Layout + Home page
@@ -851,6 +851,16 @@ Use this file to track your progress. Check off items as you complete them.
 - Phase 1.2: NestJS API Setup ✓
 - Phase 1.3: Angular Frontend Setup ✓
 - Phase 1.4: Content Pipeline Setup ✓
+- Phase 2.1: Angular App Configuration ✓
+- Phase 2.2: Core Services ✓
+- Phase 2.3: Layout Components ✓
+- Phase 2.4: Shared Components ✓
+- Phase 3.1: Home Page Component ✓
+- Phase 3.2: Hero Section ✓
+- Phase 3.3: Featured Projects Section ✓
+- Phase 3.4: Skills Overview Section ✓
+- Phase 3.5: Latest Blog Posts Section ✓
+- Phase 3.6: CTA Section ✓
 
 ### Design Inspiration
 - (Add portfolio sites you like for reference)

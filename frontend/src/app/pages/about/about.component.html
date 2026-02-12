@@ -1,0 +1,110 @@
+<section class="mx-auto max-w-4xl px-6 py-20">
+    <app-section-heading
+        title="About Me"
+        subtitle="Full-stack developer passionate about building modern web applications."
+    />
+
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
+        <div class="lg:col-span-2">
+            <div class="prose prose-invert max-w-none prose-headings:text-[#fafafa] prose-p:text-[#a1a1aa] prose-strong:text-[#fafafa]">
+                <p class="text-lg leading-relaxed">
+                    Hi, I'm Ignacio, a full-stack developer with over 5 years of experience building
+                    modern web applications. I specialize in TypeScript, Angular, and Node.js, with a
+                    focus on creating performant, accessible, and user-friendly interfaces.
+                </p>
+
+                <h2 class="mt-8 text-xl font-semibold text-[#fafafa]">What I Do</h2>
+                <p>
+                    I design and build complete web applications from the ground up. My expertise
+                    spans both frontend and backend development, allowing me to create cohesive
+                    solutions that deliver exceptional user experiences while maintaining clean,
+                    scalable codebases.
+                </p>
+
+                <h2 class="mt-8 text-xl font-semibold text-[#fafafa]">Current Focus</h2>
+                <p>
+                    Currently, I'm diving deep into microservices architecture and exploring the
+                    latest features in Angular and NestJS. I'm also passionate about developer
+                    experience and building tools that make development more efficient.
+                </p>
+
+                <h2 class="mt-8 text-xl font-semibold text-[#fafafa]">Beyond Code</h2>
+                <p>
+                    When I'm not coding, you can find me exploring new technologies, contributing to
+                    open-source projects, or writing about my experiences on this blog. I believe in
+                    continuous learning and sharing knowledge with the community.
+                </p>
+            </div>
+
+            <div class="mt-10 flex flex-wrap gap-3">
+                <a
+                    href="https://github.com/yourusername"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex h-11 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                >
+                    <lucide-icon [img]="icons.Github" [size]="18" />
+                    GitHub
+                </a>
+                <a
+                    href="https://linkedin.com/in/yourusername"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex h-11 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                >
+                    <lucide-icon [img]="icons.Linkedin" [size]="18" />
+                    LinkedIn
+                </a>
+                <a
+                    routerLink="/contact"
+                    class="inline-flex h-11 items-center gap-2 rounded-md bg-[#3b82f6] px-5 text-sm font-medium text-white transition-colors hover:bg-[#2563eb]"
+                >
+                    <lucide-icon [img]="icons.Mail" [size]="18" />
+                    Get in Touch
+                </a>
+                <a
+                    href="/assets/resume.pdf"
+                    download
+                    class="inline-flex h-11 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                >
+                    <lucide-icon [img]="icons.FileText" [size]="18" />
+                    Resume
+                </a>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1">
+            <div class="sticky top-24 space-y-6">
+                <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-6">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+                        Experience
+                    </h3>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <p class="font-medium text-[#fafafa]">5+ Years</p>
+                            <p class="text-sm text-[#71717a]">Professional Development</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-[#fafafa]">Full-Stack</p>
+                            <p class="text-sm text-[#71717a]">Frontend & Backend</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-6">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+                        Location
+                    </h3>
+                    <p class="mt-4 text-[#a1a1aa]">Remote / Worldwide</p>
+                </div>
+
+                <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-6">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+                        Availability
+                    </h3>
+                    <p class="mt-4 text-[#a1a1aa]">Open to opportunities</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

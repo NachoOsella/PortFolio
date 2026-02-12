@@ -1,0 +1,83 @@
+<div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+    <!-- Toolbar -->
+    <div class="flex items-center gap-1 border-b border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-700 dark:bg-gray-800">
+        <button
+            type="button"
+            (click)="insertMarkdown('**', '**')"
+            class="toolbar-btn"
+            title="Bold"
+            aria-label="Bold"
+        >
+            <lucide-icon [img]="icons.Bold" [size]="16" />
+        </button>
+        <button
+            type="button"
+            (click)="insertMarkdown('*', '*')"
+            class="toolbar-btn"
+            title="Italic"
+            aria-label="Italic"
+        >
+            <lucide-icon [img]="icons.Italic" [size]="16" />
+        </button>
+        <button
+            type="button"
+            (click)="insertMarkdown('`', '`')"
+            class="toolbar-btn"
+            title="Inline Code"
+            aria-label="Inline code"
+        >
+            <lucide-icon [img]="icons.Code" [size]="16" />
+        </button>
+        <button
+            type="button"
+            (click)="insertMarkdown('[', '](url)')"
+            class="toolbar-btn"
+            title="Link"
+            aria-label="Insert link"
+        >
+            <lucide-icon [img]="icons.Link" [size]="16" />
+        </button>
+        <button
+            type="button"
+            (click)="insertMarkdown('## ', '')"
+            class="toolbar-btn"
+            title="Heading"
+            aria-label="Heading"
+        >
+            <lucide-icon [img]="icons.Heading" [size]="16" />
+        </button>
+        <button
+            type="button"
+            (click)="insertMarkdown('- ', '')"
+            class="toolbar-btn"
+            title="List"
+            aria-label="List"
+        >
+            <lucide-icon [img]="icons.List" [size]="16" />
+        </button>
+        <button
+            type="button"
+            (click)="insertMarkdown('> ', '')"
+            class="toolbar-btn"
+            title="Quote"
+            aria-label="Quote"
+        >
+            <lucide-icon [img]="icons.Quote" [size]="16" />
+        </button>
+
+        <span class="ml-auto text-xs text-gray-500 dark:text-gray-400">
+            {{ wordCount }} words
+        </span>
+    </div>
+
+    <!-- Textarea -->
+    <textarea
+        #textareaRef
+        [value]="content()"
+        (input)="onInput($event)"
+        (keydown)="onKeydown($event)"
+        class="editor-textarea w-full resize-y bg-white p-4 font-mono text-sm text-gray-900 outline-none dark:bg-gray-900 dark:text-gray-100"
+        rows="20"
+        placeholder="Write your markdown content here..."
+    ></textarea>
+</div>

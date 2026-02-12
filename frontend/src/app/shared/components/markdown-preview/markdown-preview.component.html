@@ -1,0 +1,12 @@
+<div class="markdown-preview overflow-auto rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
+    @if (renderedHtml()) {
+        <article
+            class="prose prose-gray dark:prose-invert max-w-none"
+            [innerHTML]="renderedHtml()"
+        ></article>
+    } @else {
+        <p class="text-sm italic text-gray-400 dark:text-gray-500">
+            Nothing to preview yet. Start writing markdown...
+        </p>
+    }
+</div>

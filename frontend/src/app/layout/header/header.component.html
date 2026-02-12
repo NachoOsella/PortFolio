@@ -1,0 +1,87 @@
+<header class="site-header sticky top-0 z-50" [class.header-scrolled]="scrolled()">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <a routerLink="/" class="text-lg font-semibold tracking-tight text-[#fafafa]">
+            Nacho<span class="text-[#3b82f6]">.</span>dev
+        </a>
+
+        <nav class="hidden items-center gap-8 md:flex" aria-label="Primary">
+            @for (link of navLinks; track link.path) {
+                <a
+                    [routerLink]="link.path"
+                    routerLinkActive="nav-active"
+                    [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+                    class="nav-link"
+                >
+                    {{ link.label }}
+                </a>
+            }
+        </nav>
+
+        <div class="flex items-center gap-3">
+            <a
+                href="/assets/resume.pdf"
+                download
+                class="hidden h-9 items-center gap-2 rounded-md border border-white/10 px-4 text-sm font-medium text-[#fafafa] transition-colors hover:border-white/20 hover:bg-white/[0.03] md:inline-flex"
+            >
+                <lucide-icon [img]="icons.Download" [size]="16" />
+                Resume
+            </a>
+
+            <button
+                (click)="toggleTheme()"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+            >
+                <lucide-icon [img]="isDark() ? icons.Sun : icons.Moon" [size]="18" />
+            </button>
+
+            <button
+                (click)="toggleMobileMenu()"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa] md:hidden"
+                [attr.aria-expanded]="mobileMenuOpen()"
+                [attr.aria-controls]="mobileNavId"
+                aria-label="Toggle mobile menu"
+            >
+                <lucide-icon [img]="mobileMenuOpen() ? icons.X : icons.Menu" [size]="18" />
+            </button>
+        </div>
+    </div>
+
+    <div
+        class="mobile-backdrop md:hidden"
+        [class.mobile-backdrop-open]="mobileMenuOpen()"
+        (click)="closeMobileMenu()"
+        aria-hidden="true"
+    ></div>
+
+    <aside
+        [id]="mobileNavId"
+        class="mobile-panel md:hidden"
+        [class.mobile-panel-open]="mobileMenuOpen()"
+        [attr.aria-hidden]="!mobileMenuOpen()"
+        aria-label="Mobile navigation"
+    >
+        <nav class="flex flex-col gap-1 p-4 pt-20">
+            @for (link of navLinks; track link.path) {
+                <a
+                    [routerLink]="link.path"
+                    routerLinkActive="nav-active-mobile"
+                    [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+                    (click)="closeMobileMenu()"
+                    class="inline-flex h-11 items-center rounded-md px-4 text-sm font-medium text-[#a1a1aa] transition-colors hover:bg-white/[0.03] hover:text-[#fafafa]"
+                >
+                    {{ link.label }}
+                </a>
+            }
+
+            <a
+                href="/assets/resume.pdf"
+                download
+                class="mt-4 inline-flex h-11 items-center gap-2 rounded-md border border-white/10 px-4 text-sm font-medium text-[#fafafa] transition-colors hover:border-white/20"
+            >
+                <lucide-icon [img]="icons.Download" [size]="16" />
+                Download Resume
+            </a>
+        </nav>
+    </aside>
+</header>

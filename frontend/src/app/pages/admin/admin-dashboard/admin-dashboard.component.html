@@ -1,0 +1,121 @@
+<section class="mx-auto max-w-6xl px-6 py-20">
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-3xl font-semibold tracking-tight text-[#fafafa]">Admin Dashboard</h1>
+            <p class="mt-1 text-[#71717a]">Manage your blog posts</p>
+        </div>
+        <div class="flex gap-3">
+            <a
+                routerLink="/admin/new"
+                class="inline-flex h-11 items-center gap-2 rounded-md bg-[#3b82f6] px-5 text-sm font-medium text-white transition-colors hover:bg-[#2563eb]"
+            >
+                <lucide-icon [img]="icons.Plus" [size]="16" />
+                New Post
+            </a>
+            <button
+                (click)="logout()"
+                class="inline-flex h-11 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+            >
+                <lucide-icon [img]="icons.LogOut" [size]="16" />
+                Logout
+            </button>
+        </div>
+    </div>
+
+    @if (isLoading()) {
+        <div class="space-y-4">
+            @for (i of [1, 2, 3]; track i) {
+                <div class="h-24 animate-pulse rounded-lg bg-[#18181b]"></div>
+            }
+        </div>
+    } @else if (posts().length === 0) {
+        <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-12 text-center">
+            <p class="text-[#71717a]">No posts yet.</p>
+            <a
+                routerLink="/admin/new"
+                class="mt-4 inline-flex h-11 items-center gap-2 rounded-md bg-[#3b82f6] px-5 text-sm font-medium text-white transition-colors hover:bg-[#2563eb]"
+            >
+                <lucide-icon [img]="icons.Plus" [size]="16" />
+                Create your first post
+            </a>
+        </div>
+    } @else {
+        <div class="space-y-4">
+            @for (post of posts(); track post.slug) {
+                <div class="flex items-center justify-between rounded-lg border border-white/[0.06] bg-[#18181b] p-4 sm:p-6">
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-3">
+                            <h2 class="truncate text-lg font-medium text-[#fafafa]">{{ post.title }}</h2>
+                            @if (post.published) {
+                                <span class="flex-shrink-0 rounded bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-400">
+                                    Published
+                                </span>
+                            } @else {
+                                <span class="flex-shrink-0 rounded bg-yellow-500/10 px-2 py-0.5 text-xs font-medium text-yellow-400">
+                                    Draft
+                                </span>
+                            }
+                        </div>
+                        <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[#71717a]">
+                            <span>{{ post.date | date: 'mediumDate' }}</span>
+                            <span class="text-[#52525b]">·</span>
+                            <span>{{ post.readingTime }}</span>
+                            <span class="text-[#52525b]">·</span>
+                            <div class="flex gap-1">
+                                @for (tag of post.tags.slice(0, 3); track tag) {
+                                    <span class="rounded bg-white/[0.03] px-1.5 py-0.5 text-xs">{{ tag }}</span>
+                                }
+                                @if (post.tags.length > 3) {
+                                    <span class="text-xs text-[#52525b]">+{{ post.tags.length - 3 }}</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ml-4 flex items-center gap-2">
+                        @if (deleteConfirm() === post.slug) {
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-[#71717a]">Delete?</span>
+                                <button
+                                    (click)="deletePost(post.slug)"
+                                    class="inline-flex h-9 items-center rounded-md bg-red-500/10 px-3 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
+                                >
+                                    Yes
+                                </button>
+                                <button
+                                    (click)="cancelDelete()"
+                                    class="inline-flex h-9 items-center rounded-md border border-white/10 px-3 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20"
+                                >
+                                    No
+                                </button>
+                            </div>
+                        } @else {
+                            <a
+                                [routerLink]="['/blog', post.slug]"
+                                target="_blank"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-[#71717a] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                                aria-label="View post"
+                            >
+                                <lucide-icon [img]="icons.ExternalLink" [size]="16" />
+                            </a>
+                            <a
+                                [routerLink]="['/admin/edit', post.slug]"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-[#71717a] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                                aria-label="Edit post"
+                            >
+                                <lucide-icon [img]="icons.Edit" [size]="16" />
+                            </a>
+                            <button
+                                (click)="confirmDelete(post.slug)"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-[#71717a] transition-colors hover:border-red-500/50 hover:text-red-400"
+                                aria-label="Delete post"
+                            >
+                                <lucide-icon [img]="icons.Trash2" [size]="16" />
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>
