@@ -15,7 +15,7 @@ Use this file to track your progress. Check off items as you complete them.
 ### 1.1 Repository & Workspace Setup
 - [x] Create project root directory
 - [x] Initialize Git repository
-- [x] Create `.gitignore` (node_modules, dist, .env, generated/, .vercel/)
+- [x] Create `.gitignore` (node_modules, dist, .env, generated/)
 - [x] Initialize npm workspace (`npm init` + configure workspaces in root `package.json`)
 - [x] Create workspace directories:
   - [x] `api/` (NestJS backend)
@@ -519,7 +519,7 @@ Use this file to track your progress. Check off items as you complete them.
 - [ ] Add request logging with @nestjs/common Logger
 - [ ] Configure global validation pipe
 - [ ] Test all endpoints end-to-end
-- [ ] Configure for Vercel serverless deployment
+- [ ] Configure for traditional server deployment
 
 ---
 
@@ -656,37 +656,48 @@ Use this file to track your progress. Check off items as you complete them.
 
 ## Phase 8: Deployment
 
-### 8.1 Vercel Configuration
-- [ ] Create `vercel.json`:
-  - [ ] Build command: `npm run build`
-  - [ ] Output directory configuration
-  - [ ] API function routing (`/api/*`)
-  - [ ] SPA fallback rewrites
-- [ ] Configure Vercel project:
-  - [ ] Connect GitHub repository
-  - [ ] Set framework preset (or custom)
-  - [ ] Configure environment variables:
-    - [ ] `RESEND_API_KEY`
-    - [ ] `CONTACT_EMAIL`
-    - [ ] `SITE_URL`
-    - [ ] `ADMIN_PASSWORD_HASH` (bcrypt hash)
-    - [ ] `ADMIN_JWT_SECRET` (random string)
-    - [ ] `ADMIN_SESSION_HOURS` (default: 24)
+### 8.1 Server Configuration
+- [ ] Provision server (VPS/VM) with Ubuntu/Debian
+- [ ] Install runtime stack:
+  - [ ] Docker Engine + Docker Compose plugin
+  - [ ] Caddy (containerized reverse proxy)
+- [ ] Create deployment files:
+  - [ ] `api/Dockerfile` (build + run NestJS in production mode)
+  - [ ] `frontend/Dockerfile` (build + run Angular SSR server)
+  - [ ] `deploy/docker-compose.yml` (caddy + frontend + api services)
+  - [ ] `deploy/caddy/Caddyfile`
+  - [ ] `deploy/.env.production` (server env variables)
+- [ ] Configure environment variables on server:
+  - [ ] `RESEND_API_KEY`
+  - [ ] `CONTACT_EMAIL`
+  - [ ] `SITE_URL`
+  - [ ] `ADMIN_PASSWORD_HASH` (bcrypt hash)
+  - [ ] `ADMIN_JWT_SECRET` (random string)
+  - [ ] `ADMIN_SESSION_HOURS` (default: 24)
+  - [ ] `GITHUB_TOKEN` (optional, admin git integration)
+  - [ ] `GITHUB_REPO` (optional)
+  - [ ] `GITHUB_BRANCH` (optional)
 - [ ] Test build locally: `npm run build`
   - [ ] Content pipeline runs
   - [ ] API bundles correctly
   - [ ] Angular builds with SSR
-- [ ] Deploy to Vercel
+- [ ] Run first deployment:
+  - [ ] `docker compose -f deploy/docker-compose.yml up -d --build`
+  - [ ] Verify containers are healthy (`docker compose ps`, `docker logs`)
+- [ ] Configure Caddy reverse proxy routes:
+  - [ ] `/` → frontend SSR container
+  - [ ] `/api/*` → api container
+- [ ] Verify automatic HTTPS certificate issuance in Caddy
 - [ ] Verify all pages render correctly
 - [ ] Verify API endpoints work
 - [ ] Test contact form submission on production
 
 ### 8.2 Custom Domain
 - [ ] Purchase domain (if needed)
-- [ ] Configure DNS in Vercel:
-  - [ ] Add custom domain
-  - [ ] Configure DNS records (CNAME or A)
-  - [ ] SSL certificate (automatic via Vercel)
+- [ ] Configure DNS for your server:
+  - [ ] Point `@` and/or `www` to server IP (A/AAAA records)
+  - [ ] Point `api` subdomain to same server or dedicated API server
+  - [ ] Verify DNS is ready for Caddy automatic HTTPS
 - [ ] Update `SITE_URL` environment variable
 - [ ] Update canonical URLs
 - [ ] Verify HTTPS works
@@ -710,12 +721,18 @@ Use this file to track your progress. Check off items as you complete them.
 - [ ] Test committing posts via admin dashboard:
   - [ ] Create test post in admin
   - [ ] Verify commit appears in GitHub
-  - [ ] Verify Vercel auto-deploys
+  - [ ] Verify CI/CD deploy or server webhook runs
   - [ ] Verify new post appears on site
 
 ### 8.4 Analytics & Monitoring
-- [ ] Enable Vercel Analytics (free tier)
-- [ ] Enable Vercel Speed Insights (optional)
+- [ ] Configure basic uptime monitoring (UptimeRobot/Better Stack)
+- [ ] Configure server logs:
+  - [ ] Caddy access + error logs
+  - [ ] Container logs (`docker compose logs api frontend`)
+- [ ] Configure backup & recovery:
+  - [ ] Backup `deploy/.env.production` securely
+  - [ ] Backup TLS certificates or document re-issuance steps
+  - [ ] Document rollback command (`docker compose ... up -d --build` on previous commit)
 - [ ] Set up Google Search Console:
   - [ ] Verify domain ownership
   - [ ] Submit sitemap.xml
@@ -724,7 +741,7 @@ Use this file to track your progress. Check off items as you complete them.
   - [ ] Add tracking code
   - [ ] Configure privacy-respecting settings
 
-### 8.4 Final Testing
+### 8.5 Final Testing
 - [ ] Test all pages on production URL
 - [ ] Test contact form end-to-end
 - [ ] Test dark/light mode
@@ -789,7 +806,7 @@ Use this file to track your progress. Check off items as you complete them.
   - [ ] New post commits to repo
   - [ ] Edited post updates file
   - [ ] Deleted post removes file
-  - [ ] Vercel auto-deploys on commit
+  - [ ] Deploy pipeline updates production on commit
 
 ### 9.3 Final Polish
 - [ ] Proofread all content
@@ -805,7 +822,7 @@ Use this file to track your progress. Check off items as you complete them.
 
 ### 9.4 Launch
 - [ ] Push final changes to GitHub
-- [ ] Verify Vercel auto-deploys
+- [ ] Verify deploy pipeline or manual deploy script works
 - [ ] Test production site one final time
 - [ ] Update LinkedIn with portfolio URL
 - [ ] Update GitHub profile README with portfolio link
@@ -872,7 +889,7 @@ Use this file to track your progress. Check off items as you complete them.
 - Tailwind CSS: https://tailwindcss.com
 - Resend: https://resend.com/docs
 - Shiki: https://shiki.matsu.io
-- Vercel Angular: https://vercel.com/docs/frameworks/angular
+- Docker Compose: https://docs.docker.com/compose/
 
 ---
 

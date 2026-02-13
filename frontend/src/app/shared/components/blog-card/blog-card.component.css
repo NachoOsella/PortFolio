@@ -4,24 +4,16 @@
 }
 
 .blog-card {
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.01), transparent);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 0 1px transparent;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #282828;
+    transition: border-color 180ms ease-out, background-color 180ms ease-out;
 }
 
 .blog-card:hover {
-    border-color: rgba(59, 130, 246, 0.3);
-    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1),
-                0 10px 30px -10px rgba(0, 0, 0, 0.5);
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.1);
+    background: #32302f;
 }
 
 .pattern-bg {
-    background-color: #09090b;
-    background-image: 
-        radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%),
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 24px 24px, 24px 24px;
+    background-color: #1d2021;
 }

@@ -1,8 +1,10 @@
 <button
     (click)="scrollToTop()"
-    class="back-to-top fixed bottom-6 right-6 z-40 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-slate-600 bg-slate-900/90 text-slate-100 shadow-xl transition-all duration-300 hover:border-cyan-400 hover:text-cyan-200"
+    class="back-to-top fixed bottom-6 right-6 z-40 inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/[0.05] bg-[#282828] text-[#d4be98] transition-colors hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]"
     [class.back-to-top-visible]="visible()"
     [attr.aria-hidden]="!visible()"
+    [attr.tabindex]="visible() ? '0' : '-1'"
+    [disabled]="!visible()"
     aria-label="Back to top"
 >
     <lucide-icon [img]="icons.ChevronUp" [size]="20" />

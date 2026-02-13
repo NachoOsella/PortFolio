@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../core/services/seo.service';
 import { SectionHeadingComponent } from '../../shared/components/section-heading/section-heading.component';
-import { Github, Linkedin, Mail, FileText, LucideAngularModule } from 'lucide-angular';
+import { Github, Mail, FileText, LucideAngularModule } from 'lucide-angular';
 
 @Component({
     selector: 'app-about',
@@ -15,7 +15,7 @@ import { Github, Linkedin, Mail, FileText, LucideAngularModule } from 'lucide-an
 export class AboutComponent implements OnInit {
     private readonly seo = inject(SeoService);
 
-    icons = { Github, Linkedin, Mail, FileText };
+    icons = { Github, Mail, FileText };
 
     ngOnInit(): void {
         this.seo.updateTitle('About | Nacho.dev');

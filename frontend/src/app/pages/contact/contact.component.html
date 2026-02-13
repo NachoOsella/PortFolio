@@ -1,4 +1,4 @@
-<section class="mx-auto max-w-4xl px-6 py-20">
+<section class="section-block mx-auto max-w-4xl px-6 py-20">
     <app-section-heading
         title="Get in Touch"
         subtitle="Have a project in mind or want to collaborate? I'd love to hear from you."
@@ -7,8 +7,8 @@
     <div class="grid grid-cols-1 gap-12 lg:grid-cols-2">
         <div>
             @if (submitStatus() === 'success') {
-                <div class="rounded-lg border border-green-500/20 bg-green-500/10 p-6">
-                    <p class="text-green-400">{{ submitMessage() }}</p>
+                <div class="rounded-md border border-[#a9b665]/30 bg-[#282828] p-6">
+                    <p class="text-[#a9b665]">{{ submitMessage() }}</p>
                 </div>
             } @else {
                 <form (ngSubmit)="onSubmit()" class="space-y-6">
@@ -22,7 +22,7 @@
                     />
 
                     <div>
-                        <label for="name" class="block text-sm font-medium text-[#a1a1aa]">
+                        <label for="name" class="block text-sm font-medium text-[#928374]">
                             Name
                         </label>
                         <input
@@ -33,7 +33,7 @@
                             (input)="updateField('name', $any($event.target).value)"
                             required
                             minlength="2"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
                             [class.border-red-500]="errors()['name']"
                             placeholder="Your name"
                         />
@@ -43,7 +43,7 @@
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-[#a1a1aa]">
+                        <label for="email" class="block text-sm font-medium text-[#928374]">
                             Email
                         </label>
                         <input
@@ -53,7 +53,7 @@
                             [value]="form().email"
                             (input)="updateField('email', $any($event.target).value)"
                             required
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
                             [class.border-red-500]="errors()['email']"
                             placeholder="your@email.com"
                         />
@@ -63,7 +63,7 @@
                     </div>
 
                     <div>
-                        <label for="subject" class="block text-sm font-medium text-[#a1a1aa]">
+                        <label for="subject" class="block text-sm font-medium text-[#928374]">
                             Subject
                         </label>
                         <input
@@ -74,7 +74,7 @@
                             (input)="updateField('subject', $any($event.target).value)"
                             required
                             minlength="5"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
                             [class.border-red-500]="errors()['subject']"
                             placeholder="What's this about?"
                         />
@@ -84,7 +84,7 @@
                     </div>
 
                     <div>
-                        <label for="message" class="block text-sm font-medium text-[#a1a1aa]">
+                        <label for="message" class="block text-sm font-medium text-[#928374]">
                             Message
                         </label>
                         <textarea
@@ -95,7 +95,7 @@
                             required
                             minlength="20"
                             rows="6"
-                            class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#fafafa] placeholder:text-[#52525b] transition-colors focus:border-[#3b82f6] focus:outline-none"
+                            class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
                             [class.border-red-500]="errors()['message']"
                             placeholder="Tell me about your project or question..."
                         ></textarea>
@@ -105,15 +105,15 @@
                     </div>
 
                     @if (submitStatus() === 'error') {
-                        <div class="rounded-lg border border-red-500/20 bg-red-500/10 p-4">
-                            <p class="text-sm text-red-400">{{ submitMessage() }}</p>
+                        <div class="rounded-md border border-[#ea6962]/30 bg-[#282828] p-4">
+                            <p class="text-sm text-[#ea6962]">{{ submitMessage() }}</p>
                         </div>
                     }
 
                     <button
                         type="submit"
                         [disabled]="isSubmitting()"
-                        class="inline-flex h-11 items-center gap-2 rounded-md bg-[#3b82f6] px-6 text-sm font-medium text-white transition-colors hover:bg-[#2563eb] disabled:cursor-not-allowed disabled:opacity-50"
+                        class="inline-flex h-11 items-center gap-2 rounded-md bg-[#a9b665] px-6 text-sm font-medium text-[#1d2021] transition-colors hover:bg-[#89b482] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         @if (isSubmitting()) {
                             <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -131,50 +131,50 @@
         </div>
 
         <div class="space-y-8">
-            <div class="glass-card rounded-xl p-6">
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+            <div class="glass-card rounded-md p-6">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#928374]">
                     Email
                 </h3>
                 <a
                     href="mailto:hello@nacho.dev"
-                    class="mt-3 inline-flex items-center gap-2 text-[#a1a1aa] transition-colors hover:text-[#3b82f6]"
+                    class="mt-3 inline-flex items-center gap-2 text-[#d4be98] transition-colors hover:text-[#7daea3]"
                 >
                     <lucide-icon [img]="icons.Mail" [size]="18" />
                     hello@nacho.dev
                 </a>
             </div>
 
-            <div class="glass-card rounded-xl p-6">
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+            <div class="glass-card rounded-md p-6">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#928374]">
                     Social
                 </h3>
                 <div class="mt-3 flex flex-col gap-3">
                     <a
-                        href="https://github.com/yourusername"
+                        href="https://github.com/NachoOsella"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 text-[#a1a1aa] transition-colors hover:text-[#fafafa]"
+                        class="inline-flex items-center gap-2 text-[#d4be98] transition-colors hover:text-[#d4be98]"
                     >
                         <lucide-icon [img]="icons.Github" [size]="18" />
                         GitHub
                     </a>
                     <a
-                        href="https://linkedin.com/in/yourusername"
+                        href="mailto:hello@nacho.dev"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 text-[#a1a1aa] transition-colors hover:text-[#fafafa]"
+                        class="inline-flex items-center gap-2 text-[#d4be98] transition-colors hover:text-[#d4be98]"
                     >
-                        <lucide-icon [img]="icons.Linkedin" [size]="18" />
-                        LinkedIn
+                        <lucide-icon [img]="icons.Mail" [size]="18" />
+                        Email
                     </a>
                 </div>
             </div>
 
-            <div class="glass-card rounded-xl p-6">
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+            <div class="glass-card rounded-md p-6">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-[#928374]">
                     Response Time
                 </h3>
-                <p class="mt-3 text-[#a1a1aa]">
+                <p class="mt-3 text-[#928374]">
                     I typically respond within 24-48 hours. For urgent matters, please mention it in the subject line.
                 </p>
             </div>

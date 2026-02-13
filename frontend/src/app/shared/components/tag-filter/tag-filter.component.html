@@ -1,11 +1,11 @@
 <div class="flex flex-wrap gap-2">
     <button
         (click)="selectTag('all')"
-        class="min-h-11 rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+        class="min-h-10 rounded-[6px] border px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wide transition-colors"
         [class]="
             selectedTag() === 'all'
-                ? 'bg-cyan-500 text-slate-950'
-                : 'border border-slate-700 bg-slate-900 text-slate-300 hover:border-cyan-500/60'
+                ? 'border-transparent bg-[#3a3735] text-[#d4be98]'
+                : 'border-white/[0.05] bg-[#282828] text-[#d4be98] hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]'
         "
     >
         All
@@ -13,11 +13,11 @@
     @for (tag of visibleTags(); track tag) {
         <button
             (click)="selectTag(tag)"
-            class="min-h-11 rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+            class="min-h-10 rounded-[6px] border px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wide transition-colors"
             [class]="
                 selectedTag() === tag
-                    ? 'bg-cyan-500 text-slate-950'
-                    : 'border border-slate-700 bg-slate-900 text-slate-300 hover:border-cyan-500/60'
+                    ? 'border-transparent bg-[#3a3735] text-[#d4be98]'
+                    : 'border-white/[0.05] bg-[#282828] text-[#d4be98] hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]'
             "
         >
             {{ tag }}

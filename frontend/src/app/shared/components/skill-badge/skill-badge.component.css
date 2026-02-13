@@ -3,12 +3,5 @@
 }
 
 .progress-fill {
-    animation: progress-fill-anim 0.8s ease-out forwards;
-    width: 0;
-}
-
-@keyframes progress-fill-anim {
-    from {
-        width: 0;
-    }
+    transition: width 180ms ease-out;
 }

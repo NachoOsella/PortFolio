@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, Github, Linkedin, Mail, Heart } from 'lucide-angular';
+import { LucideAngularModule, Github, Mail } from 'lucide-angular';
 
 @Component({
     selector: 'app-footer',
@@ -12,8 +12,6 @@ import { LucideAngularModule, Github, Linkedin, Mail, Heart } from 'lucide-angul
 export class FooterComponent {
     readonly currentYear = new Date().getFullYear();
 
-    readonly icons = { Github, Linkedin, Mail, Heart };
-
     readonly socialLinks = [
         {
             label: 'GitHub',
@@ -21,13 +19,8 @@ export class FooterComponent {
             icon: Github,
         },
         {
-            label: 'LinkedIn',
-            href: 'https://linkedin.com/in/',
-            icon: Linkedin,
-        },
-        {
             label: 'Email',
-            href: 'mailto:contact@example.com',
+            href: 'mailto:hello@nacho.dev',
             icon: Mail,
         },
     ];

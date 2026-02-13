@@ -46,42 +46,42 @@ Build a modern, performant developer portfolio with an integrated blog section. 
 - Build script processes markdown → JSON at build time
 
 ### Deployment
-- **Platform:** Vercel
-- **Angular SSR:** Deployed via `@vercel/angular` or as Node.js serverless
-- **API Routes:** NestJS endpoints as Vercel serverless functions
-- **Domain:** Custom domain with Vercel DNS
-- **Analytics:** Vercel Analytics (free tier)
+- **Platform:** Traditional Linux server (VPS/VM) with Docker Compose
+- **Frontend:** Angular SSR served behind Caddy
+- **API:** NestJS running as a persistent Node.js process/container
+- **Domain:** Custom domain with DNS pointing to the server IP
+- **SSL:** Automatic HTTPS via Caddy (Let's Encrypt)
 
 ---
 
 ## Architecture Overview
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Vercel Edge Network                   │
-│              CDN + SSL + Custom Domain                   │
-└───────────────┬───────────────────┬─────────────────────┘
-                │                   │
-    ┌───────────▼──────┐  ┌────────▼──────────┐
-    │  Angular SSR     │  │  NestJS API       │
-    │  (Serverless)    │  │  (Serverless)     │
-    │                  │  │                   │
-    │  • Home/Hero     │  │  /api/contact     │
-    │  • Projects      │  │  /api/blog        │
-    │  • Blog listing  │  │  /api/projects    │
-    │  • Blog post     │  │                   │
-    │  • About         │  │  (Vercel funcs)   │
-    │  • Contact       │  │                   │
-    └───────────┬──────┘  └────────┬──────────┘
-                │                   │
-    ┌───────────▼──────────────────▼──────────┐
-    │              Content Layer               │
-    │                                          │
-    │  content/blog/*.md   (Markdown posts)    │
-    │  content/projects.json (Project data)    │
-    │  content/skills.json  (Skills data)      │
-    │  assets/resume.pdf    (Resume file)      │
-    └─────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│              Linux Server (VPS / VM / Bare Metal)       │
+│                  Docker Compose + Reverse Proxy          │
+└───────────────┬──────────────────────┬───────────────────┘
+                │                      │
+    ┌───────────▼─────────┐   ┌────────▼──────────┐
+    │   Angular Frontend  │   │    NestJS API     │
+    │      (Caddy)        │   │    (Container)    │
+    │                     │   │                   │
+    │  • Home/Hero        │   │  /api/contact     │
+    │  • Projects         │   │  /api/blog        │
+    │  • Blog listing     │   │  /api/projects    │
+    │  • Blog post        │   │  /api/admin/*     │
+    │  • About            │   │                   │
+    │  • Contact          │   │                   │
+    └───────────┬─────────┘   └────────┬──────────┘
+                │                      │
+    ┌───────────▼──────────────────────▼──────────┐
+    │                  Content Layer               │
+    │                                              │
+    │ content/blog/*.md    (Markdown posts)        │
+    │ content/projects.json (Project data)         │
+    │ content/skills.json   (Skills data)          │
+    │ assets/resume.pdf     (Resume file)          │
+    └──────────────────────────────────────────────┘
 ```
 
 ### Content Pipeline (Build-Time)
@@ -119,7 +119,7 @@ Markdown Files (.md)
 - Pre-processed HTML is faster than parsing on every request
 - Enables Angular SSR prerendering of blog pages
 - Syntax highlighting at build time (Shiki is expensive to run per-request)
-- Vercel serves the JSON from CDN edge
+- Generated JSON is served by your frontend server as static assets
 
 ---
 
@@ -258,7 +258,7 @@ portfolio/
 │       └── ...
 │
 ├── package.json                  # Workspace root
-├── vercel.json                   # Vercel deployment config
+├── deploy/                       # Docker Compose + Caddy deployment files
 ├── package-lock.json
 └── README.md
 ```
@@ -401,7 +401,7 @@ Some text about the implementation...
       "skills": [
         { "name": "Docker", "icon": "docker", "level": "intermediate" },
         { "name": "Git", "icon": "git", "level": "advanced" },
-        { "name": "Vercel", "icon": "vercel", "level": "intermediate" }
+        { "name": "Caddy", "icon": "caddy", "level": "intermediate" }
       ]
     }
   ]
@@ -730,12 +730,12 @@ content/blog/
 - Admin API creates/updates directories in `content/blog/`
 - Each post = one directory containing `index.md` + images
 - Trigger git commit + push via GitHub API
-- Vercel auto-deploys on git push
+- CI/CD pipeline deploys to the server on git push
 - *Pros:* Version control, free, organized assets, matches existing architecture
 - *Cons:* Delayed updates (requires rebuild)
 
 **Option B: Database + Build-time fetch**
-- Store posts in lightweight DB (Turso, PlanetScale, or Vercel Postgres)
+- Store posts in lightweight DB (Turso, PlanetScale, or PostgreSQL)
 - Store images in cloud storage (S3, Cloudinary)
 - Build script fetches posts from DB during build
 - *Pros:* Instant save, no git integration needed
@@ -744,8 +744,8 @@ content/blog/
 **Recommended: Option A with GitHub Integration**
 
 ```
-Admin writes post → API creates directory → GitHub API commits directory → 
-Vercel auto-deploys → New post live with all images
+Admin writes post → API creates directory → GitHub API commits directory →
+CI/CD deploy runs on server → New post live with all images
 ```
 
 ### Admin Security Considerations
@@ -764,7 +764,7 @@ Vercel auto-deploys → New post live with all images
 
 ## API Endpoints
 
-### NestJS API (serverless on Vercel)
+### NestJS API (persistent Node.js server)
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -932,24 +932,99 @@ xl: 1280px   /* Large desktop */
 
 ---
 
-## Vercel Deployment Configuration
+## Server Deployment Configuration
 
-### `vercel.json`
+### Deployment Goal
 
-```json
-{
-  "framework": null,
-  "buildCommand": "npm run build",
-  "outputDirectory": "frontend/dist/frontend/browser",
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "@vercel/node@latest"
+- Single Linux server running all services with Docker Compose
+- Caddy as reverse proxy with automatic TLS
+- No serverless runtimes
+- Frontend and backend run as persistent containers
+
+### Runtime Topology (Docker + Caddy)
+
+- `caddy` container:
+  - Public entrypoint (`80` / `443`)
+  - Routes `/` to frontend SSR container
+  - Routes `/api/*` to NestJS API container
+- `frontend` container:
+  - Runs Angular SSR server (`node dist/frontend/server/server.mjs`)
+  - Internal port: `4000`
+- `api` container:
+  - Runs NestJS API (`node dist/main.js`)
+  - Internal port: `3000`
+
+### Deployment Files
+
+Create a `deploy/` directory with:
+
+```
+deploy/
+├── docker-compose.yml
+├── caddy/
+│   └── Caddyfile
+└── .env.production
+```
+
+### Example `docker-compose.yml`
+
+```yaml
+services:
+  caddy:
+    image: caddy:2.10-alpine
+    container_name: portfolio-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - api
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: portfolio-frontend
+    env_file:
+      - ./deploy/.env.production
+    expose:
+      - "4000"
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: portfolio-api
+    env_file:
+      - ./deploy/.env.production
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:
+```
+
+### Example Caddy Routing (`Caddyfile`)
+
+```caddy
+yourdomain.com, www.yourdomain.com {
+    encode zstd gzip
+
+    handle /api/* {
+        reverse_proxy api:3000
     }
-  }
+
+    handle {
+        reverse_proxy frontend:4000
+    }
 }
 ```
 
@@ -958,16 +1033,39 @@ xl: 1280px   /* Large desktop */
 ```
 npm run build
   ├── 1. npm run build:content     # Process markdown → JSON
-  ├── 2. npm run build:api         # Bundle NestJS API for Vercel
+  ├── 2. npm run build:api         # Bundle NestJS API for Node runtime
   └── 3. npm run build:frontend    # ng build (SSR + prerender)
 ```
 
-### Environment Variables (Vercel)
+### Environment Variables (Server)
 
 ```
 RESEND_API_KEY=re_xxxx          # Email service
 CONTACT_EMAIL=your@email.com    # Where to receive emails
 SITE_URL=https://yourdomain.com # Canonical URL
+ADMIN_PASSWORD_HASH=...         # Bcrypt hash
+ADMIN_JWT_SECRET=...            # Strong random secret
+ADMIN_SESSION_HOURS=24          # Session expiration
+GITHUB_TOKEN=...                # Admin GitHub integration token (optional)
+GITHUB_REPO=user/repo           # Repo for content commits (optional)
+GITHUB_BRANCH=main              # Target branch (optional)
+```
+
+### Deployment Commands (Server)
+
+```bash
+# First-time setup
+docker compose -f deploy/docker-compose.yml up -d --build
+
+# Routine updates
+git pull
+npm install
+npm run build
+docker compose -f deploy/docker-compose.yml up -d --build
+
+# Health checks
+curl -f https://yourdomain.com/
+curl -f https://yourdomain.com/api/health
 ```
 
 ---
@@ -992,7 +1090,7 @@ SITE_URL=https://yourdomain.com # Canonical URL
 - [ ] Animations & transitions
 - [ ] Dark mode
 - [ ] Responsive testing
-- [ ] Vercel deployment
+- [ ] Server deployment (frontend + API + reverse proxy + SSL)
 - [ ] Performance optimization (Lighthouse 95+)
 
 ---
@@ -1010,13 +1108,13 @@ SITE_URL=https://yourdomain.com # Canonical URL
 - Blog content is static - no reason to parse markdown on every request
 - Enables prerendering all blog pages for maximum SEO
 - Syntax highlighting (Shiki) is too expensive to run per-request
-- Generated JSON files are served from Vercel's CDN edge
+- Generated JSON files are served by the frontend server
 
 **Why no database?**
 - Portfolio content doesn't need dynamic storage
 - Markdown files are version-controlled with git
 - Simpler deployment (no DB provisioning)
-- Free hosting on Vercel (no managed DB costs)
+- Lower operational complexity and low server cost
 
 **Why Angular SSR over prerendering only?**
 - SSR handles dynamic routes (future growth)

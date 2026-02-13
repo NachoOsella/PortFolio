@@ -1,8 +1,8 @@
 <div
-    class="skill-row group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-white/[0.02]"
+    class="skill-row group relative flex w-full items-center gap-3 rounded-[6px] border border-transparent px-3 py-2 transition-colors hover:border-white/[0.05] hover:bg-[#32302f]"
     [attr.title]="skill().name + ' - ' + skill().level"
 >
-    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10">
+    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] border border-white/[0.05] bg-[#3a3735]">
         <img
             [src]="iconUrl"
             [alt]="skill().name"
@@ -12,22 +12,22 @@
         />
         
         @if (imgError) {
-            <lucide-icon [img]="fallbackIcon" [size]="16" class="text-[#9ca3af]" />
+            <lucide-icon [img]="fallbackIcon" [size]="16" class="text-[#928374]" />
         }
     </div>
 
     <div class="min-w-0 flex-1">
         <div class="flex items-center justify-between">
-            <span class="truncate text-sm font-medium text-[#fafafa]">{{ skill().name }}</span>
+            <span class="truncate text-sm font-medium text-[#d4be98]">{{ skill().name }}</span>
             @if (showLevel()) {
-                <span class="text-xs text-[#71717a]">{{ levelValue }}%</span>
+                <span class="text-xs text-[#928374]">{{ levelValue }}%</span>
             }
         </div>
         
         @if (showLevel()) {
-            <div class="progress-track mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/[0.05]">
+            <div class="progress-track mt-1 h-1.5 w-full overflow-hidden rounded-[4px] bg-white/[0.05]">
                 <div 
-                    class="progress-fill h-full rounded-full bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]" 
+                    class="progress-fill h-full rounded-[4px] bg-[#89b482]" 
                     [style.width.%]="levelValue"
                 ></div>
             </div>

@@ -50,7 +50,7 @@
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #60a5fa;
+    color: #89b482;
 }
 
 .post-title {
@@ -61,7 +61,7 @@
 }
 
 .post-meta {
-    color: #a1a1aa;
+    color: #928374;
 }
 
 .post-meta-item {
@@ -71,7 +71,7 @@
 }
 
 .post-meta-dot {
-    color: #52525b;
+    color: #928374;
 }
 
 .post-tags {
@@ -86,14 +86,15 @@
 .post-tag {
     display: inline-flex;
     align-items: center;
-    border: 1px solid rgba(96, 165, 250, 0.22);
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(59, 130, 246, 0.16), rgba(59, 130, 246, 0.07));
-    padding: 0.34rem 0.72rem;
-    font-size: 0.73rem;
-    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    background: #3a3735;
+    padding: 0.3rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
     letter-spacing: 0.03em;
-    color: #c7ddff;
+    color: #928374;
 }
 
 .toc-shell {
@@ -112,7 +113,7 @@
     background: transparent;
     padding: 0.65rem 0.8rem;
     text-align: left;
-    color: #e4e4e7;
+    color: #d4be98;
     transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
@@ -122,7 +123,7 @@
 }
 
 .toc-mobile-toggle:focus-visible {
-    outline: 2px solid #3b82f6;
+    outline: 2px solid #7daea3;
     outline-offset: 2px;
 }
 
@@ -134,12 +135,12 @@
 }
 
 .toc-mobile-toggle-icon {
-    color: #a1a1aa;
+    color: #928374;
     transition: transform 0.22s ease, color 0.22s ease;
 }
 
 .toc-mobile-toggle-icon-open {
-    color: #93c5fd;
+    color: #a9b665;
     transform: rotate(180deg);
 }
 
@@ -151,12 +152,12 @@
     font-size: 0.92rem;
     font-weight: 500;
     line-height: 1.5;
-    color: #71717a;
+    color: #928374;
     transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
 }
 
 .toc-link:hover {
-    color: #d4d4d8;
+    color: #d4be98;
 }
 
 .toc-link::before {
@@ -173,12 +174,12 @@
 }
 
 .toc-link-active {
-    color: #dbeafe;
+    color: #a9b665;
     background: transparent;
 }
 
 .toc-link-active::before {
-    background: #3b82f6;
+    background: #7daea3;
     opacity: 1;
 }
 
@@ -189,12 +190,12 @@
 }
 
 .toc-link:focus-visible {
-    outline: 2px solid #3b82f6;
+    outline: 2px solid #7daea3;
     outline-offset: 2px;
 }
 
 .markdown-content {
-    color: #d4d4d8;
+    color: #d4be98;
     font-size: 1.05rem;
     line-height: 1.85;
 }
@@ -211,7 +212,7 @@
 .markdown-content h2,
 .markdown-content h3,
 .markdown-content h4 {
-    color: #fafafa;
+    color: #d4be98;
     font-weight: 700;
     line-height: 1.25;
     letter-spacing: -0.01em;
@@ -239,28 +240,28 @@
 }
 
 .markdown-content p {
-    color: #d4d4d8;
+    color: #d4be98;
 }
 
 .markdown-content a {
-    color: #60a5fa;
+    color: #89b482;
     text-decoration: none;
     text-underline-offset: 3px;
     transition: color 0.2s ease;
 }
 
 .markdown-content a:hover {
-    color: #93c5fd;
+    color: #a9b665;
     text-decoration: underline;
 }
 
 .markdown-content strong {
-    color: #f4f4f5;
+    color: #d4be98;
     font-weight: 700;
 }
 
 .markdown-content em {
-    color: #e4e4e7;
+    color: #d4be98;
 }
 
 .markdown-content ul,
@@ -278,7 +279,7 @@
 }
 
 .markdown-content li {
-    color: #d4d4d8;
+    color: #d4be98;
     margin: 0.42rem 0;
 }
 
@@ -295,16 +296,16 @@
 
 .markdown-content blockquote {
     margin: 1.5rem 0;
-    border-left: 3px solid rgba(59, 130, 246, 0.8);
+    border-left: 3px solid rgba(125, 174, 163, 0.8);
     padding: 0.2rem 0 0.2rem 1rem;
-    color: #a1a1aa;
+    color: #928374;
     font-style: italic;
 }
 
 .markdown-content :not(pre) > code {
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.04);
-    color: #f4f4f5;
+    color: #d4be98;
     border-radius: 0.45rem;
     padding: 0.12rem 0.4rem;
     font-size: 0.92em;
@@ -314,11 +315,10 @@
 .markdown-content pre {
     margin: 1.5rem 0;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     overflow-x: auto;
     overflow-y: hidden;
-    background: #09090b;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    background: #1d2021;
 }
 
 .markdown-content pre code {
@@ -343,7 +343,7 @@
     border-collapse: collapse;
     margin: 1.5rem 0;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.65rem;
+    border-radius: 0.5rem;
     overflow: hidden;
 }
 
@@ -360,17 +360,17 @@
 }
 
 .markdown-content th {
-    color: #f4f4f5;
+    color: #d4be98;
     font-weight: 600;
 }
 
 .markdown-content td {
-    color: #d4d4d8;
+    color: #d4be98;
 }
 
 .markdown-content img {
     width: 100%;
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 

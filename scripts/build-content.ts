@@ -115,7 +115,7 @@ async function highlightCodeBlocks(html: string): Promise<string> {
     try {
       const highlighted = await codeToHtml(block.code, {
         lang: block.lang || 'text',
-        theme: 'github-dark',
+        theme: 'gruvbox-dark-hard',
       });
       html = html.replace(`<!--${block.id}-->`, highlighted);
     } catch (error) {

@@ -1,63 +1,71 @@
-<section class="mx-auto max-w-4xl px-6 py-20">
-    <app-section-heading
-        title="About Me"
-        subtitle="Full-stack developer passionate about building modern web applications."
-    />
+<section class="section-block mx-auto max-w-5xl px-6 py-20">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.8fr)_minmax(0,0.86fr)] lg:gap-10">
+        <div>
+            <app-section-heading
+                title="About Me"
+                subtitle="Backend developer focused on building scalable and well-structured systems."
+            />
 
-    <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
-        <div class="lg:col-span-2">
-            <div class="prose prose-invert max-w-none prose-headings:text-[#fafafa] prose-p:text-[#a1a1aa] prose-strong:text-[#fafafa]">
+            <div class="prose prose-invert max-w-none prose-headings:text-[#d4be98] prose-p:text-[#928374] prose-strong:text-[#d4be98]">
                 <p class="text-lg leading-relaxed">
-                    Hi, I'm Ignacio, a full-stack developer with over 5 years of experience building
-                    modern web applications. I specialize in TypeScript, Angular, and Node.js, with a
-                    focus on creating performant, accessible, and user-friendly interfaces.
+                    Hi, I'm Ignacio, a backend-focused developer and student of Technical Programming
+                    (Tecnicatura Universitaria en Programacion) at Universidad Tecnologica Nacional -
+                    Facultad Regional Cordoba (UTN FRC). I specialize in TypeScript and Java,
+                    designing robust APIs and backend systems with an emphasis on clean architecture,
+                    domain-driven design, and long-term maintainability.
                 </p>
 
-                <h2 class="mt-8 text-xl font-semibold text-[#fafafa]">What I Do</h2>
+                <h2 class="mt-8 text-xl font-semibold text-[#d4be98]">What I Do</h2>
                 <p>
-                    I design and build complete web applications from the ground up. My expertise
-                    spans both frontend and backend development, allowing me to create cohesive
-                    solutions that deliver exceptional user experiences while maintaining clean,
-                    scalable codebases.
+                    I design and build backend systems from the ground up. My expertise includes REST
+                    APIs, modular service design, relational data modeling, and containerized
+                    deployments.
+                </p>
+                <p>
+                    I prioritize clear boundaries between layers, strong typing, predictable business
+                    logic, and production-ready practices. My goal is to build systems that are
+                    scalable, testable, and maintainable over time.
                 </p>
 
-                <h2 class="mt-8 text-xl font-semibold text-[#fafafa]">Current Focus</h2>
+                <h2 class="mt-8 text-xl font-semibold text-[#d4be98]">Current Focus</h2>
                 <p>
-                    Currently, I'm diving deep into microservices architecture and exploring the
-                    latest features in Angular and NestJS. I'm also passionate about developer
-                    experience and building tools that make development more efficient.
+                    Currently, I'm deepening my knowledge in microservices architecture, API
+                    gateways, and observability. I'm working with TypeScript-based backend frameworks
+                    and exploring advanced architectural patterns that improve system reliability and
+                    performance.
                 </p>
 
-                <h2 class="mt-8 text-xl font-semibold text-[#fafafa]">Beyond Code</h2>
+                <h2 class="mt-8 text-xl font-semibold text-[#d4be98]">Beyond Code</h2>
                 <p>
-                    When I'm not coding, you can find me exploring new technologies, contributing to
-                    open-source projects, or writing about my experiences on this blog. I believe in
-                    continuous learning and sharing knowledge with the community.
+                    Outside of building systems, I continuously study software architecture,
+                    distributed systems concepts, and engineering best practices. I approach
+                    development as a discipline: structured, iterative, and focused on long-term
+                    improvement.
                 </p>
             </div>
 
-            <div class="mt-10 flex flex-wrap gap-3">
+            <div class="mt-10 flex flex-nowrap gap-3 overflow-x-auto pb-1">
                 <a
-                    href="https://github.com/yourusername"
+                    href="https://github.com/NachoOsella"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex h-11 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                    class="inline-flex h-11 shrink-0 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#d4be98] transition-colors hover:border-white/20 hover:text-[#d4be98]"
                 >
                     <lucide-icon [img]="icons.Github" [size]="18" />
                     GitHub
                 </a>
                 <a
-                    href="https://linkedin.com/in/yourusername"
+                    href="mailto:hello@nacho.dev"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex h-11 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                    class="inline-flex h-11 shrink-0 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#d4be98] transition-colors hover:border-white/20 hover:text-[#d4be98]"
                 >
-                    <lucide-icon [img]="icons.Linkedin" [size]="18" />
-                    LinkedIn
+                    <lucide-icon [img]="icons.Mail" [size]="18" />
+                    Email
                 </a>
                 <a
                     routerLink="/contact"
-                    class="inline-flex h-11 items-center gap-2 rounded-md bg-[#3b82f6] px-5 text-sm font-medium text-white transition-colors hover:bg-[#2563eb]"
+                    class="btn-primary shrink-0"
                 >
                     <lucide-icon [img]="icons.Mail" [size]="18" />
                     Get in Touch
@@ -65,7 +73,7 @@
                 <a
                     href="/assets/resume.pdf"
                     download
-                    class="inline-flex h-11 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#a1a1aa] transition-colors hover:border-white/20 hover:text-[#fafafa]"
+                    class="inline-flex h-11 shrink-0 items-center gap-2 rounded-md border border-white/10 px-5 text-sm font-medium text-[#d4be98] transition-colors hover:border-white/20 hover:text-[#d4be98]"
                 >
                     <lucide-icon [img]="icons.FileText" [size]="18" />
                     Resume
@@ -73,36 +81,46 @@
             </div>
         </div>
 
-        <div class="lg:col-span-1">
-            <div class="sticky top-24 space-y-6">
-                <div class="glass-card rounded-xl p-6">
-                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+        <div class="lg:max-w-[18.5rem] lg:pt-12">
+            <div class="space-y-6">
+                <div class="profile-card rounded-md p-3">
+                    <div class="aspect-square overflow-hidden rounded-[6px] border border-white/[0.05] bg-[#282828]">
+                        <img
+                            src="/assets/profile.jpg"
+                            alt="Ignacio Osella profile photo"
+                            class="h-full w-full object-cover"
+                        />
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-md p-5">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#928374]">
                         Experience
                     </h3>
                     <div class="mt-4 space-y-4">
                         <div>
-                            <p class="font-medium text-[#fafafa]">5+ Years</p>
-                            <p class="text-sm text-[#71717a]">Professional Development</p>
+                            <p class="font-medium text-[#d4be98]">5+ Years</p>
+                            <p class="text-sm text-[#928374]">Professional Development</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#fafafa]">Full-Stack</p>
-                            <p class="text-sm text-[#71717a]">Frontend & Backend</p>
+                            <p class="font-medium text-[#d4be98]">Full-Stack</p>
+                            <p class="text-sm text-[#928374]">Frontend & Backend</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="glass-card rounded-xl p-6">
-                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+                <div class="glass-card rounded-md p-5">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#928374]">
                         Location
                     </h3>
-                    <p class="mt-4 text-[#a1a1aa]">Remote / Worldwide</p>
+                    <p class="mt-4 text-[#928374]">Remote / Worldwide</p>
                 </div>
 
-                <div class="glass-card rounded-xl p-6">
-                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#71717a]">
+                <div class="glass-card rounded-md p-5">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#928374]">
                         Availability
                     </h3>
-                    <p class="mt-4 text-[#a1a1aa]">Open to opportunities</p>
+                    <p class="mt-4 text-[#928374]">Open to opportunities</p>
                 </div>
             </div>
         </div>

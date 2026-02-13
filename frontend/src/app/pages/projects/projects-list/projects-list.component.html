@@ -1,4 +1,4 @@
-<section class="mx-auto max-w-6xl px-6 py-20">
+<section class="section-block mx-auto max-w-6xl px-6 py-20">
     <app-section-heading
         title="Projects"
         subtitle="A collection of my work across web applications, CLI tools, and open-source contributions."
@@ -7,12 +7,12 @@
     @if (isLoading()) {
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-                <div class="h-96 animate-pulse rounded-lg bg-[#18181b]"></div>
+                <div class="h-96 animate-pulse rounded-lg bg-[#282828]"></div>
             }
         </div>
     } @else if (error()) {
-        <div class="rounded-lg border border-red-500/20 bg-red-500/10 p-8 text-center">
-            <p class="text-red-400">{{ error() }}</p>
+        <div class="rounded-md border border-[#ea6962]/30 bg-[#282828] p-8 text-center">
+            <p class="text-[#ea6962]">{{ error() }}</p>
         </div>
     } @else {
         <app-tag-filter
@@ -23,8 +23,8 @@
         />
 
         @if (filteredProjects().length === 0) {
-            <div class="rounded-lg border border-white/[0.06] bg-[#18181b] p-12 text-center">
-                <p class="text-[#71717a]">No projects found in this category.</p>
+            <div class="rounded-lg border border-white/[0.06] bg-[#282828] p-12 text-center">
+                <p class="text-[#928374]">No projects found in this category.</p>
             </div>
         } @else {
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

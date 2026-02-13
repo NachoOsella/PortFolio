@@ -9,8 +9,8 @@
     "technologies": ["Node.js", "NestJS", "PostgreSQL", "Redis", "Docker", "React", "TypeScript"],
     "featured": true,
     "links": {
-      "live": "https://studytracker.example.com",
-      "github": "https://github.com/username/study-focus-tracker"
+      "live": null,
+      "github": null
     },
     "highlights": [
       "Microservices architecture with 5 independent services",
@@ -29,10 +29,10 @@
     "longDescription": "A modern developer portfolio built with Angular and NestJS, featuring server-side rendering for optimal SEO, a custom content pipeline that processes markdown at build time, and a secure admin dashboard for content management. The site achieves excellent Core Web Vitals scores and follows accessibility best practices.",
     "image": "https://bairesdev.mo.cloudinary.net/blog/2023/08/How-to-Choose-the-Right-Programming-Language-for-a-New-Project.jpg?tx=w_1920,q_auto",
     "category": "Full-Stack",
-    "technologies": ["Angular 21", "NestJS", "Tailwind CSS", "TypeScript", "Shiki", "Vercel"],
+    "technologies": ["Angular 21", "NestJS", "Tailwind CSS", "TypeScript", "Shiki", "Nginx"],
     "featured": true,
     "links": {
-      "live": "https://portfolio.example.com",
+      "live": null,
       "github": "https://github.com/NachoOsella/PortFolio"
     },
     "highlights": [
@@ -56,7 +56,7 @@
     "featured": false,
     "links": {
       "live": null,
-      "github": "https://github.com/username/task-manager-cli"
+      "github": null
     },
     "highlights": [
       "Blazing fast performance with Rust",

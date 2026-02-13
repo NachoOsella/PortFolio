@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SeoService } from '../../core/services/seo.service';
 import { ApiService } from '../../core/services/api.service';
 import { SectionHeadingComponent } from '../../shared/components/section-heading/section-heading.component';
-import { Mail, Github, Linkedin, Send, LucideAngularModule } from 'lucide-angular';
+import { Mail, Github, Send, LucideAngularModule } from 'lucide-angular';
 
 interface ContactForm {
     name: string;
@@ -38,7 +38,7 @@ export class ContactComponent implements OnInit {
     submitStatus = signal<'idle' | 'success' | 'error'>('idle');
     submitMessage = signal('');
 
-    icons = { Mail, Github, Linkedin, Send };
+    icons = { Mail, Github, Send };
 
     ngOnInit(): void {
         this.seo.updateTitle('Contact | Nacho.dev');
