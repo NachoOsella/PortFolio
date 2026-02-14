@@ -2,11 +2,11 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MarkdownModule } from 'ngx-markdown';
 import { ApiService } from '../../../core/services/api.service';
 import { SeoService } from '../../../core/services/seo.service';
 import { BlogPost } from '../../../shared/models/blog.model';
 import { ArrowLeft, Save, Send, LucideAngularModule } from 'lucide-angular';
+import { MarkdownPreviewComponent } from '../../../shared/components/markdown-preview/markdown-preview.component';
 
 
 interface PostForm {
@@ -17,13 +17,14 @@ interface PostForm {
     tags: string;
     content: string;
     published: boolean;
+    featured: boolean;
     coverImage: string;
 }
 
 @Component({
     selector: 'app-admin-editor',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, MarkdownModule],
+    imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule, MarkdownPreviewComponent],
     templateUrl: './admin-editor.component.html',
     styleUrl: './admin-editor.component.css',
 })
@@ -49,6 +50,7 @@ export class AdminEditorComponent implements OnInit {
         tags: '',
         content: '',
         published: false,
+        featured: false,
         coverImage: '',
     });
 
@@ -73,7 +75,7 @@ export class AdminEditorComponent implements OnInit {
 
     loadPost(slug: string): void {
         this.isLoading.set(true);
-        this.api.get<BlogPost>(`/blog/${slug}`).subscribe({
+        this.api.get<BlogPost>(`/admin/posts/${slug}`).subscribe({
             next: (post) => {
                 this.form.set({
                     title: post.title,
@@ -83,6 +85,7 @@ export class AdminEditorComponent implements OnInit {
                     tags: post.tags.join(', '),
                     content: post.content || '',
                     published: post.published,
+                    featured: post.featured ?? false,
                     coverImage: post.coverImage || '',
                 });
                 this.isLoading.set(false);
