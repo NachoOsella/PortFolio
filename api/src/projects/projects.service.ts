@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { ProjectRecord, readProjects } from '../common/content-files';
 
-export interface ProjectSummary {
-    id: string;
-    title: string;
-}
+export type ProjectSummary = ProjectRecord;
 
 @Injectable()
 export class ProjectsService {
     async getProjects(): Promise<ProjectSummary[]> {
-        return [];
+        return readProjects();
     }
 
     async getProjectById(id: string): Promise<ProjectSummary | null> {
-        void id;
-        return null;
+        const projects = await readProjects();
+        return projects.find((project) => project.id === id) || null;
     }
 }

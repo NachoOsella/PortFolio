@@ -1,4 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="80" fill="#18181b"/>
-  <text x="256" y="320" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="280" font-weight="600" fill="#fafafa" text-anchor="middle">IO</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#1d2021"/>
+  
+  <g fill="#d4be98">
+    <!-- I -->
+    <rect x="16" y="14" width="8" height="36" rx="3"/>
+    
+    <!-- O -->
+    <path d="M40,14 A18,18 0 1,0 40,50 A18,18 0 0,0 40,14 Z M40,22 A10,10 0 1,1 40,42 A10,10 0 0,1 40,22 Z"/>
+  </g>
 </svg>

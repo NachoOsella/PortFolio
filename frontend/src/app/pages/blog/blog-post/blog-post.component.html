@@ -72,20 +72,13 @@
                             <lucide-icon [img]="icons.Calendar" [size]="14" />
                             <time [attr.datetime]="post()!.date">{{ post()!.date | date: 'mediumDate' }}</time>
                         </span>
-
-                        <span class="post-meta-dot" aria-hidden="true">·</span>
-
-                        <span class="post-meta-item">
-                            <lucide-icon [img]="icons.Clock" [size]="14" />
-                            <span>{{ post()!.readingTime }}</span>
-                        </span>
                     </div>
 
                     @if (post()!.tags.length) {
                         <ul class="post-tags mt-5" aria-label="Post tags">
                             @for (tag of post()!.tags; track tag) {
                                 <li>
-                                    <span class="post-tag">#{{ tag }}</span>
+                                    <span class="post-tag">{{ tag }}</span>
                                 </li>
                             }
                         </ul>

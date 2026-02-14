@@ -169,11 +169,7 @@
                 <div class="sticky top-6">
                     <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-[#928374]">Preview</h3>
                     <div class="max-h-[calc(100vh-200px)] overflow-y-auto rounded-lg border border-white/[0.06] bg-[#282828] p-5">
-                        <div
-                            class="prose prose-invert max-w-none prose-headings:text-[#d4be98] prose-p:text-[#928374] prose-a:text-[#7daea3] prose-strong:text-[#d4be98] prose-code:text-[#d8a657] prose-pre:bg-[#32302f] prose-pre:text-[#d4be98]"
-                        >
-                            <markdown [data]="form().content" [disableSanitizer]="true"></markdown>
-                        </div>
+                        <app-markdown-preview [content]="form().content" />
                     </div>
                 </div>
             </div>

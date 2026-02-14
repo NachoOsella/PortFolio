@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
+import { adminGuard } from './pages/admin/admin.guard';
 
 export const routes: Routes = [
     {
@@ -62,7 +63,7 @@ export const routes: Routes = [
                     import('./pages/admin/admin-dashboard/admin-dashboard.component').then(
                         (m) => m.AdminDashboardComponent,
                     ),
-                // canActivate: [adminGuard],
+                canActivate: [adminGuard],
             },
             {
                 path: 'admin/new',
@@ -70,7 +71,7 @@ export const routes: Routes = [
                     import('./pages/admin/admin-editor/admin-editor.component').then(
                         (m) => m.AdminEditorComponent,
                     ),
-                // canActivate: [adminGuard],
+                canActivate: [adminGuard],
             },
             {
                 path: 'admin/edit/:slug',
@@ -78,11 +79,30 @@ export const routes: Routes = [
                     import('./pages/admin/admin-editor/admin-editor.component').then(
                         (m) => m.AdminEditorComponent,
                     ),
-                // canActivate: [adminGuard],
+                canActivate: [adminGuard],
+            },
+            {
+                path: 'admin/projects/new',
+                loadComponent: () =>
+                    import('./pages/admin/admin-project-editor/admin-project-editor.component').then(
+                        (m) => m.AdminProjectEditorComponent,
+                    ),
+                canActivate: [adminGuard],
+            },
+            {
+                path: 'admin/projects/edit/:id',
+                loadComponent: () =>
+                    import('./pages/admin/admin-project-editor/admin-project-editor.component').then(
+                        (m) => m.AdminProjectEditorComponent,
+                    ),
+                canActivate: [adminGuard],
             },
             {
                 path: '**',
-                redirectTo: '',
+                loadComponent: () =>
+                    import('./pages/not-found/not-found.component').then(
+                        (m) => m.NotFoundComponent,
+                    ),
             },
         ],
     },

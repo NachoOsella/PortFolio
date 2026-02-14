@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://localhost:4200/</loc>
+    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:4200/projects</loc>
+    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:4200/blog</loc>
+    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:4200/about</loc>
+    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:4200/contact</loc>
+    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:4200/blog/hello-world</loc>
+    <lastmod>2026-02-11T00:00:00.000Z</lastmod>
+  </url>
+</urlset>

@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
     Component,
+    DOCUMENT,
     ElementRef,
     OnDestroy,
     OnInit,
@@ -22,7 +23,6 @@ import {
     ArrowLeft,
     Calendar,
     ChevronDown,
-    Clock,
     Link2,
     Linkedin,
     LucideAngularModule,
@@ -47,6 +47,7 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly api = inject(ApiService);
     private readonly seo = inject(SeoService);
     private readonly http = inject(HttpClient);
+    private readonly document = inject(DOCUMENT);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     private headingObserver: IntersectionObserver | null = null;
@@ -61,7 +62,7 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
     tocItems = signal<TocItem[]>([]);
     readonly tocPanelId = 'blog-post-mobile-toc';
 
-    icons = { ArrowLeft, Calendar, ChevronDown, Clock, Linkedin, Link2 };
+    icons = { ArrowLeft, Calendar, ChevronDown, Linkedin, Link2 };
 
     ngOnInit(): void {
         this.route.params.pipe(
@@ -84,6 +85,7 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.seo.updateMetaTags({
                         description: result.post.excerpt,
                     });
+                    this.updateSeoForPost(result.post);
                     this.queueScrollSpySetup();
                 } else {
                     this.error.set('Post not found');
@@ -143,6 +145,100 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
         void navigator.clipboard.writeText(window.location.href);
     }
 
+    private updateSeoForPost(post: BlogPost): void {
+        const siteUrl = this.resolveSiteUrl();
+        const postUrl = `${siteUrl}/blog/${post.slug}`;
+        const ogImage = this.resolveAbsoluteUrl(post.coverImage || '/icon-512.png', siteUrl);
+        const publishedAt = new Date(post.date).toISOString();
+
+        this.seo.setCanonical(postUrl);
+        this.seo.setOpenGraph({
+            title: `${post.title} | Blog | Nacho.dev`,
+            description: post.excerpt,
+            type: 'article',
+            url: postUrl,
+            image: ogImage,
+            siteName: 'Nacho.dev',
+        });
+        this.seo.setTwitterCard({
+            card: 'summary_large_image',
+            title: `${post.title} | Blog | Nacho.dev`,
+            description: post.excerpt,
+            image: ogImage,
+            creator: '@nacho',
+            site: '@nacho',
+        });
+        this.seo.setJsonLd([
+            {
+                '@context': 'https://schema.org',
+                '@type': 'BlogPosting',
+                headline: post.title,
+                description: post.excerpt,
+                datePublished: publishedAt,
+                dateModified: publishedAt,
+                image: [ogImage],
+                mainEntityOfPage: {
+                    '@type': 'WebPage',
+                    '@id': postUrl,
+                },
+                author: {
+                    '@type': 'Person',
+                    name: 'Ignacio',
+                },
+                publisher: {
+                    '@type': 'Person',
+                    name: 'Ignacio',
+                },
+            },
+            {
+                '@context': 'https://schema.org',
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                    {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: 'Home',
+                        item: `${siteUrl}/`,
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: 'Blog',
+                        item: `${siteUrl}/blog`,
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 3,
+                        name: post.title,
+                        item: postUrl,
+                    },
+                ],
+            },
+        ]);
+    }
+
+    private resolveSiteUrl(): string {
+        const runtime = globalThis as { process?: { env?: Record<string, string | undefined> } };
+        const envSiteUrl = runtime.process?.env?.['SITE_URL'];
+        const documentOrigin = this.document?.location?.origin;
+        const fallbackOrigin = this.isBrowser ? window.location.origin : undefined;
+        const url = envSiteUrl || documentOrigin || fallbackOrigin || 'http://localhost:4200';
+
+        return url.replace(/\/+$/, '');
+    }
+
+    private resolveAbsoluteUrl(value: string, siteUrl: string): string {
+        if (/^https?:\/\//i.test(value)) {
+            return value;
+        }
+
+        if (value.startsWith('/')) {
+            return `${siteUrl}${value}`;
+        }
+
+        return `${siteUrl}/${value.replace(/^\/+/, '')}`;
+    }
+
     private loadPost(slug: string) {
         return this.http.get<BlogPost[]>(`/generated/blog-index.json`).pipe(
             catchError(() => this.api.get<BlogPost[]>('/blog')),
@@ -199,7 +295,6 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
             published: mergedPost.published ?? fallbackPost?.published ?? true,
             featured: mergedPost.featured ?? fallbackPost?.featured ?? false,
             coverImage: this.normalizeCoverImage(mergedPost.coverImage, slug),
-            readingTime: mergedPost.readingTime ?? fallbackPost?.readingTime ?? '1 min read',
             content: decoratedContent.content,
             toc: decoratedContent.toc.length
                 ? decoratedContent.toc

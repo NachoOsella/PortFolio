@@ -8,8 +8,10 @@
             @for (link of navLinks; track link.path) {
                 <a
                     [routerLink]="link.path"
+                    #rla="routerLinkActive"
                     routerLinkActive="nav-active"
                     [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+                    [attr.aria-current]="rla.isActive ? 'page' : null"
                     class="nav-link"
                 >
                     {{ link.label }}
@@ -26,14 +28,6 @@
                 <lucide-icon [img]="icons.Download" [size]="16" />
                 Resume
             </a>
-
-            <button
-                (click)="toggleTheme()"
-                class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/[0.05] text-[#d4be98] transition-colors hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]"
-                [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
-            >
-                <lucide-icon [img]="isDark() ? icons.Sun : icons.Moon" [size]="18" />
-            </button>
 
             <button
                 (click)="toggleMobileMenu()"
@@ -65,10 +59,12 @@
             @for (link of navLinks; track link.path) {
                 <a
                     [routerLink]="link.path"
+                    #mobileRla="routerLinkActive"
                     routerLinkActive="nav-active-mobile"
                     [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+                    [attr.aria-current]="mobileRla.isActive ? 'page' : null"
                     (click)="closeMobileMenu()"
-                    class="inline-flex h-11 items-center rounded-md px-4 text-sm font-medium text-[#d4be98] transition-colors hover:bg-[#32302f] hover:text-[#d4be98]"
+                    class="inline-flex h-11 items-center rounded-md px-4 text-base font-medium text-[#d4be98] transition-colors hover:bg-[#32302f] hover:text-[#d4be98]"
                 >
                     {{ link.label }}
                 </a>

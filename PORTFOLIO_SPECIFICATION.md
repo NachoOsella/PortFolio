@@ -97,7 +97,7 @@ Markdown Files (.md)
 │  • gray-matter   │ ← Parse frontmatter (title, date, tags, excerpt)
 │  • marked        │ ← Convert MD → HTML
 │  • shiki         │ ← Syntax highlight code blocks
-│  • reading-time  │ ← Calculate read time
+│  • reading-time  │ ← Calculate word count metadata
 └────────┬─────────┘
          │
          ▼
@@ -312,7 +312,6 @@ Some text about the implementation...
     "excerpt": "How I built a production-ready microservices platform...",
 "tags": ["typescript", "nodejs", "nestjs", "microservices", "docker"],
     "coverImage": "/images/blog/microservices-cover.webp",
-    "readingTime": "8 min read",
     "wordCount": 2100
   }
 ]
@@ -329,7 +328,6 @@ Some text about the implementation...
   "excerpt": "How I built a production-ready microservices platform...",
   "tags": ["typescript", "nodejs", "nestjs", "microservices", "docker"],
   "coverImage": "/images/blog/microservices-cover.webp",
-  "readingTime": "8 min read",
   "wordCount": 2100,
   "content": "<article><h2>Introduction</h2><p>...</p></article>",
   "tableOfContents": [
@@ -458,11 +456,11 @@ Some text about the implementation...
 │                                                  │
 │  ┌─────────────────────────────────────────┐    │
 │  │ Post Title            │ Jan 15, 2026    │    │
-│  │ Short excerpt...      │ 8 min read      │    │
+│  │ Short excerpt...      │                 │    │
 │  │ [tag1] [tag2] [tag3]                    │    │
 │  ├─────────────────────────────────────────┤    │
 │  │ Post Title            │ Jan 10, 2026    │    │
-│  │ Short excerpt...      │ 5 min read      │    │
+│  │ Short excerpt...      │                 │    │
 │  └─────────────────────────────────────────┘    │
 │                                                  │
 │  [Read All Posts →]                              │
@@ -494,13 +492,13 @@ Some text about the implementation...
 │  ┌─────────────────────────────────────────┐    │
 │  │ ┌────────┐                              │    │
 │  │ │ cover  │  Post Title                  │    │
-│  │ │ image  │  Jan 15, 2026 · 8 min read   │    │
+│  │ │ image  │  Jan 15, 2026                │    │
 │  │ │        │  Excerpt text goes here...   │    │
 │  │ └────────┘  [tag1] [tag2]               │    │
 │  ├─────────────────────────────────────────┤    │
 │  │ ┌────────┐                              │    │
 │  │ │ cover  │  Post Title                  │    │
-│  │ │ image  │  Jan 10, 2026 · 5 min read   │    │
+│  │ │ image  │  Jan 10, 2026                │    │
 │  │ │        │  Excerpt text goes here...   │    │
 │  │ └────────┘  [tag1] [tag2]               │    │
 │  └─────────────────────────────────────────┘    │
@@ -521,7 +519,7 @@ Some text about the implementation...
 │                                                  │
 │  ┌─────────────────────────────────────────┐    │
 │  │ Post Title                              │    │
-│  │ Jan 15, 2026 · 8 min read               │    │
+│  │ Jan 15, 2026                            │    │
 │  │ [tag1] [tag2] [tag3]                    │    │
 │  │                                          │    │
 │  │ ┌─────────────────────────────────────┐ │    │
@@ -846,16 +844,6 @@ Prerender these routes at build time for instant loading:
 ### Colors (CSS Custom Properties)
 
 ```css
-/* Light theme */
---bg-primary: #ffffff;
---bg-secondary: #f8fafc;
---text-primary: #0f172a;
---text-secondary: #475569;
---accent: #3b82f6;          /* Blue-500 */
---accent-hover: #2563eb;    /* Blue-600 */
---border: #e2e8f0;
---code-bg: #1e293b;
-
 /* Dark theme */
 --bg-primary: #0f172a;
 --bg-secondary: #1e293b;
@@ -922,11 +910,9 @@ lg: 1024px   /* Desktop */
 xl: 1280px   /* Large desktop */
 ```
 
-### Dark Mode
+### Theme
 
-- Toggle in header (sun/moon icon)
-- Persisted in `localStorage`
-- Respects `prefers-color-scheme` on first visit
+- Dark theme only
 - Implemented via CSS class on `<html>` element (`class="dark"`)
 - Tailwind `darkMode: 'class'`
 
@@ -1075,7 +1061,7 @@ curl -f https://yourdomain.com/api/health
 ### Week 1: Foundation
 - [ ] Project setup (npm workspace, Angular CLI, Tailwind)
 - [ ] Content pipeline (markdown → JSON build script)
-- [ ] Layout (header, footer, theme toggle, routing)
+- [ ] Layout (header, footer, routing)
 - [ ] Home page (hero, CTA sections)
 
 ### Week 2: Core Pages
@@ -1088,7 +1074,7 @@ curl -f https://yourdomain.com/api/health
 - [ ] Contact form + NestJS API + Resend email
 - [ ] SEO (meta tags, JSON-LD, sitemap, Open Graph)
 - [ ] Animations & transitions
-- [ ] Dark mode
+- [ ] Dark theme polish
 - [ ] Responsive testing
 - [ ] Server deployment (frontend + API + reverse proxy + SSL)
 - [ ] Performance optimization (Lighthouse 95+)

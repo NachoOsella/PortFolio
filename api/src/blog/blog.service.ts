@@ -1,26 +1,79 @@
 import { Injectable } from '@nestjs/common';
 
 import { BlogQueryDto } from './dto/blog-query.dto';
+import { BlogPostMeta, BlogTocItem, readBlogDocument, readBlogIndex } from '../common/content-files';
 
 export interface BlogPostSummary {
+    date: string;
+    excerpt: string;
+    published: boolean;
+    featured: boolean;
+    coverImage?: string;
+    readingTime: string;
+    wordCount: number;
     slug: string;
     title: string;
     tags: string[];
 }
 
+export interface BlogPost extends BlogPostSummary {
+    content: string;
+    toc: BlogTocItem[];
+}
+
 @Injectable()
 export class BlogService {
     async getPosts(query: BlogQueryDto): Promise<BlogPostSummary[]> {
-        void query;
-        return [];
+        const posts = await readBlogIndex();
+        const tag = query.tag?.trim().toLowerCase();
+        const filteredPosts = tag
+            ? posts.filter((post) => post.tags.some((postTag) => postTag.toLowerCase() === tag))
+            : posts;
+
+        return filteredPosts.map((post) => this.mapMetaToSummary(post));
     }
 
-    async getPostBySlug(slug: string): Promise<BlogPostSummary | null> {
-        void slug;
-        return null;
+    async getPostBySlug(slug: string): Promise<BlogPost | null> {
+        const document = await readBlogDocument(slug);
+        if (!document) {
+            return null;
+        }
+
+        return {
+            ...this.mapMetaToSummary(document.meta),
+            content: document.content,
+            toc: Array.isArray(document.toc) ? document.toc : [],
+        };
     }
 
     async getTags(): Promise<string[]> {
-        return [];
+        const posts = await readBlogIndex();
+        const uniqueTags = new Set<string>();
+
+        posts.forEach((post) => {
+            post.tags.forEach((tag) => {
+                const normalizedTag = tag.trim().toLowerCase();
+                if (normalizedTag) {
+                    uniqueTags.add(normalizedTag);
+                }
+            });
+        });
+
+        return Array.from(uniqueTags).sort();
+    }
+
+    private mapMetaToSummary(meta: BlogPostMeta): BlogPostSummary {
+        return {
+            title: meta.title,
+            slug: meta.slug,
+            date: meta.date,
+            tags: meta.tags,
+            excerpt: meta.excerpt,
+            published: meta.published,
+            featured: meta.featured,
+            coverImage: meta.coverImage,
+            readingTime: meta.readingTime,
+            wordCount: meta.wordCount,
+        };
     }
 }

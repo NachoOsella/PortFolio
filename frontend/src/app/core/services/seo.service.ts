@@ -35,6 +35,7 @@ export class SeoService {
     private readonly meta = inject(Meta);
     private readonly document = inject(DOCUMENT);
     private readonly jsonLdScriptId = 'app-json-ld';
+    private readonly canonicalLinkId = 'app-canonical-link';
 
     updateTitle(title: string): void {
         this.title.setTitle(title);
@@ -82,6 +83,19 @@ export class SeoService {
         script.type = 'application/ld+json';
         script.text = JSON.stringify(data);
         this.document.head.appendChild(script);
+    }
+
+    setCanonical(url: string): void {
+        const existingElement = this.document.getElementById(this.canonicalLinkId);
+        if (existingElement) {
+            existingElement.remove();
+        }
+
+        const link = this.document.createElement('link');
+        link.id = this.canonicalLinkId;
+        link.setAttribute('rel', 'canonical');
+        link.setAttribute('href', url);
+        this.document.head.appendChild(link);
     }
 
     private updateNameMetaTags(tags: Record<string, string | undefined>): void {

@@ -8,8 +8,9 @@
     "frontend"
   ],
   "scripts": {
-    "build": "npm run build:content && npm run build:api && npm run build:frontend",
+    "build": "npm run build:content && npm run build:seo && npm run build:api && npm run build:frontend",
     "build:content": "tsx scripts/build-content.ts",
+    "build:seo": "tsx scripts/generate-sitemap.ts",
     "build:api": "cd api && npm run build",
     "build:frontend": "cd frontend && npm run build",
     "dev": "concurrently \"npm run dev:api\" \"npm run dev:frontend\"",

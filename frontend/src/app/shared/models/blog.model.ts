@@ -7,7 +7,7 @@ export interface BlogPost {
     published: boolean;
     featured: boolean;
     coverImage?: string;
-    readingTime: string;
+    readingTime?: string;
     content?: string;
     toc?: TocItem[];
 }

@@ -1,0 +1,46 @@
+# Caddyfile - Reverse proxy configuration
+# Placeholders will be replaced with actual domain in production
+
+{
+    auto_https off
+    admin off
+}
+
+:80 {
+    # Enable compression
+    encode zstd gzip
+
+    # Handle API routes
+    handle /api/* {
+        reverse_proxy api:3000
+    }
+
+    # Handle all other requests - serve Angular SSR
+    handle {
+        reverse_proxy frontend:4000
+    }
+
+    # Logging
+    log {
+        output file /var/log/caddy/access.log
+        format json
+    }
+}
+
+# For production with custom domain (uncomment and modify):
+# yourdomain.com, www.yourdomain.com {
+#     encode zstd gzip
+#
+#     handle /api/* {
+#         reverse_proxy api:3000
+#     }
+#
+#     handle {
+#         reverse_proxy frontend:4000
+#     }
+#
+#     log {
+#         output file /var/log/caddy/access.log
+#         format json
+#     }
+# }

@@ -1,32 +1,36 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, inject, isDevMode } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, PLATFORM_ID, inject, isDevMode } from '@angular/core';
 import { Observable, catchError, retry, throwError } from 'rxjs';
+import { ADMIN_AUTH_TOKEN_KEY } from '../constants/admin-auth.constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ApiService {
     private readonly http = inject(HttpClient);
+    private readonly platformId = inject(PLATFORM_ID);
     private readonly baseUrl = isDevMode() ? 'http://localhost:3000/api' : '/api';
     private readonly retryDelayMs = 500;
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
 
     get<T>(endpoint: string, retryCount = 1): Observable<T> {
-        const request$ = this.http.get<T>(this.buildUrl(endpoint));
+        const request$ = this.http.get<T>(this.buildUrl(endpoint), this.buildHttpOptions());
         return this.requestWithHandling(request$, 'GET', endpoint, retryCount);
     }
 
     post<TResponse, TBody = unknown>(endpoint: string, data: TBody, retryCount = 0): Observable<TResponse> {
-        const request$ = this.http.post<TResponse>(this.buildUrl(endpoint), data);
+        const request$ = this.http.post<TResponse>(this.buildUrl(endpoint), data, this.buildHttpOptions());
         return this.requestWithHandling(request$, 'POST', endpoint, retryCount);
     }
 
     put<TResponse, TBody = unknown>(endpoint: string, data: TBody, retryCount = 0): Observable<TResponse> {
-        const request$ = this.http.put<TResponse>(this.buildUrl(endpoint), data);
+        const request$ = this.http.put<TResponse>(this.buildUrl(endpoint), data, this.buildHttpOptions());
         return this.requestWithHandling(request$, 'PUT', endpoint, retryCount);
     }
 
     delete<TResponse>(endpoint: string, retryCount = 0): Observable<TResponse> {
-        const request$ = this.http.delete<TResponse>(this.buildUrl(endpoint));
+        const request$ = this.http.delete<TResponse>(this.buildUrl(endpoint), this.buildHttpOptions());
         return this.requestWithHandling(request$, 'DELETE', endpoint, retryCount);
     }
 
@@ -77,5 +81,26 @@ export class ApiService {
     private buildUrl(endpoint: string): string {
         const normalizedEndpoint = endpoint.replace(/^\/+/, '');
         return `${this.baseUrl}/${normalizedEndpoint}`;
+    }
+
+    private buildHttpOptions(): { headers?: Record<string, string> } {
+        const token = this.getStoredAdminToken();
+        if (!token) {
+            return {};
+        }
+
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    }
+
+    private getStoredAdminToken(): string | null {
+        if (!this.isBrowser) {
+            return null;
+        }
+
+        return localStorage.getItem(ADMIN_AUTH_TOKEN_KEY);
     }
 }

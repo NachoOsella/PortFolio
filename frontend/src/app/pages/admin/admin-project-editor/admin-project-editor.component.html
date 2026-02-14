@@ -1,0 +1,242 @@
+@if (isLoading()) {
+    <section class="mx-auto max-w-6xl px-6 py-20">
+        <div class="animate-pulse space-y-6">
+            <div class="h-12 rounded bg-[#282828]"></div>
+            <div class="h-12 rounded bg-[#282828]"></div>
+            <div class="h-64 rounded bg-[#282828]"></div>
+        </div>
+    </section>
+} @else {
+    <section class="mx-auto max-w-6xl px-6 py-10">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <a
+                routerLink="/admin"
+                class="btn-secondary"
+            >
+                <lucide-icon [img]="icons.ArrowLeft" [size]="16" />
+                Back to Dashboard
+            </a>
+
+            <div class="flex gap-3">
+                <button
+                    (click)="save()"
+                    [disabled]="isSaving()"
+                    class="btn-primary"
+                >
+                    <lucide-icon [img]="icons.Save" [size]="16" />
+                    {{ isEditMode() ? 'Update Project' : 'Create Project' }}
+                </button>
+            </div>
+        </div>
+
+        @if (saveStatus() !== 'idle') {
+            <div
+                class="mb-6 rounded-lg border p-4"
+                [class.border-green-500/20]="saveStatus() === 'success'"
+                [class.bg-green-500/10]="saveStatus() === 'success'"
+                [class.border-red-500/20]="saveStatus() === 'error'"
+                [class.bg-red-500/10]="saveStatus() === 'error'"
+            >
+                <p
+                    [class.text-green-400]="saveStatus() === 'success'"
+                    [class.text-red-400]="saveStatus() === 'error'"
+                >
+                    {{ saveMessage() }}
+                </p>
+            </div>
+        }
+
+        <div class="grid grid-cols-1 gap-6">
+            <div class="space-y-5">
+                <div>
+                    <label for="id" class="block text-sm font-medium text-[#928374]">
+                        ID
+                        @if (isEditMode()) {
+                            <span class="ml-1 text-xs text-[#928374]">(read-only)</span>
+                        }
+                    </label>
+                    <input
+                        type="text"
+                        id="id"
+                        [(ngModel)]="form().id"
+                        [disabled]="isEditMode()"
+                        class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none disabled:opacity-50"
+                        [class.border-red-500]="errors()['id']"
+                        placeholder="project-id"
+                    />
+                    @if (errors()['id']) {
+                        <p class="mt-1 text-sm text-red-400">{{ errors()['id'] }}</p>
+                    }
+                </div>
+
+                <div>
+                    <label for="title" class="block text-sm font-medium text-[#928374]">Title</label>
+                    <input
+                        type="text"
+                        id="title"
+                        [(ngModel)]="form().title"
+                        (blur)="generateId()"
+                        class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-lg text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        [class.border-red-500]="errors()['title']"
+                        placeholder="Project title"
+                    />
+                    @if (errors()['title']) {
+                        <p class="mt-1 text-sm text-red-400">{{ errors()['title'] }}</p>
+                    }
+                </div>
+
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-[#928374]">Category</label>
+                        <input
+                            type="text"
+                            id="category"
+                            [(ngModel)]="form().category"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            [class.border-red-500]="errors()['category']"
+                            placeholder="e.g., Full-Stack"
+                        />
+                        @if (errors()['category']) {
+                            <p class="mt-1 text-sm text-red-400">{{ errors()['category'] }}</p>
+                        }
+                    </div>
+
+                    <div>
+                        <label for="date" class="block text-sm font-medium text-[#928374]">Date</label>
+                        <input
+                            type="date"
+                            id="date"
+                            [(ngModel)]="form().date"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            [class.border-red-500]="errors()['date']"
+                        />
+                        @if (errors()['date']) {
+                            <p class="mt-1 text-sm text-red-400">{{ errors()['date'] }}</p>
+                        }
+                    </div>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-[#928374]">Short Description</label>
+                    <textarea
+                        id="description"
+                        [(ngModel)]="form().description"
+                        rows="2"
+                        class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        [class.border-red-500]="errors()['description']"
+                        placeholder="Brief description for project cards..."
+                    ></textarea>
+                    @if (errors()['description']) {
+                        <p class="mt-1 text-sm text-red-400">{{ errors()['description'] }}</p>
+                    }
+                </div>
+
+                <div>
+                    <label for="longDescription" class="block text-sm font-medium text-[#928374]">Long Description</label>
+                    <textarea
+                        id="longDescription"
+                        [(ngModel)]="form().longDescription"
+                        rows="5"
+                        class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        [class.border-red-500]="errors()['longDescription']"
+                        placeholder="Detailed project description..."
+                    ></textarea>
+                    @if (errors()['longDescription']) {
+                        <p class="mt-1 text-sm text-red-400">{{ errors()['longDescription'] }}</p>
+                    }
+                </div>
+
+                <div>
+                    <label for="image" class="block text-sm font-medium text-[#928374]">Image URL</label>
+                    <input
+                        type="text"
+                        id="image"
+                        [(ngModel)]="form().image"
+                        class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        [class.border-red-500]="errors()['image']"
+                        placeholder="https://example.com/image.jpg"
+                    />
+                    @if (errors()['image']) {
+                        <p class="mt-1 text-sm text-red-400">{{ errors()['image'] }}</p>
+                    }
+                </div>
+
+                <div>
+                    <label for="technologies" class="block text-sm font-medium text-[#928374]">
+                        Technologies (comma-separated)
+                    </label>
+                    <input
+                        type="text"
+                        id="technologies"
+                        [(ngModel)]="form().technologies"
+                        class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        [class.border-red-500]="errors()['technologies']"
+                        placeholder="Angular, TypeScript, Node.js"
+                    />
+                    @if (errors()['technologies']) {
+                        <p class="mt-1 text-sm text-red-400">{{ errors()['technologies'] }}</p>
+                    }
+                </div>
+
+                <div>
+                    <label for="highlights" class="block text-sm font-medium text-[#928374]">
+                        Highlights (one per line)
+                    </label>
+                    <textarea
+                        id="highlights"
+                        [(ngModel)]="form().highlights"
+                        rows="5"
+                        class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        [class.border-red-500]="errors()['highlights']"
+                        placeholder="Built with modern tech stack&#10;Responsive design&#10;High performance"
+                    ></textarea>
+                    @if (errors()['highlights']) {
+                        <p class="mt-1 text-sm text-red-400">{{ errors()['highlights'] }}</p>
+                    }
+                </div>
+
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div>
+                        <label for="liveUrl" class="block text-sm font-medium text-[#928374]">Live URL (optional)</label>
+                        <input
+                            type="text"
+                            id="liveUrl"
+                            [(ngModel)]="form().liveUrl"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            [class.border-red-500]="errors()['liveUrl']"
+                            placeholder="https://demo.example.com"
+                        />
+                        @if (errors()['liveUrl']) {
+                            <p class="mt-1 text-sm text-red-400">{{ errors()['liveUrl'] }}</p>
+                        }
+                    </div>
+
+                    <div>
+                        <label for="githubUrl" class="block text-sm font-medium text-[#928374]">GitHub URL (optional)</label>
+                        <input
+                            type="text"
+                            id="githubUrl"
+                            [(ngModel)]="form().githubUrl"
+                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            [class.border-red-500]="errors()['githubUrl']"
+                            placeholder="https://github.com/username/repo"
+                        />
+                        @if (errors()['githubUrl']) {
+                            <p class="mt-1 text-sm text-red-400">{{ errors()['githubUrl'] }}</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-4">
+                    <input
+                        type="checkbox"
+                        id="featured"
+                        [(ngModel)]="form().featured"
+                        class="h-5 w-5 rounded border-white/10 bg-transparent text-[#7daea3] focus:ring-[#7daea3]"
+                    />
+                    <label for="featured" class="text-[#d4be98]">Feature this project on homepage</label>
+                </div>
+            </div>
+        </div>
+    </section>
+}

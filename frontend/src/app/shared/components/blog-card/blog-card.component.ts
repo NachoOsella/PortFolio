@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { LucideAngularModule, ArrowRight, Calendar, Clock } from 'lucide-angular';
+import { LucideAngularModule, ArrowRight, Calendar } from 'lucide-angular';
 import { BlogPost } from '../../models/blog.model';
 
 @Component({
@@ -15,7 +15,7 @@ export class BlogCardComponent {
     post = input.required<BlogPost>();
     readonly imageFailed = signal(false);
 
-    readonly icons = { ArrowRight, Calendar, Clock };
+    readonly icons = { ArrowRight, Calendar };
 
     private readonly router = inject(Router);
 

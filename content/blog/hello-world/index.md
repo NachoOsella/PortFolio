@@ -1,11 +1,11 @@
 ---
-title: "Hello World - Building My Developer Portfolio"
+title: "Hello World - Building My Developer Portfolio "
 slug: "hello-world"
 date: "2026-02-11"
 tags: ["portfolio", "angular", "nestjs", "tutorial"]
 excerpt: "Welcome to my new developer portfolio! In this post, I'll share the journey of building this site using Angular, NestJS, and modern web technologies."
 published: true
-featured: true
+featured: false
 coverImage: "./2026-02-12-115754_hyprshot.png"
 ---
 

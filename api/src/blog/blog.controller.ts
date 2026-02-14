@@ -1,7 +1,7 @@
 import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
 
 import { BlogQueryDto } from './dto/blog-query.dto';
-import { BlogService, BlogPostSummary } from './blog.service';
+import { BlogService, BlogPost, BlogPostSummary } from './blog.service';
 
 @Controller('blog')
 export class BlogController {
@@ -18,7 +18,7 @@ export class BlogController {
     }
 
     @Get(':slug')
-    async getPostBySlug(@Param('slug') slug: string): Promise<BlogPostSummary> {
+    async getPostBySlug(@Param('slug') slug: string): Promise<BlogPost> {
         const post = await this.blogService.getPostBySlug(slug);
 
         if (!post) {

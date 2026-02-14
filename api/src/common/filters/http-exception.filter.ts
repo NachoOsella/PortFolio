@@ -26,7 +26,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
             exception instanceof HttpException ? exception.message : 'Internal server error';
 
         if (status >= 500) {
-            this.logger.error(`${request.method} ${request.url} -> ${message}`);
+            const stack = exception instanceof Error ? exception.stack : undefined;
+            this.logger.error(`${request.method} ${request.url} -> ${message}`, stack);
         }
 
         response.status(status).json({

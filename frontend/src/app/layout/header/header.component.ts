@@ -1,10 +1,7 @@
 import { Component, HostListener, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
     LucideAngularModule,
-    Sun,
-    Moon,
     Menu,
     X,
     Download,
@@ -18,7 +15,7 @@ import { ThemeService } from '../../core/services/theme.service';
     providers: [
         {
             provide: 'LUCIDE_ICONS',
-            useValue: { Sun, Moon, Menu, X, Download },
+            useValue: { Menu, X, Download },
         },
     ],
     templateUrl: './header.component.html',
@@ -29,9 +26,6 @@ export class HeaderComponent {
 
     mobileMenuOpen = signal(false);
     scrolled = signal(false);
-    readonly isDark = toSignal(this.themeService.isDark$, {
-        initialValue: this.themeService.isDark,
-    });
     readonly mobileNavId = 'mobile-nav-panel';
 
     readonly navLinks = [
@@ -42,7 +36,11 @@ export class HeaderComponent {
         { label: 'Contact', path: '/contact' },
     ];
     
-    readonly icons = { Sun, Moon, Menu, X, Download };
+    readonly icons = { Menu, X, Download };
+
+    constructor() {
+        this.themeService.setTheme();
+    }
 
     @HostListener('window:scroll')
     onScroll(): void {
@@ -52,10 +50,6 @@ export class HeaderComponent {
     @HostListener('window:keydown.escape')
     onEscape(): void {
         this.closeMobileMenu();
-    }
-
-    toggleTheme(): void {
-        this.themeService.toggleTheme();
     }
 
     toggleMobileMenu(): void {

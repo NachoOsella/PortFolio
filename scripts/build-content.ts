@@ -306,6 +306,37 @@ async function buildContent(): Promise<void> {
       console.log('  ℹ️  No skills.json found');
     }
 
+    // Process about.md
+    console.log('\n👤 Processing about page...');
+    const aboutSrc = path.join(CONTENT_DIR, 'about.md');
+    const aboutDest = path.join(GENERATED_DIR, 'about.json');
+    
+    if (fs.existsSync(aboutSrc)) {
+      const aboutContent = fs.readFileSync(aboutSrc, 'utf-8');
+      
+      // Clear code blocks array
+      codeBlocks.length = 0;
+      codeBlockId = 0;
+      
+      // Convert markdown to HTML
+      const htmlWithPlaceholders = await marked.parse(aboutContent);
+      const aboutHtml = await highlightCodeBlocks(htmlWithPlaceholders);
+      
+      // Calculate reading time
+      const aboutReadTime = readingTime(aboutContent);
+      
+      const aboutData = {
+        content: aboutHtml,
+        readingTime: aboutReadTime.text,
+        wordCount: aboutReadTime.words,
+      };
+      
+      fs.writeFileSync(aboutDest, JSON.stringify(aboutData, null, 2));
+      console.log(`  ✅ Generated: ${path.relative(GENERATED_DIR, aboutDest)}`);
+    } else {
+      console.log('  ℹ️  No about.md found');
+    }
+
     const duration = Date.now() - startTime;
     console.log(`\n✨ Content build complete in ${duration}ms!`);
     console.log(`📁 Output: ${GENERATED_DIR}\n`);
