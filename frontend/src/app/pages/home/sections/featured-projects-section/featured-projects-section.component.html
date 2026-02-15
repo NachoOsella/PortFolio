@@ -2,31 +2,32 @@
     <div class="mx-auto max-w-6xl">
         <app-section-heading
             title="Featured Projects"
-            subtitle="A selection of my recent work and personal projects."
+            subtitle="Selected work in backend systems and full-stack architecture."
         />
 
         @if (isLoading()) {
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 @for (i of [1, 2, 3]; track i) {
-                    <div class="h-96 animate-pulse rounded-md bg-[#282828]"></div>
+                    <div class="h-72 animate-pulse bg-[var(--bg1)]"></div>
                 }
             </div>
         } @else if (error()) {
-            <div class="rounded-md border border-[#ea6962]/30 bg-[#282828] p-8 text-center">
-                <p class="text-[#ea6962]">{{ error() }}</p>
+            <div class="border border-[#e55050]/30 bg-[var(--bg1)] p-8 text-center">
+                <p class="text-[#e55050]">{{ error() }}</p>
             </div>
         } @else {
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                @for (project of featuredProjects(); track project.id) {
-                    <app-project-card [project]="project" class="h-full" />
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" #projectsGrid>
+                @for (project of featuredProjects(); track project.id; let i = $index) {
+                    <app-project-card 
+                        #projectCardRef
+                        [project]="project" 
+                        class="h-full animate-on-scroll stagger-{{ ((i % 6) + 1) }}"
+                    />
                 }
             </div>
 
-            <div class="mt-12 text-center">
-                <a
-                    routerLink="/projects"
-                    class="btn-secondary"
-                >
+            <div class="mt-12 text-center animate-on-scroll" #viewAllBtn>
+                <a routerLink="/projects" class="btn-secondary">
                     View All Projects
                     <lucide-icon [img]="icons.ArrowRight" [size]="16" />
                 </a>

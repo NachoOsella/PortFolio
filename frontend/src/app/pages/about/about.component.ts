@@ -1,11 +1,12 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ElementRef, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MarkdownModule } from 'ngx-markdown';
 import { SeoService } from '../../core/services/seo.service';
 import { ApiService } from '../../core/services/api.service';
-import { Github, Mail, FileText, Code, Briefcase, MapPin, CircleCheck, LucideAngularModule } from 'lucide-angular';
+import { ScrollAnimationService } from '../../core/services/scroll-animation.service';
+import { Github, Mail, FileText, LucideAngularModule } from 'lucide-angular';
 import { catchError, of } from 'rxjs';
 
 interface AboutData {
@@ -24,42 +25,80 @@ export class AboutComponent implements OnInit {
     private readonly seo = inject(SeoService);
     private readonly http = inject(HttpClient);
     private readonly api = inject(ApiService);
+    private readonly scrollAnimationService = inject(ScrollAnimationService);
 
     aboutContent = signal<string>('');
     isLoading = signal(true);
     error = signal<string | null>(null);
 
-    icons = { Github, Mail, FileText, Code, Briefcase, MapPin, CircleCheck };
+    icons = { Github, Mail, FileText };
+    
+    readonly pageHeader = viewChild<ElementRef<HTMLDivElement>>('pageHeader');
+    readonly contentArea = viewChild<ElementRef<HTMLDivElement>>('contentArea');
+    readonly profileBlock = viewChild<ElementRef<HTMLDivElement>>('profileBlock');
+    readonly actionButtons = viewChild<ElementRef<HTMLDivElement>>('actionButtons');
 
     ngOnInit(): void {
         this.seo.updateTitle('About | Nacho.dev');
         this.seo.updateMetaTags({
-            description: 'Full-stack developer passionate about building modern web applications with TypeScript, Angular, and Node.js.',
+            description:
+                'Backend engineer focused on Java, Spring Boot, distributed systems, and clean architecture.',
         });
 
         this.loadAboutContent();
     }
 
     private loadAboutContent(): void {
-        this.http.get<AboutData>('/generated/about.json').pipe(
-            catchError(() => {
-                return this.api.get<AboutData>('/about').pipe(
-                    catchError(() => of(null))
-                );
-            })
-        ).subscribe({
-            next: (data) => {
-                if (data) {
-                    this.aboutContent.set(data.content);
-                } else {
+        this.http
+            .get<AboutData>('/generated/about.json')
+            .pipe(
+                catchError(() => {
+                    return this.api.get<AboutData>('/about').pipe(catchError(() => of(null)));
+                })
+            )
+            .subscribe({
+                next: (data) => {
+                    if (data) {
+                        this.aboutContent.set(data.content);
+                    } else {
+                        this.error.set('Failed to load about content');
+                    }
+                    this.isLoading.set(false);
+                    
+                    setTimeout(() => {
+                        this.observeElements();
+                    });
+                },
+                error: () => {
                     this.error.set('Failed to load about content');
-                }
-                this.isLoading.set(false);
-            },
-            error: () => {
-                this.error.set('Failed to load about content');
-                this.isLoading.set(false);
-            },
-        });
+                    this.isLoading.set(false);
+                },
+            });
+    }
+    
+    private observeElements(): void {
+        // Header is visible immediately
+        const header = this.pageHeader();
+        if (header) {
+            this.scrollAnimationService.observe(header.nativeElement);
+        }
+        
+        // Content area
+        const content = this.contentArea();
+        if (content) {
+            this.scrollAnimationService.observe(content.nativeElement);
+        }
+        
+        // Profile grid
+        const profile = this.profileBlock();
+        if (profile) {
+            this.scrollAnimationService.observe(profile.nativeElement);
+        }
+        
+        // Action buttons
+        const buttons = this.actionButtons();
+        if (buttons) {
+            this.scrollAnimationService.observe(buttons.nativeElement);
+        }
     }
 }

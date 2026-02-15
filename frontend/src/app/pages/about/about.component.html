@@ -1,153 +1,99 @@
-<section class="mx-auto max-w-5xl px-6 py-16">
-    <!-- Header -->
-    <div class="mb-12 text-center lg:text-left">
-        <h1 class="text-4xl font-bold tracking-tight text-[#d4be98] sm:text-5xl">
-            About Me
+<section class="mx-auto max-w-4xl px-6 py-16">
+    <div class="mb-12 animate-on-scroll" #pageHeader>
+        <p class="font-mono text-xs uppercase tracking-widest text-[var(--gray)]">/ about</p>
+        <h1 class="mt-4 text-[var(--fg)] uppercase" style="font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; line-height: 0.95;">
+            About
         </h1>
-        <p class="mt-3 text-lg text-[#928374]">
-            Backend developer focused on building scalable and well-structured systems.
+        <p class="mt-4 text-base text-[var(--gray)]">
+            Backend engineer building scalable systems and clean architectures.
         </p>
     </div>
 
-    <div class="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_340px] lg:gap-12">
-        <!-- Main Content -->
-        <div class="order-2 lg:order-1">
-            <!-- Loading State -->
-            @if (isLoading()) {
-                <div class="space-y-6">
-                    <div class="h-6 w-1/3 rounded-lg bg-[#3c3836]"></div>
-                    <div class="space-y-3">
-                        <div class="h-4 w-full rounded bg-[#3c3836]"></div>
-                        <div class="h-4 w-full rounded bg-[#3c3836]"></div>
-                        <div class="h-4 w-4/5 rounded bg-[#3c3836]"></div>
-                    </div>
-                    <div class="h-6 w-1/4 rounded-lg bg-[#3c3836] mt-8"></div>
-                    <div class="space-y-3">
-                        <div class="h-4 w-full rounded bg-[#3c3836]"></div>
-                        <div class="h-4 w-5/6 rounded bg-[#3c3836]"></div>
-                    </div>
-                </div>
-            }
-
-            <!-- Error State -->
-            @if (error()) {
-                <div class="rounded-xl border border-red-500/20 bg-red-500/10 p-6">
-                    <p class="text-red-400">{{ error() }}</p>
-                </div>
-            }
-
-            <!-- Content -->
-            @if (!isLoading() && !error() && aboutContent()) {
-                <article class="markdown-content prose prose-invert max-w-none prose-headings:text-[#d4be98] prose-p:text-[#928374] prose-a:text-[#7daea3] prose-strong:text-[#d4be98] prose-code:text-[#d8a657] prose-pre:bg-[#32302f] prose-pre:text-[#d4be98]">
-                    <markdown [data]="aboutContent()" [disableSanitizer]="true"></markdown>
-                </article>
-            }
-
-            <!-- Action Buttons -->
-            <div class="mt-12 flex flex-wrap gap-3">
-                <a
-                    href="https://github.com/NachoOsella"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn-secondary inline-flex items-center gap-2"
-                >
-                    <lucide-icon [img]="icons.Github" [size]="18" />
-                    GitHub
-                </a>
-                <a
-                    href="mailto:hello@nacho.dev"
-                    class="btn-secondary inline-flex items-center gap-2"
-                >
-                    <lucide-icon [img]="icons.Mail" [size]="18" />
-                    Email
-                </a>
-                <a
-                    routerLink="/contact"
-                    class="btn-primary inline-flex items-center gap-2"
-                >
-                    <lucide-icon [img]="icons.Mail" [size]="18" />
-                    Get in Touch
-                </a>
-                <a
-                    href="/assets/resume.pdf"
-                    download
-                    class="btn-secondary inline-flex items-center gap-2"
-                >
-                    <lucide-icon [img]="icons.FileText" [size]="18" />
-                    Resume
-                </a>
+    <!-- Loading State -->
+    @if (isLoading()) {
+        <div class="space-y-6 animate-on-scroll">
+            <div class="h-6 w-1/3 bg-[var(--bg2)]"></div>
+            <div class="space-y-3">
+                <div class="h-4 w-full bg-[var(--bg2)]"></div>
+                <div class="h-4 w-full bg-[var(--bg2)]"></div>
+                <div class="h-4 w-4/5 bg-[var(--bg2)]"></div>
+            </div>
+            <div class="mt-8 h-6 w-1/4 bg-[var(--bg2)]"></div>
+            <div class="space-y-3">
+                <div class="h-4 w-full bg-[var(--bg2)]"></div>
+                <div class="h-4 w-5/6 bg-[var(--bg2)]"></div>
             </div>
         </div>
+    }
 
-        <!-- Sidebar -->
-        <aside class="order-1 lg:order-2">
-            <div class="sticky top-6 space-y-5">
-                <!-- Profile Card -->
-                <div class="overflow-hidden rounded-2xl border border-white/[0.06] bg-[#282828]/50">
-                    <div class="aspect-square overflow-hidden">
-                        <img
-                            src="/assets/profile.jpg"
-                            alt="Ignacio Osella"
-                            class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
-                    </div>
-                    <div class="p-5">
-                        <h2 class="text-xl font-semibold text-[#d4be98]">Ignacio Osella</h2>
-                        <p class="mt-1 text-sm text-[#928374]">Full-Stack Developer</p>
-                    </div>
-                </div>
+    <!-- Error State -->
+    @if (error()) {
+        <div class="border border-[#e55050]/30 bg-[var(--bg1)] p-6 animate-on-scroll">
+            <p class="text-[#e55050]">{{ error() }}</p>
+        </div>
+    }
 
-                <!-- Quick Info Cards -->
-                <div class="grid grid-cols-2 gap-3 lg:grid-cols-1">
-                    <div class="rounded-xl border border-white/[0.06] bg-[#282828]/30 p-4">
-                        <div class="flex items-center gap-3">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#7daea3]/10">
-                                <lucide-icon [img]="icons.Code" [size]="20" class="text-[#7daea3]" />
-                            </div>
-                            <div>
-                                <p class="text-lg font-semibold text-[#d4be98]">5+</p>
-                                <p class="text-xs text-[#928374]">Years Experience</p>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Content -->
+    @if (!isLoading() && !error() && aboutContent()) {
+        <article class="markdown-content max-w-none animate-on-scroll" #contentArea>
+            <markdown [data]="aboutContent()" [disableSanitizer]="true"></markdown>
+        </article>
+    }
 
-                    <div class="rounded-xl border border-white/[0.06] bg-[#282828]/30 p-4">
-                        <div class="flex items-center gap-3">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#a9b665]/10">
-                                <lucide-icon [img]="icons.Briefcase" [size]="20" class="text-[#a9b665]" />
-                            </div>
-                            <div>
-                                <p class="text-lg font-semibold text-[#d4be98]">Full-Stack</p>
-                                <p class="text-xs text-[#928374]">Focus Area</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rounded-xl border border-white/[0.06] bg-[#282828]/30 p-4">
-                        <div class="flex items-center gap-3">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#e78a4e]/10">
-                                <lucide-icon [img]="icons.MapPin" [size]="20" class="text-[#e78a4e]" />
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold text-[#d4be98]">Remote</p>
-                                <p class="text-xs text-[#928374]">Worldwide</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rounded-xl border border-white/[0.06] bg-[#282828]/30 p-4">
-                        <div class="flex items-center gap-3">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#d3869b]/10">
-                                <lucide-icon [img]="icons.CircleCheck" [size]="20" class="text-[#d3869b]" />
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold text-[#d4be98]">Available</p>
-                                <p class="text-xs text-[#928374]">Open to work</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Profile data block -->
+    <div class="mt-16 border-t border-[var(--border-subtle)] pt-10 animate-on-scroll" #profileBlock>
+        <div class="grid grid-cols-1 gap-px border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-2 lg:grid-cols-4">
+            <div class="bg-[var(--bg1)] p-5 stagger-1">
+                <p class="font-mono text-xs uppercase tracking-wider text-[var(--gray)]">Role</p>
+                <p class="mt-1 text-sm font-bold text-[var(--fg)]">Backend Engineer</p>
             </div>
-        </aside>
+            <div class="bg-[var(--bg1)] p-5 stagger-2">
+                <p class="font-mono text-xs uppercase tracking-wider text-[var(--gray)]">Experience</p>
+                <p class="mt-1 text-sm font-bold text-[var(--fg)]">5+ years</p>
+            </div>
+            <div class="bg-[var(--bg1)] p-5 stagger-3">
+                <p class="font-mono text-xs uppercase tracking-wider text-[var(--gray)]">Location</p>
+                <p class="mt-1 text-sm font-bold text-[var(--fg)]">Cordoba, Argentina</p>
+            </div>
+            <div class="bg-[var(--bg1)] p-5 stagger-4">
+                <p class="font-mono text-xs uppercase tracking-wider text-[var(--gray)]">Status</p>
+                <p class="mt-1 text-sm font-bold text-[var(--fg)]">Available</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-10 flex flex-wrap gap-3 animate-on-scroll" #actionButtons>
+        <a
+            href="https://github.com/NachoOsella"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-secondary inline-flex items-center gap-2"
+        >
+            <lucide-icon [img]="icons.Github" [size]="18" />
+            GitHub
+        </a>
+        <a
+            href="mailto:hello@nacho.dev"
+            class="btn-secondary inline-flex items-center gap-2"
+        >
+            <lucide-icon [img]="icons.Mail" [size]="18" />
+            Email
+        </a>
+        <a
+            routerLink="/contact"
+            class="btn-primary inline-flex items-center gap-2"
+        >
+            <lucide-icon [img]="icons.Mail" [size]="18" />
+            Get in Touch
+        </a>
+        <a
+            href="/assets/resume.pdf"
+            download
+            class="btn-secondary inline-flex items-center gap-2"
+        >
+            <lucide-icon [img]="icons.FileText" [size]="18" />
+            Resume
+        </a>
     </div>
 </section>

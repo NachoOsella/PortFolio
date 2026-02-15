@@ -1,4 +1,15 @@
-import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    OnInit,
+    computed,
+    effect,
+    inject,
+    signal,
+    viewChild,
+    viewChildren,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BlogCardComponent } from '../../../shared/components/blog-card/blog-card.component';
@@ -6,6 +17,7 @@ import { TagFilterComponent } from '../../../shared/components/tag-filter/tag-fi
 import { SectionHeadingComponent } from '../../../shared/components/section-heading/section-heading.component';
 import { ApiService } from '../../../core/services/api.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { ScrollAnimationService } from '../../../core/services/scroll-animation.service';
 import { BlogPost } from '../../../shared/models/blog.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
@@ -29,18 +41,43 @@ type BlogPostPayload = Partial<BlogPost> & {
     templateUrl: './blog-list.component.html',
     styleUrl: './blog-list.component.css',
 })
-export class BlogListComponent implements OnInit {
+export class BlogListComponent implements OnInit, AfterViewInit {
     private readonly api = inject(ApiService);
     private readonly seo = inject(SeoService);
     private readonly http = inject(HttpClient);
+    private readonly scrollAnimationService = inject(ScrollAnimationService);
 
     posts = signal<BlogPost[]>([]);
     selectedTag = signal<string>('all');
     searchQuery = signal<string>('');
     isLoading = signal(true);
     error = signal<string | null>(null);
+    
+    readonly filterSection = viewChild<ElementRef<HTMLDivElement>>('filterSection');
+    readonly emptyState = viewChild<ElementRef<HTMLDivElement>>('emptyState');
+    readonly blogCards = viewChildren('blogCardRef', { read: ElementRef<HTMLElement> });
+    readonly pageSection = viewChild<ElementRef<HTMLElement>>('pageSection');
 
     icons = { Search };
+
+    constructor() {
+        effect(() => {
+            if (this.isLoading()) {
+                return;
+            }
+
+            const cards = this.blogCards();
+            if (!cards.length) {
+                return;
+            }
+
+            cards.forEach((card) => {
+                this.scrollAnimationService.observe(card.nativeElement);
+            });
+
+            this.observePageAnimations();
+        });
+    }
 
     allTags = computed(() => {
         const tags = new Map<string, string>();
@@ -89,8 +126,17 @@ export class BlogListComponent implements OnInit {
         this.loadPosts();
     }
 
+    ngAfterViewInit(): void {
+        this.observePageAnimations();
+    }
+
     onTagSelected(tag: string): void {
         this.selectedTag.set(tag.toLowerCase());
+        
+        setTimeout(() => {
+            this.observeElements();
+            this.observePageAnimations();
+        });
     }
 
     onSearchChange(event: Event): void {
@@ -131,6 +177,11 @@ export class BlogListComponent implements OnInit {
             next: (data) => {
                 this.posts.set(data);
                 this.isLoading.set(false);
+                
+                setTimeout(() => {
+                    this.observeElements();
+                    this.observePageAnimations();
+                });
             },
             error: () => {
                 this.error.set('Failed to load blog posts. Please try again later.');
@@ -161,5 +212,42 @@ export class BlogListComponent implements OnInit {
         }
 
         return `/generated/blog/${slug}/${coverImage}`;
+    }
+    
+    private observeElements(): void {
+        // Filter section
+        const filter = this.filterSection();
+        if (filter) {
+            this.scrollAnimationService.observe(filter.nativeElement);
+        }
+        
+        // Empty state
+        const empty = this.emptyState();
+        if (empty) {
+            this.scrollAnimationService.observe(empty.nativeElement);
+        }
+        
+    }
+
+    private observePageAnimations(): void {
+        const run = () => {
+            const sectionRef = this.pageSection();
+            if (!sectionRef) {
+                return;
+            }
+
+            const section = sectionRef.nativeElement;
+            const elements = section.querySelectorAll<HTMLElement>('.animate-on-scroll');
+            elements.forEach((element) => {
+                this.scrollAnimationService.observe(element);
+            });
+        };
+
+        if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(run);
+            return;
+        }
+
+        setTimeout(run, 0);
     }
 }

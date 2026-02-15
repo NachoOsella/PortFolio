@@ -4,19 +4,19 @@
     min-width: 2.75rem;
     align-items: center;
     justify-content: center;
-    border-radius: 0.75rem;
+    border-radius: 0;
     border: 1px solid transparent;
-    color: #d4be98;
+    color: var(--color-text-primary);
     transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
 }
 
 .toolbar-btn:hover {
-    border-color: #928374;
-    background-color: #32302f;
+    border-color: var(--color-border-hover);
+    background-color: var(--color-surface-2);
 }
 
 .editor-textarea {
     min-height: 300px;
     tab-size: 2;
-    background: #1d2021;
+    background: var(--color-bg);
 }

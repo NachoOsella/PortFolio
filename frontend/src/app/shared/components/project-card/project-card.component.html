@@ -1,61 +1,43 @@
 <article
-    class="project-card group flex h-full cursor-pointer flex-col overflow-hidden rounded-md"
+    class="project-card group flex h-full cursor-pointer flex-col"
     role="link"
     tabindex="0"
     [attr.aria-label]="'Open project ' + project().title"
     (click)="onCardClick($event)"
     (keydown)="onCardKeydown($event)"
 >
-    <div class="project-thumb relative aspect-video overflow-hidden">
-        @if (project().image) {
-            <img
-                [src]="project().image"
-                [alt]="project().title"
-                class="h-full w-full object-cover"
-            />
-        } @else {
-            <div
-                class="pattern-bg flex h-full w-full items-center justify-center text-4xl font-bold text-[#928374]"
-            >
-                {{ project().title.charAt(0) }}
-            </div>
-        }
-        <span
-            class="absolute left-4 top-4 rounded-[6px] border border-white/[0.05] bg-[#3a3735] px-2.5 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#d4be98]"
-        >
-            {{ project().category }}
-        </span>
-    </div>
+    <div class="flex flex-1 flex-col p-6">
+        <div class="flex items-center gap-3">
+            <span class="font-mono text-[11px] font-bold uppercase tracking-wider text-[var(--gray)]">
+                {{ project().category }}
+            </span>
+        </div>
 
-    <div class="flex flex-1 flex-col p-5">
-        <h3 class="text-lg font-semibold text-[#d4be98] transition-colors group-hover:text-[#7daea3]">
+        <h3 class="mt-3 text-lg font-bold text-[var(--fg)] transition-colors group-hover:text-[var(--accent)]">
             <a [routerLink]="['/projects', project().id]">{{ project().title }}</a>
         </h3>
-        <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-[#928374]">
+
+        <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-[var(--gray)]">
             {{ project().description }}
         </p>
 
         <div class="mt-4 flex flex-wrap gap-2">
-            @for (tech of project().technologies.slice(0, 4); track tech) {
-                <span class="mono-chip">
-                    {{ tech }}
-                </span>
+            @for (tech of project().technologies.slice(0, 5); track tech) {
+                <span class="mono-chip">{{ tech }}</span>
             }
-            @if (project().technologies.length > 4) {
-                <span class="mono-chip">
-                    +{{ project().technologies.length - 4 }}
-                </span>
+            @if (project().technologies.length > 5) {
+                <span class="mono-chip">+{{ project().technologies.length - 5 }}</span>
             }
         </div>
 
-        <div class="mt-5 flex items-center justify-between gap-3 border-t border-white/[0.05] pt-4">
+        <div class="mt-auto flex items-center justify-between gap-3 border-t border-[var(--border-subtle)] pt-4" style="margin-top: 1.25rem;">
             <div class="flex items-center gap-2">
                 @if (project().links.github) {
                     <a
                         [href]="project().links.github"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/[0.05] text-[#d4be98] transition-colors hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]"
+                        class="inline-flex h-9 w-9 items-center justify-center border border-[var(--border-subtle)] text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
                         aria-label="View source code"
                     >
                         <lucide-icon [img]="icons.Github" [size]="16" />
@@ -66,7 +48,7 @@
                         [href]="project().links.live"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/[0.05] text-[#d4be98] transition-colors hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]"
+                        class="inline-flex h-9 w-9 items-center justify-center border border-[var(--border-subtle)] text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
                         aria-label="Open live project"
                     >
                         <lucide-icon [img]="icons.ExternalLink" [size]="16" />
@@ -76,7 +58,7 @@
 
             <a
                 [routerLink]="['/projects', project().id]"
-                class="inline-flex h-11 items-center gap-1 rounded-md border border-white/[0.05] px-4 text-sm font-medium text-[#d4be98] transition-colors hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]"
+                class="inline-flex h-9 items-center gap-1 border border-[var(--border-subtle)] px-3 text-sm font-medium text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
             >
                 Details
                 <lucide-icon [img]="icons.ArrowRight" [size]="14" />

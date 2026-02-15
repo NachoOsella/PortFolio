@@ -6,16 +6,17 @@ import {
     OnDestroy,
     OnInit,
     PLATFORM_ID,
-    ViewChild,
     ViewEncapsulation,
     inject,
     signal,
+    viewChild,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { ApiService } from '../../../core/services/api.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { ScrollAnimationService } from '../../../core/services/scroll-animation.service';
 import { BlogPost, TocItem } from '../../../shared/models/blog.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of, switchMap } from 'rxjs';
@@ -41,14 +42,13 @@ type BlogPostPayload = Partial<BlogPost> & {
     encapsulation: ViewEncapsulation.None,
 })
 export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
-    @ViewChild('contentContainer') contentContainerRef?: ElementRef<HTMLElement>;
-
     private readonly route = inject(ActivatedRoute);
     private readonly api = inject(ApiService);
     private readonly seo = inject(SeoService);
     private readonly http = inject(HttpClient);
     private readonly document = inject(DOCUMENT);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+    private readonly scrollAnimationService = inject(ScrollAnimationService);
 
     private headingObserver: IntersectionObserver | null = null;
 
@@ -61,6 +61,13 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
     tocOpen = signal(false);
     tocItems = signal<TocItem[]>([]);
     readonly tocPanelId = 'blog-post-mobile-toc';
+    
+    readonly tocColumn = viewChild<ElementRef<HTMLElement>>('tocColumn');
+    readonly backButton = viewChild<ElementRef<HTMLAnchorElement>>('backButton');
+    readonly postHeader = viewChild<ElementRef<HTMLElement>>('postHeader');
+    readonly mobileToc = viewChild<ElementRef<HTMLDivElement>>('mobileToc');
+    readonly contentContainerRef = viewChild<ElementRef<HTMLElement>>('contentContainerRef');
+    readonly postNav = viewChild<ElementRef<HTMLElement>>('postNav');
 
     icons = { ArrowLeft, Calendar, ChevronDown, Linkedin, Link2 };
 
@@ -91,6 +98,10 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.error.set('Post not found');
                 }
                 this.isLoading.set(false);
+                
+                setTimeout(() => {
+                    this.observeElements();
+                });
             },
             error: () => {
                 this.error.set('Failed to load post');
@@ -432,7 +443,7 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private findHeadingElement(id: string): HTMLElement | null {
-        const container = this.contentContainerRef?.nativeElement;
+        const container = this.contentContainerRef()?.nativeElement;
         const scopedElement = container?.querySelector<HTMLElement>(`[id="${id}"]`) ?? null;
 
         if (scopedElement) {
@@ -443,7 +454,7 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private syncTocFromRenderedContent(): void {
-        const container = this.contentContainerRef?.nativeElement;
+        const container = this.contentContainerRef()?.nativeElement;
         if (!container) {
             return;
         }
@@ -517,5 +528,43 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
         headings.forEach((heading) => {
             this.headingObserver?.observe(heading);
         });
+    }
+
+    private observeElements(): void {
+        // TOC column (desktop)
+        const toc = this.tocColumn();
+        if (toc) {
+            this.scrollAnimationService.observe(toc.nativeElement);
+        }
+
+        // Back button
+        const back = this.backButton();
+        if (back) {
+            this.scrollAnimationService.observe(back.nativeElement);
+        }
+
+        // Post header
+        const header = this.postHeader();
+        if (header) {
+            this.scrollAnimationService.observe(header.nativeElement);
+        }
+
+        // Mobile TOC
+        const mobile = this.mobileToc();
+        if (mobile) {
+            this.scrollAnimationService.observe(mobile.nativeElement);
+        }
+
+        // Content area
+        const content = this.contentContainerRef();
+        if (content) {
+            this.scrollAnimationService.observe(content.nativeElement);
+        }
+
+        // Post navigation
+        const nav = this.postNav();
+        if (nav) {
+            this.scrollAnimationService.observe(nav.nativeElement);
+        }
     }
 }

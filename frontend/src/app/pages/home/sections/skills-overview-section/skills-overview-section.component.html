@@ -2,27 +2,30 @@
     <div class="mx-auto max-w-6xl">
         <app-section-heading
             title="Tech Stack"
-            subtitle="Technologies and tools I use to build modern applications."
+            subtitle="Technologies and patterns I use to build systems."
         />
 
         @if (isLoading()) {
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-                    <div class="h-72 animate-pulse rounded-md bg-[#282828]"></div>
+                    <div class="h-48 animate-pulse bg-[var(--bg1)]"></div>
                 }
             </div>
         } @else {
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                @for (category of skillCategories(); track category.name) {
-                    <div class="skill-category rounded-md p-5">
-                        <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider text-[#928374]">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" #skillsGrid>
+                @for (category of skillCategories(); track category.name; let i = $index) {
+                    <div 
+                        #skillCard
+                        class="skill-category p-5 animate-on-scroll stagger-{{ ((i % 6) + 1) }}"
+                    >
+                        <h3 class="mb-4 font-mono text-xs font-bold uppercase tracking-wider text-[var(--gray)]">
                             {{ category.name }}
                         </h3>
-                        <div class="space-y-1">
+                        <ul class="space-y-1.5">
                             @for (skill of category.skills; track skill.name) {
-                                <app-skill-badge [skill]="skill" [showLevel]="true" />
+                                <li class="text-sm text-[var(--fg)]">{{ skill.name }}</li>
                             }
-                        </div>
+                        </ul>
                     </div>
                 }
             </div>

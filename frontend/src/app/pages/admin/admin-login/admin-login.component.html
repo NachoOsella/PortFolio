@@ -1,11 +1,11 @@
 <section class="mx-auto flex min-h-[calc(100vh-200px)] max-w-md items-center px-6 py-20">
     <div class="w-full">
         <div class="text-center">
-            <div class="inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/[0.06] bg-[#282828]">
-                <lucide-icon [img]="icons.Lock" [size]="24" class="text-[#928374]" />
+            <div class="inline-flex h-12 w-12 items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface-1)]">
+                <lucide-icon [img]="icons.Lock" [size]="24" class="text-[var(--color-text-secondary)]" />
             </div>
-            <h1 class="mt-4 text-2xl font-semibold text-[#d4be98]">Admin Login</h1>
-            <p class="mt-2 text-sm text-[#928374]">Enter your password to access the dashboard</p>
+            <h1 class="mt-4 text-2xl font-bold uppercase tracking-tight text-[var(--color-text-primary)]">Admin Login</h1>
+            <p class="mt-2 text-sm text-[var(--color-text-secondary)]">Enter your password to access the dashboard</p>
         </div>
 
         <form (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
@@ -18,14 +18,14 @@
                     [(ngModel)]="password"
                     required
                     autocomplete="current-password"
-                    class="block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                    class="input-surface block h-11 w-full px-4"
                     [class.border-red-500]="error()"
                     placeholder="Password"
                 />
             </div>
 
             @if (error()) {
-                <div class="rounded-lg border border-red-500/20 bg-red-500/10 p-4">
+                <div class="border border-red-500/20 bg-red-500/10 p-4">
                     <p class="text-sm text-red-400">{{ error() }}</p>
                 </div>
             }
@@ -47,8 +47,8 @@
         </form>
 
         <div class="mt-6 text-center">
-            <a routerLink="/" class="text-sm text-[#d4be98] transition-colors hover:text-[#d4be98]">
-                ← Back to site
+            <a routerLink="/" class="text-sm text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]">
+                &larr; Back to site
             </a>
         </div>
     </div>

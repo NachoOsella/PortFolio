@@ -2,31 +2,32 @@
     <div class="mx-auto max-w-6xl">
         <app-section-heading
             title="Latest Posts"
-            subtitle="Thoughts on code, projects, and continuous learning."
+            subtitle="Notes on architecture, code, and engineering practice."
         />
 
         @if (isLoading()) {
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 @for (i of [1, 2, 3]; track i) {
-                    <div class="h-96 animate-pulse rounded-md bg-[#282828]"></div>
+                    <div class="h-56 animate-pulse bg-[var(--bg1)]"></div>
                 }
             </div>
         } @else if (latestPosts().length === 0) {
-            <div class="rounded-md border border-white/[0.05] bg-[#282828] p-8 text-center">
-                <p class="text-[#928374]">No blog posts yet. Check back soon!</p>
+            <div class="border border-[var(--border-subtle)] bg-[var(--bg1)] p-8 text-center">
+                <p class="text-[var(--gray)]">No blog posts yet. Check back soon.</p>
             </div>
         } @else {
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                @for (post of latestPosts(); track post.slug) {
-                    <app-blog-card [post]="post" class="h-full" />
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" #postsGrid>
+                @for (post of latestPosts(); track post.slug; let i = $index) {
+                    <app-blog-card 
+                        #blogCardRef
+                        [post]="post" 
+                        class="h-full animate-on-scroll stagger-{{ ((i % 6) + 1) }}"
+                    />
                 }
             </div>
 
-            <div class="mt-12 text-center">
-                <a
-                    routerLink="/blog"
-                    class="btn-secondary"
-                >
+            <div class="mt-12 text-center animate-on-scroll" #readAllBtn>
+                <a routerLink="/blog" class="btn-secondary">
                     Read All Posts
                     <lucide-icon [img]="icons.ArrowRight" [size]="16" />
                 </a>

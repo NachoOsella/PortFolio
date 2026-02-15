@@ -1,10 +1,22 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    OnInit,
+    computed,
+    effect,
+    inject,
+    signal,
+    viewChild,
+    viewChildren,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectCardComponent } from '../../../shared/components/project-card/project-card.component';
 import { TagFilterComponent } from '../../../shared/components/tag-filter/tag-filter.component';
 import { SectionHeadingComponent } from '../../../shared/components/section-heading/section-heading.component';
 import { ApiService } from '../../../core/services/api.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { ScrollAnimationService } from '../../../core/services/scroll-animation.service';
 import { Project } from '../../../shared/models/project.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs';
@@ -21,15 +33,37 @@ import { catchError } from 'rxjs';
     templateUrl: './projects-list.component.html',
     styleUrl: './projects-list.component.css',
 })
-export class ProjectsListComponent implements OnInit {
+export class ProjectsListComponent implements OnInit, AfterViewInit {
     private readonly api = inject(ApiService);
     private readonly seo = inject(SeoService);
     private readonly http = inject(HttpClient);
+    private readonly scrollAnimationService = inject(ScrollAnimationService);
 
     projects = signal<Project[]>([]);
     selectedCategory = signal<string>('all');
     isLoading = signal(true);
     error = signal<string | null>(null);
+    
+    readonly tagFilter = viewChild<ElementRef<HTMLElement>>('tagFilter');
+    readonly emptyState = viewChild<ElementRef<HTMLDivElement>>('emptyState');
+    readonly projectCards = viewChildren('projectCardRef', { read: ElementRef<HTMLElement> });
+
+    constructor() {
+        effect(() => {
+            if (this.isLoading()) {
+                return;
+            }
+
+            const cards = this.projectCards();
+            if (!cards.length) {
+                return;
+            }
+
+            cards.forEach((card) => {
+                this.scrollAnimationService.observe(card.nativeElement);
+            });
+        });
+    }
 
     categories = computed(() => {
         const cats = new Set<string>();
@@ -57,8 +91,13 @@ export class ProjectsListComponent implements OnInit {
         this.loadProjects();
     }
 
+    ngAfterViewInit(): void {
+        this.observeElements();
+    }
+
     onCategorySelected(category: string): void {
         this.selectedCategory.set(category);
+        this.observeElements();
     }
 
     private loadProjects(): void {
@@ -73,6 +112,7 @@ export class ProjectsListComponent implements OnInit {
             next: (data) => {
                 this.projects.set(data);
                 this.isLoading.set(false);
+                this.observeElements();
             },
             error: () => {
                 this.error.set('Failed to load projects. Please try again later.');
@@ -80,4 +120,20 @@ export class ProjectsListComponent implements OnInit {
             },
         });
     }
+    
+    private observeElements(): void {
+        // Tag filter
+        const filter = this.tagFilter();
+        if (filter) {
+            this.scrollAnimationService.observe(filter.nativeElement);
+        }
+        
+        // Empty state
+        const empty = this.emptyState();
+        if (empty) {
+            this.scrollAnimationService.observe(empty.nativeElement);
+        }
+        
+    }
+
 }

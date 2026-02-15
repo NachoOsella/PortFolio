@@ -1,8 +1,9 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, effect, inject, signal, viewChild, viewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { ScrollAnimationService } from '../../../core/services/scroll-animation.service';
 import { Project } from '../../../shared/models/project.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of, switchMap } from 'rxjs';
@@ -21,13 +22,35 @@ export class ProjectDetailComponent implements OnInit {
     private readonly api = inject(ApiService);
     private readonly seo = inject(SeoService);
     private readonly http = inject(HttpClient);
+    private readonly scrollAnimationService = inject(ScrollAnimationService);
 
     project = signal<Project | null>(null);
     relatedProjects = signal<Project[]>([]);
     isLoading = signal(true);
     error = signal<string | null>(null);
+    
+    readonly backButton = viewChild<ElementRef<HTMLAnchorElement>>('backButton');
+    readonly projectHeader = viewChild<ElementRef<HTMLDivElement>>('projectHeader');
+    readonly keyFeatures = viewChild<ElementRef<HTMLDivElement>>('keyFeatures');
+    readonly relatedSection = viewChild<ElementRef<HTMLDivElement>>('relatedSection');
+    readonly relatedProjectCards = viewChildren('relatedProjectCardRef', {
+        read: ElementRef<HTMLElement>,
+    });
 
     icons = { ArrowLeft, Github, ExternalLink };
+
+    constructor() {
+        effect(() => {
+            const cards = this.relatedProjectCards();
+            if (!cards.length) {
+                return;
+            }
+
+            cards.forEach((card) => {
+                this.scrollAnimationService.observe(card.nativeElement);
+            });
+        });
+    }
 
     ngOnInit(): void {
         this.route.params.pipe(
@@ -48,6 +71,10 @@ export class ProjectDetailComponent implements OnInit {
                     this.error.set('Project not found');
                 }
                 this.isLoading.set(false);
+                
+                setTimeout(() => {
+                    this.observeElements();
+                });
             },
             error: () => {
                 this.error.set('Failed to load project');
@@ -83,4 +110,31 @@ export class ProjectDetailComponent implements OnInit {
             },
         });
     }
+    
+    private observeElements(): void {
+        // Back button
+        const back = this.backButton();
+        if (back) {
+            this.scrollAnimationService.observe(back.nativeElement);
+        }
+        
+        // Project header
+        const header = this.projectHeader();
+        if (header) {
+            this.scrollAnimationService.observe(header.nativeElement);
+        }
+        
+        // Key features
+        const features = this.keyFeatures();
+        if (features) {
+            this.scrollAnimationService.observe(features.nativeElement);
+        }
+        
+        // Related section
+        const related = this.relatedSection();
+        if (related) {
+            this.scrollAnimationService.observe(related.nativeElement);
+        }
+    }
+    
 }

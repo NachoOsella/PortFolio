@@ -1,11 +1,11 @@
 <div class="flex flex-wrap gap-2">
     <button
         (click)="selectTag('all')"
-        class="min-h-10 rounded-[6px] border px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wide transition-colors"
+        class="min-h-10 border px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wide transition-colors"
         [class]="
             selectedTag() === 'all'
-                ? 'border-transparent bg-[#3a3735] text-[#d4be98]'
-                : 'border-white/[0.05] bg-[#282828] text-[#d4be98] hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]'
+                ? 'border-[var(--color-border-hover)] bg-[var(--color-surface-2)] text-[var(--color-text-primary)]'
+                : 'border-[var(--color-border)] bg-[var(--color-surface-1)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text-primary)]'
         "
     >
         All
@@ -13,11 +13,11 @@
     @for (tag of visibleTags(); track tag) {
         <button
             (click)="selectTag(tag)"
-            class="min-h-10 rounded-[6px] border px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wide transition-colors"
+            class="min-h-10 border px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wide transition-colors"
             [class]="
                 selectedTag() === tag
-                    ? 'border-transparent bg-[#3a3735] text-[#d4be98]'
-                    : 'border-white/[0.05] bg-[#282828] text-[#d4be98] hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]'
+                    ? 'border-[var(--color-border-hover)] bg-[var(--color-surface-2)] text-[var(--color-text-primary)]'
+                    : 'border-[var(--color-border)] bg-[var(--color-surface-1)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text-primary)]'
             "
         >
             {{ tag }}

@@ -1,20 +1,19 @@
 @if (isLoading()) {
     <section class="section-block mx-auto max-w-4xl px-6 py-20">
         <div class="animate-pulse space-y-8">
-            <div class="h-8 w-32 rounded bg-[#282828]"></div>
-            <div class="h-12 w-3/4 rounded bg-[#282828]"></div>
-            <div class="aspect-video rounded-lg bg-[#282828]"></div>
+            <div class="h-8 w-32 bg-[var(--bg1)]"></div>
+            <div class="h-12 w-3/4 bg-[var(--bg1)]"></div>
             <div class="space-y-4">
-                <div class="h-4 w-full rounded bg-[#282828]"></div>
-                <div class="h-4 w-5/6 rounded bg-[#282828]"></div>
-                <div class="h-4 w-4/6 rounded bg-[#282828]"></div>
+                <div class="h-4 w-full bg-[var(--bg1)]"></div>
+                <div class="h-4 w-5/6 bg-[var(--bg1)]"></div>
+                <div class="h-4 w-4/6 bg-[var(--bg1)]"></div>
             </div>
         </div>
     </section>
 } @else if (error()) {
     <section class="section-block mx-auto max-w-4xl px-6 py-20 text-center">
-        <div class="rounded-md border border-[#ea6962]/30 bg-[#282828] p-12">
-            <p class="text-[#ea6962]">{{ error() }}</p>
+        <div class="border border-[#e55050]/30 bg-[var(--bg1)] p-12">
+            <p class="text-[#e55050]">{{ error() }}</p>
             <a routerLink="/projects" class="btn-secondary mt-4 inline-flex">
                 <lucide-icon [img]="icons.ArrowLeft" [size]="16" />
                 Back to Projects
@@ -23,35 +22,30 @@
     </section>
 } @else if (project()) {
     <section class="section-block mx-auto max-w-4xl px-6 py-20">
-        <a
-            routerLink="/projects"
-            class="btn-secondary"
-        >
+        <a routerLink="/projects" class="btn-secondary animate-on-scroll" #backButton>
             <lucide-icon [img]="icons.ArrowLeft" [size]="16" />
             Back to Projects
         </a>
 
-        <div class="mt-8">
+        <div class="mt-8 animate-on-scroll" #projectHeader>
             <div class="flex flex-wrap items-center gap-3">
-                <span class="rounded bg-white/[0.03] px-2.5 py-1 text-xs font-medium uppercase tracking-wider text-[#928374]">
+                <span class="font-mono text-xs font-bold uppercase tracking-wider text-[var(--gray)]">
                     {{ project()!.category }}
                 </span>
-                <span class="text-sm text-[#928374]">{{ project()!.date | date: 'MMM yyyy' }}</span>
+                <span class="text-sm text-[var(--gray)]">{{ project()!.date | date: 'MMM yyyy' }}</span>
             </div>
 
-            <h1 class="mt-4 text-4xl font-semibold tracking-tight text-[#d4be98] sm:text-5xl">
+            <h1 class="mt-4 text-[var(--fg)]" style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">
                 {{ project()!.title }}
             </h1>
 
-            <p class="mt-4 text-lg leading-relaxed text-[#928374]">
+            <p class="mt-4 text-base leading-relaxed text-[var(--gray)]">
                 {{ project()!.longDescription }}
             </p>
 
-            <div class="mt-6 flex flex-wrap gap-3">
+            <div class="mt-6 flex flex-wrap gap-2">
                 @for (tech of project()!.technologies; track tech) {
-                    <span class="rounded bg-white/[0.03] px-3 py-1 text-sm text-[#928374]">
-                        {{ tech }}
-                    </span>
+                    <span class="mono-chip">{{ tech }}</span>
                 }
             </div>
 
@@ -79,38 +73,32 @@
                     </a>
                 }
             </div>
-
-            @if (project()!.image) {
-                <div class="mt-12 aspect-video overflow-hidden rounded-lg border border-white/[0.06] bg-[#282828]">
-                    <img
-                        [src]="project()!.image"
-                        [alt]="project()!.title"
-                        class="h-full w-full object-cover"
-                    />
-                </div>
-            }
-
-            @if (project()!.highlights.length > 0) {
-                <div class="mt-12">
-                    <h2 class="text-xl font-semibold text-[#d4be98]">Key Features</h2>
-                    <ul class="mt-4 space-y-3">
-                        @for (highlight of project()!.highlights; track highlight) {
-                            <li class="flex items-start gap-3 text-[#928374]">
-                                <span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-[2px] bg-[#7daea3]"></span>
-                                <span>{{ highlight }}</span>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }
         </div>
 
+        @if (project()!.highlights.length > 0) {
+            <div class="mt-12 border-t border-[var(--border-subtle)] pt-10 animate-on-scroll" #keyFeatures>
+                <h2 class="text-xl font-bold text-[var(--fg)]">Key Features</h2>
+                <ul class="mt-4 space-y-3">
+                    @for (highlight of project()!.highlights; track highlight) {
+                        <li class="flex items-start gap-3 text-[var(--gray)]">
+                            <span class="mt-2 h-1.5 w-1.5 flex-shrink-0 bg-[var(--accent)]"></span>
+                            <span>{{ highlight }}</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+
         @if (relatedProjects().length > 0) {
-            <div class="mt-20 border-t border-white/[0.06] pt-16">
-                <h2 class="text-2xl font-semibold text-[#d4be98]">Related Projects</h2>
-                <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    @for (related of relatedProjects(); track related.id) {
-                        <app-project-card [project]="related" class="h-full" />
+            <div class="mt-20 border-t border-[var(--border-subtle)] pt-16 animate-on-scroll" #relatedSection>
+                <h2 class="text-2xl font-bold text-[var(--fg)]">Related Projects</h2>
+                <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" #relatedGrid>
+                    @for (related of relatedProjects(); track related.id; let i = $index) {
+                        <app-project-card 
+                            #relatedProjectCardRef
+                            [project]="related" 
+                            class="h-full animate-on-scroll stagger-{{ ((i % 3) + 1) }}"
+                        />
                     }
                 </div>
             </div>

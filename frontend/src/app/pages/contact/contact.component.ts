@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ElementRef, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SeoService } from '../../core/services/seo.service';
 import { ApiService } from '../../core/services/api.service';
+import { ScrollAnimationService } from '../../core/services/scroll-animation.service';
 import { SectionHeadingComponent } from '../../shared/components/section-heading/section-heading.component';
 import { Mail, Github, Send, LucideAngularModule } from 'lucide-angular';
 
@@ -24,6 +25,7 @@ interface ContactForm {
 export class ContactComponent implements OnInit {
     private readonly seo = inject(SeoService);
     private readonly api = inject(ApiService);
+    private readonly scrollAnimationService = inject(ScrollAnimationService);
 
     form = signal<ContactForm>({
         name: '',
@@ -37,6 +39,9 @@ export class ContactComponent implements OnInit {
     isSubmitting = signal(false);
     submitStatus = signal<'idle' | 'success' | 'error'>('idle');
     submitMessage = signal('');
+    
+    readonly contactForm = viewChild<ElementRef<HTMLDivElement>>('contactForm');
+    readonly contactInfo = viewChild<ElementRef<HTMLDivElement>>('contactInfo');
 
     icons = { Mail, Github, Send };
 
@@ -44,6 +49,10 @@ export class ContactComponent implements OnInit {
         this.seo.updateTitle('Contact | Nacho.dev');
         this.seo.updateMetaTags({
             description: 'Get in touch for collaboration, opportunities, or just to say hello.',
+        });
+        
+        setTimeout(() => {
+            this.observeElements();
         });
     }
 
@@ -118,6 +127,23 @@ export class ContactComponent implements OnInit {
                 const newErrors = { ...e };
                 delete newErrors[field];
                 return newErrors;
+            });
+        }
+    }
+    
+    private observeElements(): void {
+        // Contact form
+        const form = this.contactForm();
+        if (form) {
+            this.scrollAnimationService.observe(form.nativeElement);
+        }
+        
+        // Contact info cards
+        const info = this.contactInfo();
+        if (info) {
+            const cards = info.nativeElement.querySelectorAll('.surface-card');
+            cards.forEach((card) => {
+                this.scrollAnimationService.observe(card as HTMLElement);
             });
         }
     }

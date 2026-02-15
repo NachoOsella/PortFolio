@@ -1,8 +1,8 @@
 <section class="mx-auto max-w-6xl px-6 py-20">
     <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h1 class="text-3xl font-semibold tracking-tight text-[#d4be98]">Admin Dashboard</h1>
-            <p class="mt-1 text-[#928374]">Manage your content</p>
+            <h1 class="text-3xl font-bold uppercase tracking-tight text-[var(--color-text-primary)]">Admin Dashboard</h1>
+            <p class="mt-1 text-[var(--color-text-secondary)]">Manage your content</p>
         </div>
         <div class="flex gap-3">
             <button
@@ -16,29 +16,29 @@
     </div>
 
     <!-- Tabs -->
-    <div class="mb-6 border-b border-white/10">
+    <div class="mb-6 border-b border-[var(--color-border)]">
         <div class="flex gap-6">
             <button
                 (click)="setActiveTab('posts')"
                 class="pb-4 text-sm font-medium transition-colors"
-                [class.text-[#d4be98]]="activeTab() === 'posts'"
-                [class.text-[#928374]]="activeTab() !== 'posts'"
+                [class.text-[var(--color-text-primary)]]="activeTab() === 'posts'"
+                [class.text-[var(--color-text-secondary)]]="activeTab() !== 'posts'"
                 [class.border-b-2]="activeTab() === 'posts'"
-                [class.border-[#7daea3]]="activeTab() === 'posts'"
+                [class.border-[var(--color-accent)]]="activeTab() === 'posts'"
             >
                 Blog Posts
-                <span class="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-xs">{{ posts().length }}</span>
+                <span class="ml-2 bg-white/10 px-2 py-0.5 text-xs">{{ posts().length }}</span>
             </button>
             <button
                 (click)="setActiveTab('projects')"
                 class="pb-4 text-sm font-medium transition-colors"
-                [class.text-[#d4be98]]="activeTab() === 'projects'"
-                [class.text-[#928374]]="activeTab() !== 'projects'"
+                [class.text-[var(--color-text-primary)]]="activeTab() === 'projects'"
+                [class.text-[var(--color-text-secondary)]]="activeTab() !== 'projects'"
                 [class.border-b-2]="activeTab() === 'projects'"
-                [class.border-[#7daea3]]="activeTab() === 'projects'"
+                [class.border-[var(--color-accent)]]="activeTab() === 'projects'"
             >
                 Projects
-                <span class="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-xs">{{ projects().length }}</span>
+                <span class="ml-2 bg-white/10 px-2 py-0.5 text-xs">{{ projects().length }}</span>
             </button>
         </div>
     </div>
@@ -46,7 +46,7 @@
     @if (activeTab() === 'posts') {
         <!-- Posts Section -->
         <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 class="text-xl font-medium text-[#d4be98]">Blog Posts</h2>
+            <h2 class="text-xl font-medium text-[var(--color-text-primary)]">Blog Posts</h2>
             <a
                 routerLink="/admin/new"
                 class="btn-primary"
@@ -59,12 +59,12 @@
         @if (isLoadingPosts()) {
             <div class="space-y-4">
                 @for (i of [1, 2, 3]; track i) {
-                    <div class="h-24 animate-pulse rounded-lg bg-[#282828]"></div>
+                    <div class="h-24 animate-pulse bg-[var(--color-surface-1)]"></div>
                 }
             </div>
         } @else if (posts().length === 0) {
-            <div class="rounded-lg border border-white/[0.06] bg-[#282828] p-12 text-center">
-                <p class="text-[#928374]">No posts yet.</p>
+            <div class="border border-[var(--color-border)] bg-[var(--color-surface-1)] p-12 text-center">
+                <p class="text-[var(--color-text-secondary)]">No posts yet.</p>
                 <a
                     routerLink="/admin/new"
                     class="btn-primary mt-4 inline-flex"
@@ -76,29 +76,29 @@
         } @else {
             <div class="space-y-4">
                 @for (post of posts(); track post.slug) {
-                    <div class="flex items-center justify-between rounded-lg border border-white/[0.06] bg-[#282828] p-4 sm:p-6">
+                    <div class="flex items-center justify-between border border-[var(--color-border)] bg-[var(--color-surface-1)] p-4 sm:p-6">
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center gap-3">
-                                <h3 class="truncate text-lg font-medium text-[#d4be98]">{{ post.title }}</h3>
+                                <h3 class="truncate text-lg font-medium text-[var(--color-text-primary)]">{{ post.title }}</h3>
                                 @if (post.published) {
-                                    <span class="flex-shrink-0 rounded bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-400">
+                                    <span class="flex-shrink-0 bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-400">
                                         Published
                                     </span>
                                 } @else {
-                                    <span class="flex-shrink-0 rounded bg-yellow-500/10 px-2 py-0.5 text-xs font-medium text-yellow-400">
+                                    <span class="flex-shrink-0 bg-yellow-500/10 px-2 py-0.5 text-xs font-medium text-yellow-400">
                                         Draft
                                     </span>
                                 }
                             </div>
-                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[#928374]">
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--color-text-secondary)]">
                                 <span>{{ post.date | date: 'mediumDate' }}</span>
-                                <span class="text-[#928374]">·</span>
+                                <span class="text-[var(--color-text-secondary)]">&middot;</span>
                                 <div class="flex gap-1">
                                     @for (tag of post.tags.slice(0, 3); track tag) {
-                                        <span class="rounded bg-white/[0.03] px-1.5 py-0.5 text-xs">{{ tag }}</span>
+                                        <span class="bg-white/[0.03] px-1.5 py-0.5 text-xs">{{ tag }}</span>
                                     }
                                     @if (post.tags.length > 3) {
-                                        <span class="text-xs text-[#928374]">+{{ post.tags.length - 3 }}</span>
+                                        <span class="text-xs text-[var(--color-text-secondary)]">+{{ post.tags.length - 3 }}</span>
                                     }
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                         <div class="ml-4 flex items-center gap-2">
                             @if (deleteConfirmPost() === post.slug) {
                                 <div class="flex items-center gap-2">
-                                    <span class="text-sm text-[#928374]">Delete?</span>
+                                    <span class="text-sm text-[var(--color-text-secondary)]">Delete?</span>
                                     <button
                                         (click)="deletePost(post.slug)"
                                         class="btn-sm btn-danger"
@@ -155,7 +155,7 @@
     } @else {
         <!-- Projects Section -->
         <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 class="text-xl font-medium text-[#d4be98]">Projects</h2>
+            <h2 class="text-xl font-medium text-[var(--color-text-primary)]">Projects</h2>
             <a
                 routerLink="/admin/projects/new"
                 class="btn-primary"
@@ -168,12 +168,12 @@
         @if (isLoadingProjects()) {
             <div class="space-y-4">
                 @for (i of [1, 2, 3]; track i) {
-                    <div class="h-24 animate-pulse rounded-lg bg-[#282828]"></div>
+                    <div class="h-24 animate-pulse bg-[var(--color-surface-1)]"></div>
                 }
             </div>
         } @else if (projects().length === 0) {
-            <div class="rounded-lg border border-white/[0.06] bg-[#282828] p-12 text-center">
-                <p class="text-[#928374]">No projects yet.</p>
+            <div class="border border-[var(--color-border)] bg-[var(--color-surface-1)] p-12 text-center">
+                <p class="text-[var(--color-text-secondary)]">No projects yet.</p>
                 <a
                     routerLink="/admin/projects/new"
                     class="btn-primary mt-4 inline-flex"
@@ -185,27 +185,27 @@
         } @else {
             <div class="space-y-4">
                 @for (project of projects(); track project.id) {
-                    <div class="flex items-center justify-between rounded-lg border border-white/[0.06] bg-[#282828] p-4 sm:p-6">
+                    <div class="flex items-center justify-between border border-[var(--color-border)] bg-[var(--color-surface-1)] p-4 sm:p-6">
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center gap-3">
-                                <h3 class="truncate text-lg font-medium text-[#d4be98]">{{ project.title }}</h3>
+                                <h3 class="truncate text-lg font-medium text-[var(--color-text-primary)]">{{ project.title }}</h3>
                                 @if (project.featured) {
-                                    <span class="flex-shrink-0 rounded bg-purple-500/10 px-2 py-0.5 text-xs font-medium text-purple-400">
+                                    <span class="flex-shrink-0 bg-purple-500/10 px-2 py-0.5 text-xs font-medium text-purple-400">
                                         Featured
                                     </span>
                                 }
                             </div>
-                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[#928374]">
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--color-text-secondary)]">
                                 <span>{{ project.category }}</span>
-                                <span class="text-[#928374]">·</span>
+                                <span class="text-[var(--color-text-secondary)]">&middot;</span>
                                 <span>{{ project.date | date: 'mediumDate' }}</span>
-                                <span class="text-[#928374]">·</span>
+                                <span class="text-[var(--color-text-secondary)]">&middot;</span>
                                 <div class="flex gap-1">
                                     @for (tech of project.technologies.slice(0, 3); track tech) {
-                                        <span class="rounded bg-white/[0.03] px-1.5 py-0.5 text-xs">{{ tech }}</span>
+                                        <span class="bg-white/[0.03] px-1.5 py-0.5 text-xs">{{ tech }}</span>
                                     }
                                     @if (project.technologies.length > 3) {
-                                        <span class="text-xs text-[#928374]">+{{ project.technologies.length - 3 }}</span>
+                                        <span class="text-xs text-[var(--color-text-secondary)]">+{{ project.technologies.length - 3 }}</span>
                                     }
                                 </div>
                             </div>
@@ -214,7 +214,7 @@
                         <div class="ml-4 flex items-center gap-2">
                             @if (deleteConfirmProject() === project.id) {
                                 <div class="flex items-center gap-2">
-                                    <span class="text-sm text-[#928374]">Delete?</span>
+                                    <span class="text-sm text-[var(--color-text-secondary)]">Delete?</span>
                                     <button
                                         (click)="deleteProject(project.id)"
                                         class="btn-sm btn-danger"

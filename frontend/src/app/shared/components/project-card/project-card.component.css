@@ -4,20 +4,12 @@
 }
 
 .project-card {
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: #282828;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg1);
     transition: border-color 180ms ease-out, background-color 180ms ease-out;
 }
 
 .project-card:hover {
-    border-color: rgba(255, 255, 255, 0.1);
-    background: #32302f;
-}
-
-.project-thumb {
-    background: #282828;
-}
-
-.pattern-bg {
-    background-color: #1d2021;
+    border-color: var(--border-strong);
+    background: var(--bg2);
 }

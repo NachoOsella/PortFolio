@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, effect, inject, signal, viewChild, viewChildren } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LucideAngularModule, ArrowRight } from 'lucide-angular';
@@ -6,6 +6,7 @@ import { catchError } from 'rxjs';
 import { ProjectCardComponent } from '../../../../shared/components/project-card/project-card.component';
 import { SectionHeadingComponent } from '../../../../shared/components/section-heading/section-heading.component';
 import { ApiService } from '../../../../core/services/api.service';
+import { ScrollAnimationService } from '../../../../core/services/scroll-animation.service';
 import { Project } from '../../../../shared/models/project.model';
 
 @Component({
@@ -18,11 +19,32 @@ import { Project } from '../../../../shared/models/project.model';
 export class FeaturedProjectsSectionComponent implements OnInit {
     private readonly api = inject(ApiService);
     private readonly http = inject(HttpClient);
+    private readonly scrollAnimationService = inject(ScrollAnimationService);
     readonly icons = { ArrowRight };
 
     featuredProjects = signal<Project[]>([]);
     isLoading = signal(true);
     error = signal<string | null>(null);
+    
+    readonly viewAllBtn = viewChild<ElementRef<HTMLDivElement>>('viewAllBtn');
+    readonly projectCards = viewChildren('projectCardRef', { read: ElementRef<HTMLElement> });
+
+    constructor() {
+        effect(() => {
+            if (this.isLoading()) {
+                return;
+            }
+
+            const cards = this.projectCards();
+            if (!cards.length) {
+                return;
+            }
+
+            cards.forEach((card) => {
+                this.scrollAnimationService.observe(card.nativeElement);
+            });
+        });
+    }
 
     ngOnInit(): void {
         this.loadFeaturedProjects();
@@ -40,11 +62,24 @@ export class FeaturedProjectsSectionComponent implements OnInit {
                     const featured = projects.filter((p) => p.featured).slice(0, 3);
                     this.featuredProjects.set(featured);
                     this.isLoading.set(false);
+                    
+                    // Observe animated elements after data loads
+                    setTimeout(() => {
+                        this.observeElements();
+                    });
                 },
                 error: () => {
                     this.error.set('Failed to load projects');
                     this.isLoading.set(false);
                 },
             });
+    }
+    
+    private observeElements(): void {
+        // Observe view all button
+        const btn = this.viewAllBtn();
+        if (btn) {
+            this.scrollAnimationService.observe(btn.nativeElement);
+        }
     }
 }

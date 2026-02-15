@@ -1,9 +1,9 @@
 @if (isLoading()) {
     <section class="mx-auto max-w-6xl px-6 py-20">
         <div class="animate-pulse space-y-6">
-            <div class="h-12 rounded bg-[#282828]"></div>
-            <div class="h-12 rounded bg-[#282828]"></div>
-            <div class="h-64 rounded bg-[#282828]"></div>
+            <div class="h-12 bg-[var(--color-surface-1)]"></div>
+            <div class="h-12 bg-[var(--color-surface-1)]"></div>
+            <div class="h-64 bg-[var(--color-surface-1)]"></div>
         </div>
     </section>
 } @else {
@@ -40,7 +40,7 @@
 
         @if (saveStatus() !== 'idle') {
             <div
-                class="mb-6 rounded-lg border p-4"
+                class="mb-6 border p-4"
                 [class.border-green-500/20]="saveStatus() === 'success'"
                 [class.bg-green-500/10]="saveStatus() === 'success'"
                 [class.border-red-500/20]="saveStatus() === 'error'"
@@ -60,13 +60,13 @@
             <div class="lg:col-span-3">
                 <div class="space-y-5">
                     <div>
-                        <label for="title" class="block text-sm font-medium text-[#928374]">Title</label>
+                        <label for="title" class="block text-sm font-medium text-[var(--color-text-secondary)]">Title</label>
                         <input
                             type="text"
                             id="title"
                             [(ngModel)]="form().title"
                             (blur)="generateSlug()"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-lg text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block h-11 w-full px-4 text-lg"
                             [class.border-red-500]="errors()['title']"
                             placeholder="Post title"
                         />
@@ -77,13 +77,13 @@
 
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <div>
-                            <label for="slug" class="block text-sm font-medium text-[#928374]">Slug</label>
+                            <label for="slug" class="block text-sm font-medium text-[var(--color-text-secondary)]">Slug</label>
                             <input
                                 type="text"
                                 id="slug"
                                 [(ngModel)]="form().slug"
                                 [disabled]="isEditMode()"
-                                class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none disabled:opacity-50"
+                                class="input-surface mt-2 block h-11 w-full px-4 disabled:opacity-50"
                                 [class.border-red-500]="errors()['slug']"
                                 placeholder="post-slug"
                             />
@@ -93,12 +93,12 @@
                         </div>
 
                         <div>
-                            <label for="date" class="block text-sm font-medium text-[#928374]">Date</label>
+                            <label for="date" class="block text-sm font-medium text-[var(--color-text-secondary)]">Date</label>
                             <input
                                 type="date"
                                 id="date"
                                 [(ngModel)]="form().date"
-                                class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] transition-colors focus:border-[#7daea3] focus:outline-none"
+                                class="input-surface mt-2 block h-11 w-full px-4"
                                 [class.border-red-500]="errors()['date']"
                             />
                             @if (errors()['date']) {
@@ -108,12 +108,12 @@
                     </div>
 
                     <div>
-                        <label for="excerpt" class="block text-sm font-medium text-[#928374]">Excerpt</label>
+                        <label for="excerpt" class="block text-sm font-medium text-[var(--color-text-secondary)]">Excerpt</label>
                         <textarea
                             id="excerpt"
                             [(ngModel)]="form().excerpt"
                             rows="2"
-                            class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block w-full resize-none px-4 py-3"
                             [class.border-red-500]="errors()['excerpt']"
                             placeholder="Brief description of the post..."
                         ></textarea>
@@ -123,37 +123,37 @@
                     </div>
 
                     <div>
-                        <label for="tags" class="block text-sm font-medium text-[#928374]">Tags (comma-separated)</label>
+                        <label for="tags" class="block text-sm font-medium text-[var(--color-text-secondary)]">Tags (comma-separated)</label>
                         <input
                             type="text"
                             id="tags"
                             [(ngModel)]="form().tags"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block h-11 w-full px-4"
                             placeholder="typescript, angular, nodejs"
                         />
                     </div>
 
                     <div>
-                        <label for="coverImage" class="block text-sm font-medium text-[#928374]">Cover Image URL (optional)</label>
+                        <label for="coverImage" class="block text-sm font-medium text-[var(--color-text-secondary)]">Cover Image URL (optional)</label>
                         <input
                             type="text"
                             id="coverImage"
                             [(ngModel)]="form().coverImage"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block h-11 w-full px-4"
                             placeholder="/images/blog/cover.webp"
                         />
                     </div>
 
                     <div class="flex-1">
-                        <label for="content" class="block text-sm font-medium text-[#928374]">
+                        <label for="content" class="block text-sm font-medium text-[var(--color-text-secondary)]">
                             Content
-                            <span class="ml-2 text-[#928374]">{{ wordCount() }} words</span>
+                            <span class="ml-2 text-[var(--color-text-secondary)]">{{ wordCount() }} words</span>
                         </label>
                         <textarea
                             id="content"
                             [(ngModel)]="form().content"
                             rows="20"
-                            class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 font-mono text-sm text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block w-full resize-none px-4 py-3 font-mono text-sm"
                             [class.border-red-500]="errors()['content']"
                             placeholder="Write your post in Markdown..."
                         ></textarea>
@@ -167,8 +167,8 @@
             <!-- Preview Column (40%) -->
             <div class="lg:col-span-2">
                 <div class="sticky top-6">
-                    <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-[#928374]">Preview</h3>
-                    <div class="max-h-[calc(100vh-200px)] overflow-y-auto rounded-lg border border-white/[0.06] bg-[#282828] p-5">
+                    <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">Preview</h3>
+                    <div class="max-h-[calc(100vh-200px)] overflow-y-auto border border-[var(--color-border)] bg-[var(--color-surface-1)] p-5">
                         <app-markdown-preview [content]="form().content" />
                     </div>
                 </div>

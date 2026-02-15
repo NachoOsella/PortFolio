@@ -1,19 +1,19 @@
-<section class="section-block section-block-first px-6 py-20 sm:py-24">
-    <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-        <div>
+<section class="section-block section-block-first px-6 py-20 sm:py-28">
+    <div class="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[1.1fr_0.9fr]">
+        <div class="animate-fade-in-up">
             <p class="hero-label">/ profile</p>
-            <h1 class="mt-3 text-5xl font-semibold tracking-tight text-[#d4be98] sm:text-6xl lg:text-7xl">
-                Ignacio Osella<span class="text-[#a9b665]">.</span>
+            <h1 class="mt-4 text-[var(--fg)] uppercase">
+                Ignacio<br />Osella<span class="text-[var(--accent)]">.</span>
             </h1>
-            <p class="mt-4 text-2xl font-medium tracking-wide text-[#928374] sm:text-3xl">
+            <p class="mt-4 text-xl font-bold uppercase tracking-[0.15em] text-[var(--gray)] sm:text-2xl">
                 Backend Engineer
             </p>
-            <p class="mt-6 max-w-2xl text-lg leading-relaxed text-[#928374]">
-                I design and implement maintainable backend systems, clear API contracts, and reliable
-                developer workflows across Java, TypeScript, and distributed architectures.
+            <p class="mt-6 max-w-xl text-base leading-relaxed text-[var(--gray)]">
+                I architect and build backend systems that scale. Clean API contracts,
+                distributed architectures, and developer workflows across Java and TypeScript.
             </p>
 
-            <div class="mt-8 flex flex-wrap gap-3">
+            <div class="mt-10 flex flex-wrap gap-3">
                 <a routerLink="/projects" class="btn-primary">
                     View Projects
                     <lucide-icon [img]="icons.ArrowRight" [size]="16" />
@@ -28,7 +28,7 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         [attr.aria-label]="social.label"
-                        class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/[0.05] text-[#d4be98] transition-colors hover:border-white/[0.1] hover:bg-[#32302f] hover:text-[#d4be98]"
+                        class="inline-flex h-11 w-11 items-center justify-center border border-[var(--border-subtle)] text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
                     >
                         <lucide-icon [img]="social.icon" [size]="18" />
                     </a>
@@ -40,37 +40,28 @@
             </div>
         </div>
 
-        <aside class="terminal-panel" aria-label="Developer profile terminal">
-            <header class="terminal-head">
-                <p class="terminal-title">terminal://developer-session</p>
-            </header>
-
-            <div class="terminal-content">
-                <p class="terminal-line">
-                    <span class="terminal-prompt">$</span>
-                    <span>stack --primary</span>
-                </p>
-                <p class="terminal-output">java · spring boot · typescript · angular · nestjs</p>
-
-                <p class="terminal-line">
-                    <span class="terminal-prompt">$</span>
-                    <span>focus --now</span>
-                </p>
-                <p class="terminal-output">distributed systems, clean API contracts, and DX</p>
-
-                <p class="terminal-line">
-                    <span class="terminal-prompt">$</span>
-                    <span>status</span>
-                </p>
-                <p class="terminal-output">available for collaboration</p>
-
-                <div class="terminal-divider" aria-hidden="true"></div>
-
-                <div class="terminal-meta">
-                    <p><span class="terminal-meta-key">role</span><span>backend engineer</span></p>
-                    <p><span class="terminal-meta-key">location</span><span>cordoba-ar</span></p>
-                    <p><span class="terminal-meta-key">timezone</span><span>utc-3</span></p>
-                </div>
+        <aside class="terminal animate-fade-in-up delay-200" aria-label="Developer profile terminal">
+            <div class="terminal-header">
+                <span class="terminal-prompt">user@portfolio:~$</span>
+                <span class="terminal-command">cat about.md</span>
+            </div>
+            <div class="terminal-body">
+                @for (line of terminalLines(); track line.id) {
+                    <div
+                        class="terminal-line"
+                        [class.typed]="line.isTyped"
+                        [class.typing]="activeTypingLineId() === line.id"
+                    >
+                        <span class="terminal-key">{{ line.key }}</span>
+                        <span class="terminal-value">
+                            {{ line.typedValue }}
+                            @if (activeTypingLineId() === line.id && !allLinesTyped()) {
+                                <span class="terminal-inline-cursor" aria-hidden="true"></span>
+                            }
+                        </span>
+                    </div>
+                }
+                <div class="terminal-cursor" [class.blinking]="allLinesTyped()"></div>
             </div>
         </aside>
     </div>

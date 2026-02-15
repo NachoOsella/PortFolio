@@ -1,9 +1,9 @@
 @if (isLoading()) {
     <section class="mx-auto max-w-6xl px-6 py-20">
         <div class="animate-pulse space-y-6">
-            <div class="h-12 rounded bg-[#282828]"></div>
-            <div class="h-12 rounded bg-[#282828]"></div>
-            <div class="h-64 rounded bg-[#282828]"></div>
+            <div class="h-12 bg-[var(--color-surface-1)]"></div>
+            <div class="h-12 bg-[var(--color-surface-1)]"></div>
+            <div class="h-64 bg-[var(--color-surface-1)]"></div>
         </div>
     </section>
 } @else {
@@ -31,7 +31,7 @@
 
         @if (saveStatus() !== 'idle') {
             <div
-                class="mb-6 rounded-lg border p-4"
+                class="mb-6 border p-4"
                 [class.border-green-500/20]="saveStatus() === 'success'"
                 [class.bg-green-500/10]="saveStatus() === 'success'"
                 [class.border-red-500/20]="saveStatus() === 'error'"
@@ -49,10 +49,10 @@
         <div class="grid grid-cols-1 gap-6">
             <div class="space-y-5">
                 <div>
-                    <label for="id" class="block text-sm font-medium text-[#928374]">
+                    <label for="id" class="block text-sm font-medium text-[var(--color-text-secondary)]">
                         ID
                         @if (isEditMode()) {
-                            <span class="ml-1 text-xs text-[#928374]">(read-only)</span>
+                            <span class="ml-1 text-xs text-[var(--color-text-secondary)]">(read-only)</span>
                         }
                     </label>
                     <input
@@ -60,7 +60,7 @@
                         id="id"
                         [(ngModel)]="form().id"
                         [disabled]="isEditMode()"
-                        class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none disabled:opacity-50"
+                        class="input-surface mt-2 block h-11 w-full px-4 disabled:opacity-50"
                         [class.border-red-500]="errors()['id']"
                         placeholder="project-id"
                     />
@@ -70,13 +70,13 @@
                 </div>
 
                 <div>
-                    <label for="title" class="block text-sm font-medium text-[#928374]">Title</label>
+                    <label for="title" class="block text-sm font-medium text-[var(--color-text-secondary)]">Title</label>
                     <input
                         type="text"
                         id="title"
                         [(ngModel)]="form().title"
                         (blur)="generateId()"
-                        class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-lg text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        class="input-surface mt-2 block h-11 w-full px-4 text-lg"
                         [class.border-red-500]="errors()['title']"
                         placeholder="Project title"
                     />
@@ -87,12 +87,12 @@
 
                 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div>
-                        <label for="category" class="block text-sm font-medium text-[#928374]">Category</label>
+                        <label for="category" class="block text-sm font-medium text-[var(--color-text-secondary)]">Category</label>
                         <input
                             type="text"
                             id="category"
                             [(ngModel)]="form().category"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block h-11 w-full px-4"
                             [class.border-red-500]="errors()['category']"
                             placeholder="e.g., Full-Stack"
                         />
@@ -102,12 +102,12 @@
                     </div>
 
                     <div>
-                        <label for="date" class="block text-sm font-medium text-[#928374]">Date</label>
+                        <label for="date" class="block text-sm font-medium text-[var(--color-text-secondary)]">Date</label>
                         <input
                             type="date"
                             id="date"
                             [(ngModel)]="form().date"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block h-11 w-full px-4"
                             [class.border-red-500]="errors()['date']"
                         />
                         @if (errors()['date']) {
@@ -117,12 +117,12 @@
                 </div>
 
                 <div>
-                    <label for="description" class="block text-sm font-medium text-[#928374]">Short Description</label>
+                    <label for="description" class="block text-sm font-medium text-[var(--color-text-secondary)]">Short Description</label>
                     <textarea
                         id="description"
                         [(ngModel)]="form().description"
                         rows="2"
-                        class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        class="input-surface mt-2 block w-full resize-none px-4 py-3"
                         [class.border-red-500]="errors()['description']"
                         placeholder="Brief description for project cards..."
                     ></textarea>
@@ -132,12 +132,12 @@
                 </div>
 
                 <div>
-                    <label for="longDescription" class="block text-sm font-medium text-[#928374]">Long Description</label>
+                    <label for="longDescription" class="block text-sm font-medium text-[var(--color-text-secondary)]">Long Description</label>
                     <textarea
                         id="longDescription"
                         [(ngModel)]="form().longDescription"
                         rows="5"
-                        class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        class="input-surface mt-2 block w-full resize-none px-4 py-3"
                         [class.border-red-500]="errors()['longDescription']"
                         placeholder="Detailed project description..."
                     ></textarea>
@@ -147,12 +147,12 @@
                 </div>
 
                 <div>
-                    <label for="image" class="block text-sm font-medium text-[#928374]">Image URL</label>
+                    <label for="image" class="block text-sm font-medium text-[var(--color-text-secondary)]">Image URL</label>
                     <input
                         type="text"
                         id="image"
                         [(ngModel)]="form().image"
-                        class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        class="input-surface mt-2 block h-11 w-full px-4"
                         [class.border-red-500]="errors()['image']"
                         placeholder="https://example.com/image.jpg"
                     />
@@ -162,14 +162,14 @@
                 </div>
 
                 <div>
-                    <label for="technologies" class="block text-sm font-medium text-[#928374]">
+                    <label for="technologies" class="block text-sm font-medium text-[var(--color-text-secondary)]">
                         Technologies (comma-separated)
                     </label>
                     <input
                         type="text"
                         id="technologies"
                         [(ngModel)]="form().technologies"
-                        class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        class="input-surface mt-2 block h-11 w-full px-4"
                         [class.border-red-500]="errors()['technologies']"
                         placeholder="Angular, TypeScript, Node.js"
                     />
@@ -179,14 +179,14 @@
                 </div>
 
                 <div>
-                    <label for="highlights" class="block text-sm font-medium text-[#928374]">
+                    <label for="highlights" class="block text-sm font-medium text-[var(--color-text-secondary)]">
                         Highlights (one per line)
                     </label>
                     <textarea
                         id="highlights"
                         [(ngModel)]="form().highlights"
                         rows="5"
-                        class="mt-2 block w-full resize-none rounded-md border border-white/10 bg-transparent px-4 py-3 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                        class="input-surface mt-2 block w-full resize-none px-4 py-3"
                         [class.border-red-500]="errors()['highlights']"
                         placeholder="Built with modern tech stack&#10;Responsive design&#10;High performance"
                     ></textarea>
@@ -197,12 +197,12 @@
 
                 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div>
-                        <label for="liveUrl" class="block text-sm font-medium text-[#928374]">Live URL (optional)</label>
+                        <label for="liveUrl" class="block text-sm font-medium text-[var(--color-text-secondary)]">Live URL (optional)</label>
                         <input
                             type="text"
                             id="liveUrl"
                             [(ngModel)]="form().liveUrl"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block h-11 w-full px-4"
                             [class.border-red-500]="errors()['liveUrl']"
                             placeholder="https://demo.example.com"
                         />
@@ -212,12 +212,12 @@
                     </div>
 
                     <div>
-                        <label for="githubUrl" class="block text-sm font-medium text-[#928374]">GitHub URL (optional)</label>
+                        <label for="githubUrl" class="block text-sm font-medium text-[var(--color-text-secondary)]">GitHub URL (optional)</label>
                         <input
                             type="text"
                             id="githubUrl"
                             [(ngModel)]="form().githubUrl"
-                            class="mt-2 block h-11 w-full rounded-md border border-white/10 bg-transparent px-4 text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none"
+                            class="input-surface mt-2 block h-11 w-full px-4"
                             [class.border-red-500]="errors()['githubUrl']"
                             placeholder="https://github.com/username/repo"
                         />
@@ -232,9 +232,9 @@
                         type="checkbox"
                         id="featured"
                         [(ngModel)]="form().featured"
-                        class="h-5 w-5 rounded border-white/10 bg-transparent text-[#7daea3] focus:ring-[#7daea3]"
+                        class="h-5 w-5 border-[var(--color-border)] bg-transparent text-[var(--color-accent)] focus:ring-[var(--color-accent)]"
                     />
-                    <label for="featured" class="text-[#d4be98]">Feature this project on homepage</label>
+                    <label for="featured" class="text-[var(--color-text-primary)]">Feature this project on homepage</label>
                 </div>
             </div>
         </div>

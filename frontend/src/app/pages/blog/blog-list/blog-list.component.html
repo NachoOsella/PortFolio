@@ -1,21 +1,23 @@
-<section class="section-block mx-auto max-w-6xl px-6 py-20">
-    <app-section-heading
-        title="Blog"
-        subtitle="Thoughts on code, projects, and continuous learning."
-    />
+<section class="section-block mx-auto max-w-6xl px-6 py-20" #pageSection>
+    <div class="animate-fade-in-up">
+        <app-section-heading
+            title="Blog"
+            subtitle="Notes on architecture, code, and engineering practice."
+        />
+    </div>
 
     @if (isLoading()) {
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-                <div class="h-96 animate-pulse rounded-lg bg-[#282828]"></div>
+                <div class="h-56 animate-pulse bg-[var(--bg1)]"></div>
             }
         </div>
     } @else if (error()) {
-        <div class="rounded-md border border-[#ea6962]/30 bg-[#282828] p-8 text-center">
-            <p class="text-[#ea6962]">{{ error() }}</p>
+        <div class="border border-[#e55050]/30 bg-[var(--bg1)] p-8 text-center">
+            <p class="text-[#e55050]">{{ error() }}</p>
         </div>
     } @else {
-        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between animate-on-scroll" #filterSection>
             <app-tag-filter
                 [tags]="allTags()"
                 [selectedTag]="selectedTag()"
@@ -26,21 +28,21 @@
                 <lucide-icon
                     [img]="icons.Search"
                     [size]="18"
-                    class="absolute left-3 top-1/2 -translate-y-1/2 text-[#928374]"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--gray)]"
                 />
                 <input
                     type="text"
                     [value]="searchQuery()"
                     (input)="onSearchChange($event)"
                     placeholder="Search posts..."
-                    class="h-10 w-full rounded-md border border-white/10 bg-transparent pl-10 pr-4 text-sm text-[#d4be98] placeholder:text-[#928374] transition-colors focus:border-[#7daea3] focus:outline-none sm:w-64"
+                    class="h-10 w-full border border-[var(--border-subtle)] bg-transparent pl-10 pr-4 text-sm text-[var(--fg)] placeholder:text-[var(--gray)] transition-colors focus:border-[var(--accent)] focus:outline-none sm:w-64"
                 />
             </div>
         </div>
 
         @if (filteredPosts().length === 0) {
-            <div class="rounded-lg border border-white/[0.06] bg-[#282828] p-12 text-center">
-                <p class="text-[#928374]">
+            <div class="border border-[var(--border-subtle)] bg-[var(--bg1)] p-12 text-center animate-on-scroll" #emptyState>
+                <p class="text-[var(--gray)]">
                     @if (searchQuery()) {
                         No posts match your search.
                     } @else {
@@ -49,9 +51,13 @@
                 </p>
             </div>
         } @else {
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                @for (post of filteredPosts(); track post.slug) {
-                    <app-blog-card [post]="post" class="h-full" />
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" #postsGrid>
+                @for (post of filteredPosts(); track post.slug; let i = $index) {
+                    <app-blog-card 
+                        #blogCardRef
+                        [post]="post" 
+                        class="h-full animate-on-scroll stagger-{{ ((i % 6) + 1) }}"
+                    />
                 }
             </div>
         }
