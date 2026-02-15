@@ -44,9 +44,9 @@ export class SkillBadgeComponent {
         Workflow,
     };
 
-    get iconUrl(): string {
+    get iconUrl(): string | null {
         const slug = this.normalizeIconName(this.skill().icon || this.skill().name);
-        return `https://cdn.simpleicons.org/${slug}`;
+        return slug ? `https://cdn.simpleicons.org/${slug}` : null;
     }
 
     get levelValue(): number {
@@ -100,12 +100,14 @@ export class SkillBadgeComponent {
             default: this.icons.Globe,
         };
 
-        return iconMap[normalized] || iconMap['default'];
+        return (normalized && iconMap[normalized]) || iconMap['default'];
     }
 
-    private normalizeIconName(name: string): string {
+    private normalizeIconName(name: string): string | null {
         const lower = name.toLowerCase();
-        const map: Record<string, string> = {
+
+        // Mapping of skill names to Simple Icons slugs
+        const simpleIconsMap: Record<string, string> = {
             'node.js': 'nodedotjs',
             'next.js': 'nextdotjs',
             'c++': 'cplusplus',
@@ -119,8 +121,87 @@ export class SkillBadgeComponent {
             css3: 'css3',
             'visual studio code': 'visualstudiocode',
             'vs code': 'visualstudiocode',
+            // Add more technology mappings as needed
+            typescript: 'typescript',
+            javascript: 'javascript',
+            java: 'java',
+            python: 'python',
+            angular: 'angular',
+            react: 'react',
+            vue: 'vuedotjs',
+            spring: 'spring',
+            'spring boot': 'springboot',
+            postgresql: 'postgresql',
+            mysql: 'mysql',
+            mongodb: 'mongodb',
+            redis: 'redis',
+            kafka: 'apachekafka',
+            docker: 'docker',
+            kubernetes: 'kubernetes',
+            jenkins: 'jenkins',
+            git: 'git',
+            github: 'github',
+            gitlab: 'gitlab',
+            jira: 'jira',
+            terraform: 'terraform',
+            nginx: 'nginx',
+            linux: 'linux',
+            'intellij idea': 'intellijidea',
         };
-        return map[lower] || lower.replace(/\s+/g, '');
+
+        const mapped = simpleIconsMap[lower];
+        if (mapped) return mapped;
+
+        // Check if it's a conceptual/soft skill that has no Simple Icon
+        const noIconSkills = [
+            'sql',
+            'jpa',
+            'hibernate',
+            'jpa/hibernate',
+            'restapidesign',
+            'rest api design',
+            'microservicesarchitecture',
+            'microservices architecture',
+            'apigatewaypattern',
+            'api gateway pattern',
+            'apigateway',
+            'api gateway',
+            'cleanarchitecture',
+            'clean architecture',
+            'ddd',
+            'domain-drivendesign(ddd)',
+            'domain-driven design',
+            'domain driven design',
+            'rxjs',
+            'english',
+            'english(c1-advanced)',
+            'scrum',
+            'scrum(psmi)',
+            'agile',
+            'agilemethodology',
+            'agile methodology',
+            'teamcollaboration',
+            'team collaboration',
+            'problemsolving',
+            'problem solving',
+            'technicalcommunication',
+            'technical communication',
+            'teamwork',
+            'communication',
+            'architecture',
+            'restapi',
+            'rest api',
+            'microservices',
+            'gateway',
+            'api',
+        ];
+
+        if (noIconSkills.includes(lower)) {
+            return null;
+        }
+
+        // For anything else, try the normalized version
+        return lower.replace(/\s+/g, '');
     }
 
     levelClass(): string {

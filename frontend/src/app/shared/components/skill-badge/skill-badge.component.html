@@ -3,15 +3,17 @@
     [attr.title]="skill().name + ' - ' + skill().level"
 >
     <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] border border-white/[0.05] bg-[#3a3735]">
-        <img
-            [src]="iconUrl"
-            [alt]="skill().name"
-            class="h-5 w-5 object-contain"
-            (error)="imgError = true"
-            [style.display]="imgError ? 'none' : 'block'"
-        />
+        @if (iconUrl) {
+            <img
+                [src]="iconUrl"
+                [alt]="skill().name"
+                class="h-5 w-5 object-contain"
+                (error)="imgError = true"
+                [style.display]="imgError ? 'none' : 'block'"
+            />
+        }
         
-        @if (imgError) {
+        @if (!iconUrl || imgError) {
             <lucide-icon [img]="fallbackIcon" [size]="16" class="text-[#928374]" />
         }
     </div>
