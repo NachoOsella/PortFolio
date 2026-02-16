@@ -262,6 +262,7 @@ export class AdminService {
         projects.push(newProject);
         await writeSourceProjects(projects);
         await this.rebuildContentOrThrow();
+        await this.githubService.syncProjectsFile('create project');
 
         return newProject;
     }
@@ -298,6 +299,7 @@ export class AdminService {
         projects[index] = updatedProject;
         await writeSourceProjects(projects);
         await this.rebuildContentOrThrow();
+        await this.githubService.syncProjectsFile('update project');
 
         return updatedProject;
     }
@@ -313,6 +315,7 @@ export class AdminService {
         projects.splice(index, 1);
         await writeSourceProjects(projects);
         await this.rebuildContentOrThrow();
+        await this.githubService.syncProjectsFile('delete project');
 
         return { success: true };
     }

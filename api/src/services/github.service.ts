@@ -31,6 +31,8 @@ export class GitHubService {
     private readonly branch = this.configService.get<string>('GITHUB_BRANCH')?.trim() || 'main';
     private readonly contentRoot =
         this.configService.get<string>('GITHUB_CONTENT_ROOT')?.trim() || 'content/blog';
+    private readonly projectsPath =
+        this.configService.get<string>('GITHUB_PROJECTS_PATH')?.trim() || 'content/projects.json';
 
     constructor(private readonly configService: ConfigService) {}
 
@@ -105,21 +107,43 @@ export class GitHubService {
         }
     }
 
+    async syncProjectsFile(actionLabel: string): Promise<void> {
+        if (!this.isConfigured()) {
+            this.logger.warn(
+                `GitHub sync skipped for projects (${actionLabel}): integration is not configured`,
+            );
+            return;
+        }
+
+        const paths = getRepositoryPaths();
+        const content = await readFile(paths.contentProjectsPath);
+        const remotePath = this.joinRepoPath(this.projectsPath);
+        const remoteFiles = await this.listRemoteFiles(remotePath);
+        const currentSha = remoteFiles[0]?.sha;
+
+        await this.upsertRemoteFile(
+            remotePath,
+            content,
+            `${this.commitPrefix(actionLabel, 'project')} projects.json`,
+            currentSha,
+        );
+    }
+
     private isConfigured(): boolean {
         return Boolean(this.token && this.owner && this.repo);
     }
 
-    private commitPrefix(actionLabel: string): string {
+    private commitPrefix(actionLabel: string, entity: 'blog' | 'project' = 'blog'): string {
         const normalized = actionLabel.trim().toLowerCase();
         if (normalized.includes('create')) {
-            return 'feat(blog): add';
+            return `feat(${entity}): add`;
         }
 
         if (normalized.includes('delete') || normalized.includes('remove')) {
-            return 'chore(blog): remove';
+            return `chore(${entity}): remove`;
         }
 
-        return 'chore(blog): update';
+        return `chore(${entity}): update`;
     }
 
     private async listRemoteFiles(remoteDirPath: string): Promise<GitHubContentFile[]> {

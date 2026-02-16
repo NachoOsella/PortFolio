@@ -21,6 +21,7 @@ describe('AdminService - Projects', () => {
     const mockGitHubService = {
         syncPostDirectory: jest.fn().mockResolvedValue(undefined),
         deletePostDirectory: jest.fn().mockResolvedValue(undefined),
+        syncProjectsFile: jest.fn().mockResolvedValue(undefined),
     };
 
     beforeEach(async () => {
@@ -110,6 +111,7 @@ describe('AdminService - Projects', () => {
             expect(result.title).toBe('New Project');
             expect(writeSpy).toHaveBeenCalled();
             expect(rebuildSpy).toHaveBeenCalled();
+            expect(mockGitHubService.syncProjectsFile).toHaveBeenCalledWith('create project');
         });
 
         it('should throw ConflictException when ID already exists', async () => {
@@ -179,6 +181,7 @@ describe('AdminService - Projects', () => {
             expect(result.featured).toBe(true);
             expect(writeSpy).toHaveBeenCalled();
             expect(rebuildSpy).toHaveBeenCalled();
+            expect(mockGitHubService.syncProjectsFile).toHaveBeenCalledWith('update project');
         });
 
         it('should throw BadRequestException when trying to change ID', async () => {
@@ -235,6 +238,7 @@ describe('AdminService - Projects', () => {
             expect(result.success).toBe(true);
             expect(writeSpy).toHaveBeenCalledWith([{ id: 'project-2', title: 'Project 2' }]);
             expect(rebuildSpy).toHaveBeenCalled();
+            expect(mockGitHubService.syncProjectsFile).toHaveBeenCalledWith('delete project');
         });
 
         it('should throw NotFoundException when project does not exist', async () => {

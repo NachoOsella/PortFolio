@@ -1,5 +1,6 @@
-<section class="section-block px-6 py-16">
+<section class="section-block px-6 py-16" aria-labelledby="skills-section-title">
     <div class="mx-auto max-w-6xl">
+        <h2 id="skills-section-title" class="sr-only">Tech Stack</h2>
         <app-section-heading
             title="Tech Stack"
             subtitle="Technologies and patterns I use to build systems."
@@ -8,25 +9,47 @@
         @if (isLoading()) {
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-                    <div class="h-48 animate-pulse bg-[var(--bg1)]"></div>
+                    <article class="skill-category skill-category-skeleton p-5">
+                        <div class="skill-skeleton-heading animate-pulse"></div>
+                        <div class="mt-5 space-y-2.5">
+                            @for (line of [1, 2, 3, 4]; track line) {
+                                <div class="skill-skeleton-line animate-pulse"></div>
+                            }
+                        </div>
+                    </article>
                 }
             </div>
         } @else {
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" #skillsGrid>
                 @for (category of skillCategories(); track category.name; let i = $index) {
-                    <div 
+                    <article
                         #skillCard
                         class="skill-category p-5 animate-on-scroll stagger-{{ ((i % 6) + 1) }}"
+                        tabindex="0"
+                        (mouseenter)="setActiveCard(i)"
+                        (mouseleave)="clearActiveCard(i)"
+                        (focusin)="setActiveCard(i)"
+                        (focusout)="clearActiveCard(i, $event)"
                     >
-                        <h3 class="mb-4 font-mono text-xs font-bold uppercase tracking-wider text-[var(--gray)]">
-                            {{ category.name }}
-                        </h3>
-                        <ul class="space-y-1.5">
+                        <header class="skill-category-header">
+                            <h3 class="skill-category-title">
+                                {{ category.name }}
+                            </h3>
+                            <span class="mono-chip skill-count">
+                                {{ category.skills.length }} skills
+                            </span>
+                        </header>
+                        <ul class="mt-4 space-y-2">
                             @for (skill of category.skills; track skill.name) {
-                                <li class="text-sm text-[var(--fg)]">{{ skill.name }}</li>
+                                <li>
+                                    <app-skill-badge
+                                        [skill]="skill"
+                                        [showLevel]="shouldShowLevel(i)"
+                                    />
+                                </li>
                             }
                         </ul>
-                    </div>
+                    </article>
                 }
             </div>
         }

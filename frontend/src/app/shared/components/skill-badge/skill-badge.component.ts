@@ -2,6 +2,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { Component, input } from '@angular/core';
 import {
     Brain,
+    Coffee,
     Database,
     Globe,
     Handshake,
@@ -31,6 +32,7 @@ export class SkillBadgeComponent {
     imgError = false;
     readonly icons = {
         Brain,
+        Coffee,
         Database,
         Globe,
         Handshake,
@@ -68,7 +70,8 @@ export class SkillBadgeComponent {
     }
 
     get fallbackIcon() {
-        const normalized = this.normalizeIconName(this.skill().icon || this.skill().name);
+        const keyFromName = this.buildFallbackKey(this.skill().name);
+        const keyFromIcon = this.buildFallbackKey(this.skill().icon || '');
         const iconMap: Record<string, (typeof this.icons)[keyof typeof this.icons]> = {
             api: this.icons.Network,
             gateway: this.icons.Route,
@@ -86,22 +89,24 @@ export class SkillBadgeComponent {
             restapi: this.icons.Network,
             // Additional mappings for skills without icons
             sql: this.icons.Database,
-            'jpa/hibernate': this.icons.Database,
+            java: this.icons.Coffee,
+            openjdk: this.icons.Coffee,
+            jpahibernate: this.icons.Database,
             restapidesign: this.icons.Network,
             microservicesarchitecture: this.icons.Waypoints,
             apigatewaypattern: this.icons.Route,
             cleanarchitecture: this.icons.Layers,
-            'domain-drivendesign(ddd)': this.icons.Layers,
+            domaindrivendesignddd: this.icons.Layers,
             rxjs: this.icons.Network,
-            'english(c1-advanced)': this.icons.Languages,
-            'scrum(psmi)': this.icons.Workflow,
+            englishc1advanced: this.icons.Languages,
+            scrumpsmi: this.icons.Workflow,
             agilemethodology: this.icons.Workflow,
             teamcollaboration: this.icons.Users,
             technicalcommunication: this.icons.MessageSquare,
             default: this.icons.Globe,
         };
 
-        return (normalized && iconMap[normalized]) || iconMap['default'];
+        return iconMap[keyFromName] || iconMap[keyFromIcon] || iconMap['default'];
     }
 
     private normalizeIconName(name: string): string | null {
@@ -125,7 +130,7 @@ export class SkillBadgeComponent {
             // Add more technology mappings as needed
             typescript: 'typescript',
             javascript: 'javascript',
-            java: 'java',
+            java: 'openjdk',
             python: 'python',
             angular: 'angular',
             react: 'react',
@@ -148,6 +153,7 @@ export class SkillBadgeComponent {
             nginx: 'nginx',
             linux: 'linux',
             'intellij idea': 'intellijidea',
+            openjdk: 'openjdk',
         };
 
         const mapped = simpleIconsMap[lower];
@@ -203,6 +209,10 @@ export class SkillBadgeComponent {
 
         // For anything else, try the normalized version
         return lower.replace(/\s+/g, '');
+    }
+
+    private buildFallbackKey(value: string): string {
+        return value.toLowerCase().replace(/[^a-z0-9]+/g, '');
     }
 
     levelClass(): string {

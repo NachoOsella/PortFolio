@@ -2,6 +2,7 @@ import { Component, ElementRef, effect, inject, OnInit, signal, viewChildren } f
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs';
 import { SectionHeadingComponent } from '../../../../shared/components/section-heading/section-heading.component';
+import { SkillBadgeComponent } from '../../../../shared/components/skill-badge/skill-badge.component';
 import { SkillCategory } from '../../../../shared/models/skill.model';
 import { ApiService } from '../../../../core/services/api.service';
 import { ScrollAnimationService } from '../../../../core/services/scroll-animation.service';
@@ -9,7 +10,7 @@ import { ScrollAnimationService } from '../../../../core/services/scroll-animati
 @Component({
     selector: 'app-skills-overview-section',
     standalone: true,
-    imports: [SectionHeadingComponent],
+    imports: [SectionHeadingComponent, SkillBadgeComponent],
     templateUrl: './skills-overview-section.component.html',
     styleUrl: './skills-overview-section.component.css',
 })
@@ -20,6 +21,7 @@ export class SkillsOverviewSectionComponent implements OnInit {
 
     skillCategories = signal<SkillCategory[]>([]);
     isLoading = signal(true);
+    activeCardIndex = signal<number | null>(null);
     readonly skillCards = viewChildren<ElementRef<HTMLElement>>('skillCard');
 
     constructor() {
@@ -41,6 +43,32 @@ export class SkillsOverviewSectionComponent implements OnInit {
     
     ngOnInit(): void {
         this.loadSkills();
+    }
+
+    setActiveCard(index: number): void {
+        this.activeCardIndex.set(index);
+    }
+
+    clearActiveCard(index: number, event?: FocusEvent): void {
+        if (this.activeCardIndex() !== index) {
+            return;
+        }
+
+        const currentTarget = event?.currentTarget;
+        const relatedTarget = event?.relatedTarget;
+        if (
+            currentTarget instanceof HTMLElement &&
+            relatedTarget instanceof Node &&
+            currentTarget.contains(relatedTarget)
+        ) {
+            return;
+        }
+
+        this.activeCardIndex.set(null);
+    }
+
+    shouldShowLevel(index: number): boolean {
+        return this.activeCardIndex() === index;
     }
 
     private loadSkills(): void {
