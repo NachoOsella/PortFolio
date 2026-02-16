@@ -46,9 +46,25 @@ export class ContactComponent implements OnInit {
     icons = { Mail, Github, Send };
 
     ngOnInit(): void {
+        const description = 'Get in touch for collaboration, opportunities, or just to say hello.';
+
         this.seo.updateTitle('Contact | Nacho.dev');
         this.seo.updateMetaTags({
-            description: 'Get in touch for collaboration, opportunities, or just to say hello.',
+            description,
+        });
+        this.seo.setCanonicalForPath('/contact');
+        this.seo.setDefaultSocial({
+            title: 'Contact | Nacho.dev',
+            description,
+            path: '/contact',
+            imagePath: '/og-image.png',
+        });
+        this.seo.setJsonLd({
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            name: 'Contact',
+            description,
+            url: this.seo.buildAbsoluteUrl('/contact'),
         });
         
         setTimeout(() => {

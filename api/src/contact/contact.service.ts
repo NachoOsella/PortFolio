@@ -7,8 +7,8 @@ import { EmailService } from '../services/email.service';
 export class ContactService {
     constructor(private readonly emailService: EmailService) {}
 
-    async submitContactForm(contactDto: ContactDto): Promise<{ success: boolean }> {
+    async submitContactForm(contactDto: ContactDto): Promise<{ success: boolean; message: string }> {
         await this.emailService.sendContactEmail(contactDto);
-        return { success: true };
+        return { success: true, message: 'Message sent successfully' };
     }
 }

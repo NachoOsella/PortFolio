@@ -27,8 +27,20 @@ export interface TwitterCardConfig {
     site?: string;
 }
 
+export interface SocialDefaultsConfig {
+    title: string;
+    description: string;
+    path: string;
+    type?: string;
+    imagePath?: string;
+    siteName?: string;
+    twitterCard?: 'summary' | 'summary_large_image' | 'app' | 'player';
+    twitterCreator?: string;
+    twitterSite?: string;
+}
+
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class SeoService {
     private readonly title = inject(Title);
@@ -96,6 +108,59 @@ export class SeoService {
         link.setAttribute('rel', 'canonical');
         link.setAttribute('href', url);
         this.document.head.appendChild(link);
+    }
+
+    resolveSiteUrl(): string {
+        const runtime = globalThis as { process?: { env?: Record<string, string | undefined> } };
+        const envSiteUrl = runtime.process?.env?.['SITE_URL'];
+        const documentOrigin = this.document?.location?.origin;
+        const fallbackOrigin =
+            typeof window !== 'undefined' && window.location?.origin
+                ? window.location.origin
+                : undefined;
+        const url = envSiteUrl || documentOrigin || fallbackOrigin || 'http://localhost:4200';
+
+        return url.replace(/\/+$/, '');
+    }
+
+    buildAbsoluteUrl(pathOrUrl: string): string {
+        if (/^https?:\/\//i.test(pathOrUrl)) {
+            return pathOrUrl;
+        }
+
+        const siteUrl = this.resolveSiteUrl();
+        if (pathOrUrl.startsWith('/')) {
+            return `${siteUrl}${pathOrUrl}`;
+        }
+
+        return `${siteUrl}/${pathOrUrl.replace(/^\/+/, '')}`;
+    }
+
+    setCanonicalForPath(path: string): void {
+        this.setCanonical(this.buildAbsoluteUrl(path));
+    }
+
+    setDefaultSocial(config: SocialDefaultsConfig): void {
+        const pageUrl = this.buildAbsoluteUrl(config.path);
+        const imageUrl = this.buildAbsoluteUrl(config.imagePath || '/og-image.png');
+        const twitterCard = config.twitterCard || 'summary_large_image';
+
+        this.setOpenGraph({
+            title: config.title,
+            description: config.description,
+            type: config.type || 'website',
+            url: pageUrl,
+            image: imageUrl,
+            siteName: config.siteName || 'Nacho.dev',
+        });
+        this.setTwitterCard({
+            card: twitterCard,
+            title: config.title,
+            description: config.description,
+            image: imageUrl,
+            creator: config.twitterCreator || '@nacho',
+            site: config.twitterSite || '@nacho',
+        });
     }
 
     private updateNameMetaTags(tags: Record<string, string | undefined>): void {

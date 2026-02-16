@@ -1,11 +1,12 @@
 <article
-    class="project-card group flex h-full cursor-pointer flex-col"
-    role="link"
-    tabindex="0"
-    [attr.aria-label]="'Open project ' + project().title"
-    (click)="onCardClick($event)"
-    (keydown)="onCardKeydown($event)"
+    class="project-card group relative flex h-full flex-col focus-within:border-[var(--accent)]"
 >
+    <a
+        [routerLink]="['/projects', project().id]"
+        class="absolute inset-0 z-10"
+        [attr.aria-label]="'Open project ' + project().title"
+    ></a>
+
     <div class="flex flex-1 flex-col p-6">
         <div class="flex items-center gap-3">
             <span class="font-mono text-[11px] font-bold uppercase tracking-wider text-[var(--gray)]">
@@ -14,7 +15,7 @@
         </div>
 
         <h3 class="mt-3 text-lg font-bold text-[var(--fg)] transition-colors group-hover:text-[var(--accent)]">
-            <a [routerLink]="['/projects', project().id]">{{ project().title }}</a>
+            {{ project().title }}
         </h3>
 
         <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-[var(--gray)]">
@@ -37,7 +38,7 @@
                         [href]="project().links.github"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex h-9 w-9 items-center justify-center border border-[var(--border-subtle)] text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
+                        class="relative z-20 inline-flex h-9 w-9 items-center justify-center border border-[var(--border-subtle)] text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
                         aria-label="View source code"
                     >
                         <lucide-icon [img]="icons.Github" [size]="16" />
@@ -48,7 +49,7 @@
                         [href]="project().links.live"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex h-9 w-9 items-center justify-center border border-[var(--border-subtle)] text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
+                        class="relative z-20 inline-flex h-9 w-9 items-center justify-center border border-[var(--border-subtle)] text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
                         aria-label="Open live project"
                     >
                         <lucide-icon [img]="icons.ExternalLink" [size]="16" />
@@ -58,7 +59,7 @@
 
             <a
                 [routerLink]="['/projects', project().id]"
-                class="inline-flex h-9 items-center gap-1 border border-[var(--border-subtle)] px-3 text-sm font-medium text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
+                class="relative z-20 inline-flex h-9 items-center gap-1 border border-[var(--border-subtle)] px-3 text-sm font-medium text-[var(--fg)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--bg2)]"
             >
                 Details
                 <lucide-icon [img]="icons.ArrowRight" [size]="14" />

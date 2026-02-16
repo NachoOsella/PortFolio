@@ -30,31 +30,43 @@ export class HomeComponent implements OnInit {
         const title = 'Ignacio | Full-Stack Developer';
         const description =
             'Full-stack developer passionate about building modern web applications with TypeScript, Angular, and NestJS. View my projects and read my blog.';
-        const url = 'https://nacho.dev';
+        const siteUrl = this.seo.resolveSiteUrl();
 
         this.seo.updateTitle(title);
         this.seo.updateMetaTags({
             description,
             author: 'Ignacio',
         });
-        this.seo.setOpenGraph({
+        this.seo.setCanonicalForPath('/');
+        this.seo.setDefaultSocial({
             title,
             description,
+            path: '/',
             type: 'website',
-            url,
             siteName: 'Ignacio Portfolio',
+            imagePath: '/og-image.png',
         });
-        this.seo.setJsonLd({
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            name: 'Ignacio Portfolio',
-            url,
-            author: {
+
+        this.seo.setJsonLd([
+            {
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'Ignacio Portfolio',
+                url: siteUrl,
+                author: {
+                    '@type': 'Person',
+                    name: 'Ignacio',
+                    jobTitle: 'Full-Stack Developer',
+                    url: siteUrl,
+                },
+            },
+            {
+                '@context': 'https://schema.org',
                 '@type': 'Person',
                 name: 'Ignacio',
                 jobTitle: 'Full-Stack Developer',
-                url,
+                url: `${siteUrl}/about`,
             },
-        });
+        ]);
     }
 }

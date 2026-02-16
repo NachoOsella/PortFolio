@@ -25,17 +25,18 @@ export interface BlogPost extends BlogPostSummary {
 export class BlogService {
     async getPosts(query: BlogQueryDto): Promise<BlogPostSummary[]> {
         const posts = await readBlogIndex();
+        const publishedPosts = posts.filter((post) => post.published);
         const tag = query.tag?.trim().toLowerCase();
         const filteredPosts = tag
-            ? posts.filter((post) => post.tags.some((postTag) => postTag.toLowerCase() === tag))
-            : posts;
+            ? publishedPosts.filter((post) => post.tags.some((postTag) => postTag.toLowerCase() === tag))
+            : publishedPosts;
 
         return filteredPosts.map((post) => this.mapMetaToSummary(post));
     }
 
     async getPostBySlug(slug: string): Promise<BlogPost | null> {
         const document = await readBlogDocument(slug);
-        if (!document) {
+        if (!document || !document.meta.published) {
             return null;
         }
 
@@ -50,7 +51,7 @@ export class BlogService {
         const posts = await readBlogIndex();
         const uniqueTags = new Set<string>();
 
-        posts.forEach((post) => {
+        posts.filter((post) => post.published).forEach((post) => {
             post.tags.forEach((tag) => {
                 const normalizedTag = tag.trim().toLowerCase();
                 if (normalizedTag) {

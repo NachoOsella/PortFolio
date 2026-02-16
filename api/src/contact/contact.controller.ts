@@ -10,7 +10,9 @@ export class ContactController {
 
     @Post()
     @Throttle({ default: { limit: 3, ttl: 3_600_000 } })
-    submitContactForm(@Body() contactDto: ContactDto): Promise<{ success: boolean }> {
+    submitContactForm(
+        @Body() contactDto: ContactDto,
+    ): Promise<{ success: boolean; message: string }> {
         return this.contactService.submitContactForm(contactDto);
     }
 }

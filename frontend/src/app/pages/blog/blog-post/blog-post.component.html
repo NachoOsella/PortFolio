@@ -123,15 +123,18 @@
                     @if (post()!.coverImage) {
                         <div class="mb-8 border border-[var(--border-subtle)] bg-[var(--bg1)]">
                             <img
-                                [src]="post()!.coverImage"
+                                [ngSrc]="post()!.coverImage!"
                                 [alt]="post()!.title"
+                                width="1200"
+                                height="630"
+                                loading="lazy"
                                 class="h-full w-full object-cover"
                             />
                         </div>
                     }
 
                     <div class="markdown-content max-w-none">
-                        <markdown [data]="post()!.content" [disableSanitizer]="true"></markdown>
+                        <markdown [data]="post()!.content"></markdown>
                     </div>
 
                     <div class="mt-12 border-t border-[var(--border-subtle)] pt-8">

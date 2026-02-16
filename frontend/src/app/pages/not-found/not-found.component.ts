@@ -21,5 +21,6 @@ export class NotFoundComponent implements OnInit {
             description: 'The page you are looking for does not exist.',
             robots: 'noindex, nofollow',
         });
+        this.seo.setCanonicalForPath('/404');
     }
 }

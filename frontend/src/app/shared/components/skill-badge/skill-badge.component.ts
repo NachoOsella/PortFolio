@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component, input } from '@angular/core';
 import {
     Brain,
@@ -20,7 +21,7 @@ import { Skill } from '../../models/skill.model';
 @Component({
     selector: 'app-skill-badge',
     standalone: true,
-    imports: [LucideAngularModule],
+    imports: [LucideAngularModule, NgOptimizedImage],
     templateUrl: './skill-badge.component.html',
     styleUrl: './skill-badge.component.css',
 })

@@ -39,10 +39,29 @@ export class AboutComponent implements OnInit {
     readonly actionButtons = viewChild<ElementRef<HTMLDivElement>>('actionButtons');
 
     ngOnInit(): void {
+        const description =
+            'Backend engineer focused on Java, Spring Boot, distributed systems, and clean architecture.';
+        const siteUrl = this.seo.resolveSiteUrl();
+
         this.seo.updateTitle('About | Nacho.dev');
         this.seo.updateMetaTags({
-            description:
-                'Backend engineer focused on Java, Spring Boot, distributed systems, and clean architecture.',
+            description,
+        });
+        this.seo.setCanonicalForPath('/about');
+        this.seo.setDefaultSocial({
+            title: 'About | Nacho.dev',
+            description,
+            path: '/about',
+            imagePath: '/og-image.png',
+        });
+        this.seo.setJsonLd({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: 'Ignacio',
+            jobTitle: 'Backend Engineer',
+            description,
+            url: `${siteUrl}/about`,
+            sameAs: ['https://github.com/NachoOsella', 'https://www.linkedin.com/in/nachoosella/'],
         });
 
         this.loadAboutContent();

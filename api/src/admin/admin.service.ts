@@ -3,7 +3,6 @@ import * as path from 'node:path';
 import { Injectable, BadRequestException, ConflictException, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
-import { fileTypeFromBuffer } from 'file-type';
 
 import { AuthService } from '../auth/auth.service';
 import {
@@ -20,6 +19,7 @@ import {
     writeMarkdownPost,
     writeSourceProjects,
 } from '../common/content-files';
+import { GitHubService } from '../services/github.service';
 import { AdminLoginDto } from './dto/admin-login.dto';
 import { UpsertPostDto } from './dto/upsert-post.dto';
 import { UpsertProjectDto } from './dto/upsert-project.dto';
@@ -54,6 +54,9 @@ const IMAGE_EXTENSION_BY_MIME: Record<string, string> = {
 };
 
 export const ALLOWED_IMAGE_MIME_TYPES = Object.keys(IMAGE_EXTENSION_BY_MIME);
+const UNSAFE_SVG_CONTENT_PATTERN =
+    /<script[\s>]|<foreignobject[\s>]|<iframe[\s>]|\son[a-z]+\s*=|(?:href|xlink:href)\s*=\s*['"]\s*javascript:/i;
+const SVG_SNIFF_LIMIT_BYTES = 8192;
 
 @Injectable()
 export class AdminService {
@@ -62,6 +65,7 @@ export class AdminService {
     constructor(
         private readonly authService: AuthService,
         private readonly configService: ConfigService,
+        private readonly githubService: GitHubService,
     ) {}
 
     async login(body: AdminLoginDto): Promise<{ token: string; expiresAt: string }> {
@@ -84,7 +88,8 @@ export class AdminService {
         return this.authService.signAdminToken({ username: 'admin' });
     }
 
-    logout(): { success: boolean } {
+    logout(token: string): { success: boolean } {
+        this.authService.revokeAdminToken(token);
         return { success: true };
     }
 
@@ -134,6 +139,7 @@ export class AdminService {
 
         await writeMarkdownPost(null, normalizedSlug, this.buildMarkdownDocument(payload, normalizedSlug));
         await this.rebuildContentOrThrow();
+        await this.githubService.syncPostDirectory(normalizedSlug, 'create post');
 
         const post = await this.getPostBySlug(normalizedSlug);
         if (!post) {
@@ -156,6 +162,10 @@ export class AdminService {
             this.buildMarkdownDocument(payload, nextSlug),
         );
         await this.rebuildContentOrThrow();
+        if (currentSlug !== nextSlug) {
+            await this.githubService.deletePostDirectory(currentSlug, 'rename post');
+        }
+        await this.githubService.syncPostDirectory(nextSlug, 'update post');
 
         const post = await this.getPostBySlug(nextSlug);
         if (!post) {
@@ -171,6 +181,7 @@ export class AdminService {
 
         await deleteMarkdownPost(normalizedSlug);
         await this.rebuildContentOrThrow();
+        await this.githubService.deletePostDirectory(normalizedSlug, 'delete post');
 
         return { success: true };
     }
@@ -179,14 +190,18 @@ export class AdminService {
         const normalizedSlug = this.normalizeSlug(slug);
         await this.assertPostExists(normalizedSlug);
 
-        const fileType = await fileTypeFromBuffer(file.buffer);
-        if (!fileType || !ALLOWED_IMAGE_MIME_TYPES.includes(fileType.mime)) {
+        const detectedMimeType = this.detectImageMimeType(file.buffer);
+        if (!detectedMimeType || !ALLOWED_IMAGE_MIME_TYPES.includes(detectedMimeType)) {
             throw new BadRequestException(
-                `Invalid or unsupported image file. Detected type: ${fileType?.mime ?? 'unknown'}`
+                `Invalid or unsupported image file. Detected type: ${detectedMimeType ?? 'unknown'}`,
             );
         }
 
-        const extension = IMAGE_EXTENSION_BY_MIME[fileType.mime];
+        if (detectedMimeType === 'image/svg+xml' && !this.isSafeSvgContent(file.buffer)) {
+            throw new BadRequestException('Unsafe SVG content is not allowed');
+        }
+
+        const extension = IMAGE_EXTENSION_BY_MIME[detectedMimeType];
 
         const paths = getRepositoryPaths();
         const sourceDir = path.join(paths.contentBlogDir, normalizedSlug);
@@ -201,13 +216,14 @@ export class AdminService {
 
         await writeFile(sourcePath, file.buffer);
         await writeFile(generatedPath, file.buffer);
+        await this.githubService.syncPostDirectory(normalizedSlug, 'add image');
 
         return {
             markdownPath: `./${fileName}`,
             fileName,
             publicUrl: `/generated/blog/${normalizedSlug}/${fileName}`,
             size: file.size,
-            mimeType: file.mimetype,
+            mimeType: detectedMimeType,
         };
     }
 
@@ -388,6 +404,61 @@ export class AdminService {
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '');
         return normalizedBaseName || `image-${Date.now()}`;
+    }
+
+    private detectImageMimeType(buffer: Buffer): string | null {
+        if (this.startsWithBytes(buffer, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) {
+            return 'image/png';
+        }
+
+        if (this.startsWithBytes(buffer, [0xff, 0xd8, 0xff])) {
+            return 'image/jpeg';
+        }
+
+        if (buffer.length >= 6) {
+            const gifHeader = buffer.subarray(0, 6).toString('ascii');
+            if (gifHeader === 'GIF87a' || gifHeader === 'GIF89a') {
+                return 'image/gif';
+            }
+        }
+
+        if (buffer.length >= 12) {
+            const riffHeader = buffer.subarray(0, 4).toString('ascii');
+            const webpHeader = buffer.subarray(8, 12).toString('ascii');
+            if (riffHeader === 'RIFF' && webpHeader === 'WEBP') {
+                return 'image/webp';
+            }
+        }
+
+        const svgSnippet = buffer.subarray(0, SVG_SNIFF_LIMIT_BYTES).toString('utf8');
+        const normalizedSvgSnippet = svgSnippet.replace(/^\uFEFF/, '').trimStart();
+        const isSvgWithDoctype = /^<!doctype\s+svg/i.test(normalizedSvgSnippet);
+        const canContainSvgRoot = normalizedSvgSnippet.startsWith('<svg')
+            || normalizedSvgSnippet.startsWith('<?xml')
+            || isSvgWithDoctype;
+
+        if (canContainSvgRoot && /<svg[\s>]/i.test(normalizedSvgSnippet)) {
+            return 'image/svg+xml';
+        }
+
+        return null;
+    }
+
+    private startsWithBytes(buffer: Buffer, signature: number[]): boolean {
+        if (buffer.length < signature.length) {
+            return false;
+        }
+
+        return signature.every((byte, index) => buffer[index] === byte);
+    }
+
+    private isSafeSvgContent(buffer: Buffer): boolean {
+        const svgContent = buffer.toString('utf8');
+        if (!/<svg[\s>]/i.test(svgContent)) {
+            return false;
+        }
+
+        return !UNSAFE_SVG_CONTENT_PATTERN.test(svgContent);
     }
 
     private async generateUniqueImageName(

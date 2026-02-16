@@ -2,23 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://localhost:4200/</loc>
-    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+    <lastmod>2026-02-16T00:35:59.433Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:4200/projects</loc>
-    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+    <lastmod>2026-02-16T00:35:59.433Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:4200/blog</loc>
-    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+    <lastmod>2026-02-16T00:35:59.433Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:4200/about</loc>
-    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+    <lastmod>2026-02-16T00:35:59.433Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:4200/contact</loc>
-    <lastmod>2026-02-14T01:17:25.814Z</lastmod>
+    <lastmod>2026-02-16T00:35:59.433Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:4200/blog/hello-world</loc>

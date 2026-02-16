@@ -118,10 +118,46 @@ export class BlogListComponent implements OnInit, AfterViewInit {
     });
 
     ngOnInit(): void {
+        const description = 'Thoughts on code, projects, and continuous learning.';
+
         this.seo.updateTitle('Blog | Nacho.dev');
         this.seo.updateMetaTags({
-            description: 'Thoughts on code, projects, and continuous learning.',
+            description,
         });
+        this.seo.setCanonicalForPath('/blog');
+        this.seo.setDefaultSocial({
+            title: 'Blog | Nacho.dev',
+            description,
+            path: '/blog',
+            imagePath: '/og-image.png',
+        });
+        this.seo.setJsonLd([
+            {
+                '@context': 'https://schema.org',
+                '@type': 'Blog',
+                name: 'Nacho.dev Blog',
+                description,
+                url: this.seo.buildAbsoluteUrl('/blog'),
+            },
+            {
+                '@context': 'https://schema.org',
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                    {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: 'Home',
+                        item: this.seo.buildAbsoluteUrl('/'),
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: 'Blog',
+                        item: this.seo.buildAbsoluteUrl('/blog'),
+                    },
+                ],
+            },
+        ]);
 
         this.loadPosts();
     }

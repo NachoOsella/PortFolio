@@ -36,7 +36,7 @@
     <!-- Content -->
     @if (!isLoading() && !error() && aboutContent()) {
         <article class="markdown-content max-w-none animate-on-scroll" #contentArea>
-            <markdown [data]="aboutContent()" [disableSanitizer]="true"></markdown>
+            <markdown [data]="aboutContent()"></markdown>
         </article>
     }
 

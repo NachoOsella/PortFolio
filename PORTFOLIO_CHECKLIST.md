@@ -365,7 +365,7 @@ Use this file to track your progress. Check off items as you complete them.
   - [x] Logout method (POST to /api/admin/logout)
   - [x] Verify auth status (GET /api/admin/verify)
   - [x] Store auth state (BehaviorSubject)
-  - [ ] Handle HTTP-only cookie automatically
+  - [x] Handle bearer token storage/headers automatically (localStorage + Authorization)
 - [x] Create `pages/admin/admin-login.component.ts`
   - [x] Route: `/admin/login`
   - [x] Password input field
@@ -462,9 +462,9 @@ Use this file to track your progress. Check off items as you complete them.
   - [x] `POST /api/admin/login` - Authenticate admin
     - [x] Validate password against hash
     - [x] Generate JWT token
-    - [ ] Set HTTP-only cookie
-    - [ ] Rate limit: 5 attempts per minute per IP
-  - [~] `POST /api/admin/logout` - Clear auth cookie
+    - [x] Return JWT token in response body
+    - [x] Rate limit: 5 attempts per minute per IP
+  - [x] `POST /api/admin/logout` - Revoke auth token
   - [x] `GET /api/admin/verify` - Check authentication status
   - [x] `GET /api/admin/posts` - List all posts (including drafts)
   - [x] `POST /api/admin/posts` - Create new blog post
@@ -542,8 +542,8 @@ Use this file to track your progress. Check off items as you complete them.
 - [x] Create `robots.txt`
   - [x] Allow all crawlers
   - [x] Point to sitemap.xml
-- [ ] Add canonical URLs to all pages
-- [ ] Configure Open Graph image (`og-image.png`)
+- [x] Add canonical URLs to all pages
+- [x] Configure Open Graph image (`og-image.png`)
   - [ ] Create default OG image (1200x630)
   - [ ] Per-post OG images (optional)
 
@@ -553,7 +553,7 @@ Use this file to track your progress. Check off items as you complete them.
   - [ ] TransferState for API calls
 - [~] Configure prerendering in `angular.json`:
   - [x] Static routes: `/`, `/projects`, `/blog`, `/about`, `/contact`
-  - [ ] Dynamic routes: `/blog/:slug` (discover from blog index)
+  - [x] Dynamic routes: `/blog/:slug` (discover from blog index)
   - [ ] Script to generate prerender routes file
 - [ ] Test SSR: `ng serve --ssr`
 - [ ] Verify HTML source includes content (not empty shell)
@@ -561,7 +561,7 @@ Use this file to track your progress. Check off items as you complete them.
 
 ### 6.3 Performance Optimization
 - [ ] Image optimization:
-  - [ ] Use `ngOptimizedImage` directive
+  - [x] Use `ngOptimizedImage` directive
   - [ ] Convert images to WebP format
   - [ ] Serve responsive images (srcset)
   - [ ] Lazy load below-fold images
@@ -704,12 +704,12 @@ Use this file to track your progress. Check off items as you complete them.
   - [ ] `GITHUB_REPO` - Repository name (e.g., "username/portfolio")
   - [ ] `GITHUB_BRANCH` - Branch to commit to (e.g., "main")
 - [ ] Create `api/src/services/github.service.ts`:
-  - [ ] Function to commit new directory with multiple files
-  - [ ] Function to update files in existing directory
-  - [ ] Function to delete entire directory
-  - [ ] Function to upload binary images to directory
-  - [ ] Handle GitHub API responses and tree creation
-- [ ] Update admin service to use GitHub integration
+  - [x] Function to commit new directory with multiple files
+  - [x] Function to update files in existing directory
+  - [x] Function to delete entire directory
+  - [x] Function to upload binary images to directory
+  - [x] Handle GitHub API responses
+- [x] Update admin service to use GitHub integration
 - [ ] Test committing posts via admin dashboard:
   - [ ] Create test post in admin
   - [ ] Verify commit appears in GitHub

@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { ConfigService } from '@nestjs/config';
 import * as contentFiles from '../common/content-files';
 import { ConflictException, BadRequestException, NotFoundException } from '@nestjs/common';
+import { GitHubService } from '../services/github.service';
 
 jest.mock('../common/content-files');
 
@@ -17,6 +18,10 @@ describe('AdminService - Projects', () => {
     const mockConfigService = {
         get: jest.fn().mockReturnValue('$2a$10$mockhash'),
     };
+    const mockGitHubService = {
+        syncPostDirectory: jest.fn().mockResolvedValue(undefined),
+        deletePostDirectory: jest.fn().mockResolvedValue(undefined),
+    };
 
     beforeEach(async () => {
         jest.clearAllMocks();
@@ -26,6 +31,7 @@ describe('AdminService - Projects', () => {
                 AdminService,
                 { provide: AuthService, useValue: mockAuthService },
                 { provide: ConfigService, useValue: mockConfigService },
+                { provide: GitHubService, useValue: mockGitHubService },
             ],
         }).compile();
 

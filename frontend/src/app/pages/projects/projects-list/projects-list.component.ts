@@ -83,10 +83,47 @@ export class ProjectsListComponent implements OnInit, AfterViewInit {
     });
 
     ngOnInit(): void {
+        const description =
+            'Explore my portfolio of full-stack web applications, CLI tools, and open-source projects.';
+
         this.seo.updateTitle('Projects | Nacho.dev');
         this.seo.updateMetaTags({
-            description: 'Explore my portfolio of full-stack web applications, CLI tools, and open-source projects.',
+            description,
         });
+        this.seo.setCanonicalForPath('/projects');
+        this.seo.setDefaultSocial({
+            title: 'Projects | Nacho.dev',
+            description,
+            path: '/projects',
+            imagePath: '/og-image.png',
+        });
+        this.seo.setJsonLd([
+            {
+                '@context': 'https://schema.org',
+                '@type': 'CollectionPage',
+                name: 'Projects',
+                description,
+                url: this.seo.buildAbsoluteUrl('/projects'),
+            },
+            {
+                '@context': 'https://schema.org',
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                    {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: 'Home',
+                        item: this.seo.buildAbsoluteUrl('/'),
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: 'Projects',
+                        item: this.seo.buildAbsoluteUrl('/projects'),
+                    },
+                ],
+            },
+        ]);
 
         this.loadProjects();
     }

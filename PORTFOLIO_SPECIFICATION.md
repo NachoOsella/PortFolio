@@ -657,7 +657,8 @@ Some text about the implementation...
 Since this is a single-admin portfolio site, use simple password-based authentication:
 
 - **Storage:** Admin password hash stored in environment variable (`ADMIN_PASSWORD_HASH`)
-- **Session:** JWT token stored in HTTP-only cookie
+- **Session:** JWT token returned by login and sent in `Authorization: Bearer <token>`
+- **Client Storage:** Token persisted in frontend localStorage
 - **Security:** Rate limiting on login attempts (5 per minute per IP)
 
 ### Admin Environment Variables
@@ -672,8 +673,8 @@ ADMIN_SESSION_HOURS=24                  # Token expiry
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
-| POST | /api/admin/login | No | Authenticate admin, set JWT cookie |
-| POST | /api/admin/logout | Yes | Clear JWT cookie |
+| POST | /api/admin/login | No | Authenticate admin, return JWT token payload |
+| POST | /api/admin/logout | Yes | Revoke bearer token |
 | GET | /api/admin/verify | Yes | Verify token validity |
 | GET | /api/admin/posts | Yes | List all posts (including drafts) |
 | POST | /api/admin/posts | Yes | Create new blog post (creates directory) |
@@ -750,8 +751,8 @@ CI/CD deploy runs on server → New post live with all images
 
 - **Password Storage:** Use bcrypt hash (never store plain text)
 - **Rate Limiting:** 5 login attempts per minute per IP
-- **Session Security:** HTTP-only cookies, secure in production
-- **CSRF Protection:** Not needed with HTTP-only cookies + same-origin
+- **Session Security:** Signed JWT bearer tokens with expiration and revocation support
+- **CSRF Protection:** Not required for bearer-token Authorization header auth
 - **Content Validation:** Sanitize all inputs server-side
 - **File Safety:** Validate slug format to prevent path traversal
 - **Image Validation:** Validate file types (jpg, png, webp, svg), max size (5MB)

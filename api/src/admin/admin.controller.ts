@@ -8,6 +8,7 @@ import {
     NotFoundException,
     Param,
     Post,
+    Req,
     Put,
     UploadedFile,
     UseGuards,
@@ -16,6 +17,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
+import type { Request } from 'express';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { ProjectRecord } from '../common/content-files';
@@ -45,8 +47,14 @@ export class AdminController {
 
     @Post('logout')
     @UseGuards(AuthGuard)
-    logout(): { success: boolean } {
-        return this.adminService.logout();
+    logout(@Req() request: Request): { success: boolean } {
+        const rawAuthorization = request.headers.authorization;
+        const authHeader = Array.isArray(rawAuthorization)
+            ? rawAuthorization[0]
+            : rawAuthorization;
+        const token = authHeader?.replace('Bearer ', '').trim() ?? '';
+
+        return this.adminService.logout(token);
     }
 
     @Get('verify')

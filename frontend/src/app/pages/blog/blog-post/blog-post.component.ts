@@ -1,7 +1,6 @@
 import {
     AfterViewInit,
     Component,
-    DOCUMENT,
     ElementRef,
     OnDestroy,
     OnInit,
@@ -11,7 +10,7 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { ApiService } from '../../../core/services/api.service';
@@ -36,7 +35,7 @@ type BlogPostPayload = Partial<BlogPost> & {
 @Component({
     selector: 'app-blog-post',
     standalone: true,
-    imports: [CommonModule, RouterLink, LucideAngularModule, MarkdownModule],
+    imports: [CommonModule, RouterLink, LucideAngularModule, MarkdownModule, NgOptimizedImage],
     templateUrl: './blog-post.component.html',
     styleUrl: './blog-post.component.css',
     encapsulation: ViewEncapsulation.None,
@@ -46,7 +45,6 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly api = inject(ApiService);
     private readonly seo = inject(SeoService);
     private readonly http = inject(HttpClient);
-    private readonly document = inject(DOCUMENT);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly scrollAnimationService = inject(ScrollAnimationService);
 
@@ -157,27 +155,18 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private updateSeoForPost(post: BlogPost): void {
-        const siteUrl = this.resolveSiteUrl();
-        const postUrl = `${siteUrl}/blog/${post.slug}`;
-        const ogImage = this.resolveAbsoluteUrl(post.coverImage || '/icon-512.png', siteUrl);
+        const postPath = `/blog/${post.slug}`;
+        const postUrl = this.seo.buildAbsoluteUrl(postPath);
+        const ogImage = this.seo.buildAbsoluteUrl(post.coverImage || '/og-image.png');
         const publishedAt = new Date(post.date).toISOString();
 
-        this.seo.setCanonical(postUrl);
-        this.seo.setOpenGraph({
+        this.seo.setCanonicalForPath(postPath);
+        this.seo.setDefaultSocial({
             title: `${post.title} | Blog | Nacho.dev`,
             description: post.excerpt,
+            path: postPath,
             type: 'article',
-            url: postUrl,
-            image: ogImage,
-            siteName: 'Nacho.dev',
-        });
-        this.seo.setTwitterCard({
-            card: 'summary_large_image',
-            title: `${post.title} | Blog | Nacho.dev`,
-            description: post.excerpt,
-            image: ogImage,
-            creator: '@nacho',
-            site: '@nacho',
+            imagePath: post.coverImage || '/og-image.png',
         });
         this.seo.setJsonLd([
             {
@@ -209,13 +198,13 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
                         '@type': 'ListItem',
                         position: 1,
                         name: 'Home',
-                        item: `${siteUrl}/`,
+                        item: this.seo.buildAbsoluteUrl('/'),
                     },
                     {
                         '@type': 'ListItem',
                         position: 2,
                         name: 'Blog',
-                        item: `${siteUrl}/blog`,
+                        item: this.seo.buildAbsoluteUrl('/blog'),
                     },
                     {
                         '@type': 'ListItem',
@@ -226,28 +215,6 @@ export class BlogPostComponent implements OnInit, AfterViewInit, OnDestroy {
                 ],
             },
         ]);
-    }
-
-    private resolveSiteUrl(): string {
-        const runtime = globalThis as { process?: { env?: Record<string, string | undefined> } };
-        const envSiteUrl = runtime.process?.env?.['SITE_URL'];
-        const documentOrigin = this.document?.location?.origin;
-        const fallbackOrigin = this.isBrowser ? window.location.origin : undefined;
-        const url = envSiteUrl || documentOrigin || fallbackOrigin || 'http://localhost:4200';
-
-        return url.replace(/\/+$/, '');
-    }
-
-    private resolveAbsoluteUrl(value: string, siteUrl: string): string {
-        if (/^https?:\/\//i.test(value)) {
-            return value;
-        }
-
-        if (value.startsWith('/')) {
-            return `${siteUrl}${value}`;
-        }
-
-        return `${siteUrl}/${value.replace(/^\/+/, '')}`;
     }
 
     private loadPost(slug: string) {
