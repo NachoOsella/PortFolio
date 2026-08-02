@@ -1524,11 +1524,16 @@ body {
 .v2-contact-poster-mark {
   position: absolute;
   z-index: 1;
-  right: clamp(22px, 5vw, 68px);
-  bottom: clamp(22px, 4vw, 58px);
-  width: clamp(78px, 9vw, 132px);
+  top: clamp(20px, 2.5vw, 30px);
+  right: clamp(22px, 4vw, 48px);
+  width: clamp(72px, 7vw, 96px);
+  color: color-mix(in srgb, var(--v2-bg) 94%, var(--v2-orange));
   --signature-accent: var(--v2-yellow);
-  transform: rotate(-10deg);
+  transform: rotate(-7deg);
+}
+
+.v2-contact-poster > p {
+  width: min(20ch, calc(100% - 136px));
 }
 
 .v2-contact-form-opening {
@@ -1646,9 +1651,9 @@ body {
   }
 
   .v2-contact-poster-mark {
-    right: 34px;
-    bottom: 30px;
-    width: 88px;
+    top: 24px;
+    right: 28px;
+    width: 78px;
   }
 
   .v2-contact-form-wrap {
@@ -1775,12 +1780,6 @@ body {
 
 .v2-success p {
   color: var(--v2-muted);
-}
-
-.v2-login-layout > div:first-child > svg {
-  width: 64px;
-  margin-bottom: 64px;
-  color: var(--v2-blue);
 }
 
 .v2-footer {
@@ -2394,8 +2393,15 @@ body {
   }
 
   .v2-contact-poster {
-    min-height: 230px;
+    min-height: 280px;
     margin-top: 52px;
+  }
+
+  .v2-contact-poster > p {
+    width: calc(100% - 40px);
+    max-width: none;
+    margin-top: 96px;
+    font-size: clamp(1.7rem, 7.5vw, 2.3rem);
   }
 
   .v2-contact-short-fields {

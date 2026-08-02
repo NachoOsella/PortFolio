@@ -412,8 +412,6 @@ export function LoginPage() {
       <Seo title="Studio login" description="Private portfolio content workspace." path="/login" />
       <div className="v2-shell v2-login-layout">
         <div>
-          <SignatureMark />
-          <p className="v2-label">Private workspace</p>
           <h1>Content with clear ownership.</h1>
           <p>The browser simulates this workflow. Authentication belongs to the future Spring Boot service.</p>
         </div>
