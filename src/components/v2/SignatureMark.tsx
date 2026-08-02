@@ -2,17 +2,22 @@ export function SignatureMark({ className = '' }: { className?: string }) {
   return (
     <svg
       className={className}
-      viewBox="0 0 44 44"
+      viewBox="0 0 64 64"
       role="img"
-      aria-label="Ignacio Osella signature mark"
+      aria-label="Ignacio Osella construction mark"
+      focusable="false"
     >
-      <rect x="1" y="1" width="42" height="42" rx="2" fill="none" stroke="currentColor" />
-      <path d="M11 31V13h5v18h-5Z" fill="currentColor" />
       <path
-        d="M27.5 12.5a9.5 9.5 0 1 1-7.8 15l4-2.8a4.7 4.7 0 1 0 3.8-7.4c-1 0-1.9.3-2.7.8l-2.9-3.9a9.3 9.3 0 0 1 5.6-1.7Z"
-        fill="currentColor"
+        d="M14 6H6v8M50 6h8v8M58 50v8h-8M14 58H6v-8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.25"
+        strokeLinecap="square"
       />
-      <path d="m20 10 4 4-4 4v-8Z" fill="var(--signature-accent, #fabd2f)" />
+      <path d="M12 17h8v30h-8z" fill="currentColor" />
+      <circle cx="41" cy="32" r="13" fill="none" stroke="currentColor" strokeWidth="5.5" />
+      <path d="m25 20 12 12-6 6-12-12z" fill="var(--signature-accent, #d8a657)" />
+      <circle cx="25" cy="20" r="2.25" fill="var(--signature-accent, #d8a657)" />
     </svg>
   );
 }
