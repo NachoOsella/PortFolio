@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/badge/pnpm-workspace-F69220?logo=pnpm&logoColor=white" alt="pnpm workspace" />
 </p>
 
-![Portfolio homepage](frontend/.artifacts/final-home-desktop.png)
+![Portfolio homepage](frontend/.artifacts/artistic-home.png)
 
 ## Overview
 
