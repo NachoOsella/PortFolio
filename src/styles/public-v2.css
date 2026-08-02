@@ -271,7 +271,8 @@ body {
   gap: clamp(32px, 6vw, 90px);
   align-items: end;
   margin-top: clamp(38px, 7vh, 72px);
-  transform: translateY(-26px);
+  position: relative;
+  top: -26px;
 }
 
 .v2-hero-footer > p {
@@ -2001,7 +2002,7 @@ body {
     grid-template-columns: 1fr;
     gap: 28px;
     margin-top: 0;
-    transform: translateY(-12px);
+    top: -12px;
   }
 
   .v2-hero-footer > p {
