@@ -63,7 +63,8 @@ src/
 ├── repositories/    # Repository interfaces and local mock adapters
 ├── schemas/         # Strict Zod frontmatter schemas
 ├── services/        # Downloads, drafts, and message persistence
-├── styles.css       # Design tokens and responsive styling
+├── styles.css       # Global reset, fonts, and accessibility defaults
+├── styles/          # Public v2 and admin Gruvbox styling
 └── types/           # Domain types and API contracts
 ```
 
@@ -173,7 +174,7 @@ The content types distinguish the following states:
 
 ## Replacing mock repositories with the Java API
 
-The future adapter should implement the repository interfaces in `src/repositories/` using the centralized `apiRequest` client in `src/api/client.ts`. TanStack Query hooks should remain the UI data boundary.
+The future adapter should implement the repository interfaces in `src/repositories/`. TanStack Query hooks should remain the UI data boundary; the current browser mock does not include an API client.
 
 Conceptually:
 

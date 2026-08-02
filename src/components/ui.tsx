@@ -5,7 +5,7 @@ import {
   type ReactNode,
   type TextareaHTMLAttributes,
 } from 'react';
-import { ArrowUpRight, Check, Search, X } from 'lucide-react';
+import { Check, Search, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function Button({
@@ -48,39 +48,6 @@ export function Badge({
   tone?: 'neutral' | 'accent' | 'success' | 'warning' | 'danger';
 }) {
   return <span className={`badge badge-${tone}`}>{children}</span>;
-}
-export function Kicker({ children }: { children: ReactNode }) {
-  return <p className="kicker">{children}</p>;
-}
-export function SectionHeading({
-  kicker,
-  title,
-  description,
-  action,
-}: {
-  kicker?: string;
-  title: string;
-  description?: string;
-  action?: ReactNode;
-}) {
-  return (
-    <div className="section-heading">
-      <div>
-        {kicker && <Kicker>{kicker}</Kicker>}
-        <h2>{title}</h2>
-        {description && <p>{description}</p>}
-      </div>
-      {action}
-    </div>
-  );
-}
-export function ArrowLink({ to, children }: { to: string; children: ReactNode }) {
-  return (
-    <Link className="arrow-link" to={to}>
-      {children}
-      <ArrowUpRight size={15} strokeWidth={1.8} />
-    </Link>
-  );
 }
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   ({ className = '', ...props }, ref) => (

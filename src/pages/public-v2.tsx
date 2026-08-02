@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -273,7 +273,9 @@ export function AboutPage() {
           <p>{page.frontmatter.description}</p>
         </header>
         <div className="v2-reading-layout">
-          <Suspense fallback={null}><TableOfContents content={page.body} /></Suspense>
+          <aside className="v2-reading-rail">
+            <Suspense fallback={null}><TableOfContents content={page.body} /></Suspense>
+          </aside>
           <Suspense fallback={<LoadingState label="Preparing about page" />}><MarkdownRenderer content={page.body} /></Suspense>
         </div>
       </div>
@@ -385,7 +387,11 @@ export function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  if (session) { navigate('/admin'); return null; }
+  useEffect(() => {
+    if (session) navigate('/admin', { replace: true });
+  }, [navigate, session]);
+
+  if (session) return null;
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();

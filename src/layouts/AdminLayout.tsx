@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { StatusDot } from '@/components/ui';
+import { SignatureMark } from '@/components/v2/SignatureMark';
 import { useGitStatus } from '@/hooks/useRepositories';
 
 const navGroups = [
@@ -62,8 +63,8 @@ export function AdminLayout() {
     <div className={`admin-app ${collapsed ? 'sidebar-collapsed' : ''}`}>
       <aside className={`admin-sidebar ${mobileOpen ? 'mobile-open' : ''}`}>
         <div className="admin-brand">
-          <Link to="/" className="wordmark">
-            <span className="wordmark-mark">IO</span>
+          <Link to="/" className="admin-brand-link" aria-label="Return to Ignacio Osella portfolio">
+            <SignatureMark className="admin-brand-mark" />
             {!collapsed && <span>Studio</span>}
           </Link>
           <button

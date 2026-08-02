@@ -6,6 +6,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { router } from '@/app/routes';
 import '@/styles.css';
 import '@/styles/public-v2.css';
+import '@/styles/admin.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -50,6 +50,13 @@ import {
 } from '@/components/ui';
 import type { ContentCollection, ContentFileSummary, PublicationStatus } from '@/types';
 
+const todayLabel = new Intl.DateTimeFormat('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+}).format(new Date());
+
 export function AdminOverview() {
   const { data: files, isLoading } = useContentFiles();
   const { data: git } = useGitStatus();
@@ -66,7 +73,7 @@ export function AdminOverview() {
     <div className="admin-page">
       <div className="admin-intro">
         <div>
-          <p className="admin-eyebrow">Tuesday, July 29, 2026</p>
+          <p className="admin-eyebrow">{todayLabel}</p>
           <h2>Good morning, Ignacio.</h2>
           <p>Here is the state of your content workspace.</p>
         </div>

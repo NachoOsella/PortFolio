@@ -13,6 +13,7 @@ import {
 } from '@/pages/public-v2';
 import { NotFound } from '@/components/RouteStates';
 import { LoadingState } from '@/components/ui';
+import { ProtectedRoute } from '@/routes/ProtectedRoute';
 
 const AdminLayout = lazy(() =>
   import('@/layouts/AdminLayout').then((module) => ({ default: module.AdminLayout })),
@@ -69,8 +70,11 @@ export const router = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: deferred(<AdminLayout />),
+    element: <ProtectedRoute />,
     children: [
+      {
+        element: deferred(<AdminLayout />),
+        children: [
           { index: true, element: deferred(<AdminOverview />) },
           { path: 'content', element: deferred(<AdminContent />) },
           { path: 'projects', element: deferred(<AdminProjects />) },
@@ -85,6 +89,8 @@ export const router = createBrowserRouter([
           { path: 'git', element: deferred(<AdminGit />) },
           { path: 'messages', element: deferred(<AdminMessages />) },
           { path: 'settings', element: deferred(<AdminSettings />) },
+        ],
+      },
     ],
   },
   { path: '*', element: <NotFound /> },

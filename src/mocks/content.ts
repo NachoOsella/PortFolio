@@ -119,7 +119,7 @@ export const seedCommits = [
     message: 'chore: refine editorial navigation',
     author: 'Ignacio Osella',
     createdAt: '2026-07-18T17:08:00.000Z',
-    files: ['src/components/PublicLayout.tsx', 'src/styles.css'],
+    files: ['src/layouts/PublicLayoutV2.tsx', 'src/styles/public-v2.css'],
   },
   {
     id: 'e84af02',
