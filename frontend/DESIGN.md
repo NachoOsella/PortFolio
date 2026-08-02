@@ -129,7 +129,7 @@ components:
 
 **STORY:** Meet the developer, move through selected systems, understand the practice, read the thinking, and contact Ignacio. The route system supports home, projects, project stories, blog, articles, about, contact, and the private workspace entry without changing the public visual world.
 
-**FIRST VIEWPORT:** A two-line kinetic title reads "Systems, shaped" and "with intent." A pointer-responsive angular field sits behind it. The role label, explanatory copy, View work action, and Contact action remain visible in the first viewport.
+**FIRST VIEWPORT:** A two-line kinetic title reads "Full-stack products," and "built to last." A pointer-draggable product-systems cube rotates beside it with slow auto-rotation when idle and arrow-key support. The explanatory copy, View work action, and Contact action remain visible in the first viewport.
 
 **FORM:** Premium minimal with subtle Arch and terminal culture. The signature public patterns are a Motion-driven pinned horizontal project gallery, kinetic typography and state transitions, project-specific diagrams, hairline structure, and a vertical mobile and reduced-motion sequence.
 
@@ -147,9 +147,9 @@ The public palette is a Gruvbox Material Dark Hard field. Yellow is the primary 
 - **Warm Yellow:** `colors.yellow` is the primary action, active link, focus, reading progress, and signature accent.
 
 ### Secondary
-- **Signal Blue:** `colors.blue` marks the hero prism and selected system geometry.
+- **Signal Blue:** `colors.blue` marks one face of the hero cube and selected system geometry.
 - **Signal Green:** `colors.green` is an available project field and semantic success tone.
-- **Signal Orange:** `colors.orange` marks the hero orbit point and an available project field.
+- **Signal Orange:** `colors.orange` marks one face of the hero cube and an available project field.
 - **Signal Aqua:** `colors.aqua` is an available project field.
 - **Signal Purple:** `colors.purple` is an available project field.
 - **Signal Red:** `colors.red` is reserved for form errors.
@@ -199,9 +199,8 @@ The fixed navigation is `72px` tall on desktop and `64px` on mobile. Home and fu
 At `980px`, practice, writing, contact, and login grids collapse to one column, sticky preview and practice headings become static, and project panels reduce their internal column proportions. At `768px`, the navigation becomes a full-height menu, the hero footer stacks, and the project track becomes a vertical sequence with artwork above copy. Practice, writing, article, and contact layouts become single column. The reading table of contents is hidden on mobile while the article content remains available.
 
 ### Motion mechanics
-- **Hero pointer field:** pointer coordinates are normalized to `-0.5` through `0.5` on each axis and passed through a spring with `stiffness: 110`, `damping: 22`, and `mass: 0.55`. The prism maps horizontal movement to `-34px` through `34px` and vertical movement to `-22px` through `22px`. The orbit maps horizontal movement to `20px` through `-20px` and vertical movement to `14px` through `-14px`.
-- **Hero variable type:** the second title line maps the same smoothed horizontal value to Archivo `fontVariationSettings` weight from `560` through `780`.
-- **Hero entrance:** role copy fades and rises from `y: 14` over `0.55s`. Each title line starts at `y: 108%` with opposite `1.5deg` rotations and settles over `0.95s`, with delays of `0.06s` and `0.16s`. The footer fades and rises from `y: 20` over `0.7s` after a `0.46s` delay.
+- **Hero cube:** a six-faced cube (`PRODUCT / REACT`, `SYSTEM / JAVA`, `DATA / POSTGRES`, `FLOW / SPRING`, `SHIP / DOCKER`, `SCALE / TYPESCRIPT`) rotates with `useAnimationFrame` at a slow idle rate when reduced motion is off and the cube is not being dragged. Dragging uses pointer capture and maps delta to `rotationX`/`rotationY` spring targets with `stiffness: 180`, `damping: 24`, and `mass: 0.7`; `rotationX` is clamped to `±78°`. Arrow keys nudge the cube in `12°`/`10°` increments.
+- **Hero entrance:** each title line starts at `y: 108%` with opposite `±1.5deg` rotations and settles over `0.8s`, with staggered `0.08s` delays. The footer fades and rises from `y: 20` over `0.7s` after a `0.46s` delay.
 - **Mobile menu:** Motion animates `clip-path` from `inset(0 0 100% 0)` to `inset(0 0 0% 0)` over `0.45s` with `cubic-bezier(0.16, 1, 0.3, 1)`. Reduced motion uses an opacity-only exit.
 - **Desktop gallery:** A `ResizeObserver` measures `track.scrollWidth - outer.clientWidth`. The outer height becomes `100svh + travel`; a sticky `100svh` stage clips the rail. Motion maps `useScroll` progress to track `x`, then applies a spring with `stiffness: 120`, `damping: 24`, and `mass: 0.35`. Project panels move through `0.42 / 1 / 0.42` opacity and `0.975 / 1 / 0.975` scale around the viewport center. The active artwork follows a fine pointer by at most `8px` in the opposite direction.
 - **Writing preview:** Motion uses `0.5s` transitions. Entering content moves from `opacity: 0, scale: 0.92, rotate: -2deg` to its resting state. Exiting content moves to `opacity: 0, scale: 1.04, rotate: 2deg`.
@@ -225,9 +224,9 @@ This is a flat-by-default system. There are no decorative box shadows in the pub
 
 ## Shapes
 
-The public v2 form language is square and angular. Buttons, fields, artwork, code blocks, image placeholders, navigation controls, project panels, and form frames use `border-radius: 0`. The signature mark uses a small `2px` SVG corner radius, while the hero orbit is the deliberate circular exception at `50%`.
+The public v2 form language is square and angular. Buttons, fields, artwork, code blocks, image placeholders, navigation controls, project panels, and form frames use `border-radius: 0`. The signature mark uses a small `2px` SVG corner radius. The hero cube is the one rounded-volume object, built with `transform-style: preserve-3d` faces at `translateZ(var(--cube-half))` rather than a CSS `border-radius`.
 
-Angular IO geometry is made from a triangular prism using `clip-path: polygon(50% 0, 100% 100%, 0 100%)`, nested borders, axes, offset nodes, and a rotated square point. Project diagrams use a central monogram, horizontal and vertical axes, and three labeled nodes. Project artwork is a color field rather than a generic card image. Pills, blobs, excessive gradients, and soft rounded card stacks are outside the system.
+Angular IO geometry is carried by the hero cube (six semantic faces, one pigment each, with monospace index/label and Archivo value), nested borders, axes, and offset nodes. Project diagrams use a central monogram, horizontal and vertical axes, and three labeled nodes. Project artwork is a color field rather than a generic card image. Pills, blobs, excessive gradients, and soft rounded card stacks are outside the system.
 
 ## Components
 

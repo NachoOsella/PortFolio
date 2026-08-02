@@ -1,0 +1,226 @@
+.v2-about-profile-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.7fr);
+  gap: clamp(42px, 8vw, 120px);
+  align-items: stretch;
+  padding-block: clamp(72px, 9vw, 124px) clamp(68px, 8vw, 108px);
+}
+
+.v2-about-profile-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.v2-about-profile-copy h1 {
+  max-width: 8ch;
+  margin: 20px 0 30px;
+  font-size: clamp(4.2rem, 7vw, 7.2rem);
+  font-weight: 700;
+  line-height: 0.84;
+}
+
+.v2-about-profile-lead {
+  max-width: 36ch;
+  margin: auto 0 0;
+  color: var(--v2-muted);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.v2-about-profile-meta {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 54px 0 0;
+  border-top: 1px solid var(--v2-line);
+  padding-top: 16px;
+}
+
+.v2-about-profile-meta dt,
+.v2-about-field-label,
+.v2-about-section-number {
+  color: var(--v2-muted);
+  font: 10px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.v2-about-profile-meta dd {
+  max-width: 22ch;
+  margin: 8px 0 0;
+  color: var(--v2-fg);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.v2-about-profile-field {
+  position: relative;
+  display: flex;
+  min-height: clamp(340px, 34vw, 480px);
+  flex-direction: column;
+  overflow: hidden;
+  padding: clamp(28px, 4vw, 54px);
+  background: var(--v2-blue);
+  color: var(--v2-bg);
+}
+
+.v2-about-profile-field .v2-about-field-label {
+  position: relative;
+  z-index: 1;
+  color: color-mix(in srgb, var(--v2-bg) 70%, transparent);
+}
+
+.v2-about-profile-field .markdown {
+  position: relative;
+  z-index: 1;
+  max-width: 32ch;
+  margin-top: clamp(72px, 8vw, 112px);
+  color: var(--v2-bg);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.v2-about-profile-field .markdown h2 {
+  margin: 0 0 18px;
+  color: var(--v2-bg);
+  font-size: clamp(2.1rem, 3.3vw, 3.4rem);
+  line-height: 0.92;
+}
+
+.v2-about-profile-field .markdown p {
+  max-width: 30ch;
+  margin: 0;
+  color: var(--v2-bg);
+}
+
+.v2-about-profile-mark {
+  position: absolute;
+  right: clamp(24px, 4vw, 56px);
+  bottom: clamp(22px, 3vw, 40px);
+  width: clamp(70px, 8vw, 112px);
+  color: color-mix(in srgb, var(--v2-bg) 92%, var(--v2-blue));
+  transform: rotate(-8deg);
+}
+
+.v2-about-body {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 820px);
+  gap: clamp(56px, 8vw, 120px);
+  border-top: 1px solid var(--v2-line);
+  padding-block: clamp(48px, 6vw, 82px) 120px;
+}
+
+.v2-about-body-nav {
+  min-width: 0;
+}
+
+.v2-about-body-nav .toc {
+  position: sticky;
+  top: 116px;
+}
+
+.v2-about-sections {
+  min-width: 0;
+}
+
+.v2-about-section {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 26px;
+  border-top: 1px solid var(--v2-line);
+  padding-block: 42px 48px;
+}
+
+.v2-about-section:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.v2-about-section-number {
+  padding-top: 8px;
+  color: var(--v2-yellow);
+}
+
+.v2-about-section .markdown {
+  min-width: 0;
+}
+
+.v2-about-section .markdown h2 {
+  margin-top: 0;
+}
+
+@media (max-width: 980px) {
+  .v2-about-profile-header {
+    gap: 54px;
+  }
+
+  .v2-about-body {
+    gap: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .v2-about-profile-header {
+    display: flex;
+    flex-direction: column;
+    gap: 42px;
+    padding-block: 64px 72px;
+  }
+
+  .v2-about-profile-copy h1 {
+    margin-block: 18px 24px;
+    font-size: clamp(4rem, 16vw, 5.7rem);
+  }
+
+  .v2-about-profile-lead {
+    max-width: 34ch;
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .v2-about-profile-meta {
+    margin-top: 38px;
+  }
+
+  .v2-about-profile-field {
+    min-height: 330px;
+    padding: 26px 22px;
+  }
+
+  .v2-about-profile-field .markdown h2 {
+    font-size: 2.6rem;
+  }
+
+  .v2-about-profile-field .markdown p {
+    max-width: 23ch;
+  }
+
+  .v2-about-profile-mark {
+    right: 22px;
+    bottom: 22px;
+    width: 76px;
+  }
+
+  .v2-about-body {
+    display: block;
+    border-top: 0;
+    padding-block: 0 86px;
+  }
+
+  .v2-about-body-nav {
+    display: none;
+  }
+
+  .v2-about-section {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-block: 38px 42px;
+  }
+
+  .v2-about-section:first-child {
+    padding-top: 0;
+  }
+}

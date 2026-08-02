@@ -1,0 +1,17 @@
+@media (prefers-reduced-motion: reduce) {
+  .v2-app *,
+  .v2-app *::before,
+  .v2-app *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .v2-projects-horizontal[data-static='true'] .v2-project-artwork,
+  .v2-projects-horizontal[data-static='true'] .v2-project-copy,
+  .v2-projects-horizontal[data-static='true'] .v2-project-copy h3 {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

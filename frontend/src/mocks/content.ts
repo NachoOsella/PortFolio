@@ -116,10 +116,10 @@ export const seedCommits = [
   },
   {
     id: '7c02b91',
-    message: 'chore: refine editorial navigation',
+    message: 'content: add Now page',
     author: 'Ignacio Osella',
     createdAt: '2026-07-18T17:08:00.000Z',
-    files: ['src/layouts/PublicLayoutV2.tsx', 'src/styles/public-v2.css'],
+    files: ['content/pages/now.md'],
   },
   {
     id: 'e84af02',

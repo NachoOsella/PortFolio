@@ -1,0 +1,5 @@
+.v2-shell {
+  width: min(var(--v2-max), calc(100% - 72px));
+  margin-inline: auto;
+}
+

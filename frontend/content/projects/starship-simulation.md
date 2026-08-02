@@ -12,7 +12,6 @@ technologies:
   - TypeScript
   - Canvas
   - WebSockets
-coverImage: /images/projects/starship-simulation/cover.webp
 publishedAt: 2026-08-09
 updatedAt: 2026-07-30
 displayOrder: 6

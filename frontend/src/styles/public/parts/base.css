@@ -1,0 +1,56 @@
+html,
+body {
+  overflow-x: clip;
+  background: var(--v2-bg);
+}
+
+.v2-app {
+  min-height: 100dvh;
+  overflow: visible;
+  background: var(--v2-bg);
+  color: var(--v2-fg);
+  color-scheme: dark;
+  font-family: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+.v2-app::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.84' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.v2-app *,
+.v2-app *::before,
+.v2-app *::after {
+  box-sizing: border-box;
+}
+
+.skip-link:focus {
+  z-index: 80;
+  background: var(--v2-yellow);
+  color: var(--v2-bg);
+}
+
+.v2-app :focus-visible {
+  outline: 2px solid var(--v2-yellow);
+  outline-offset: 4px;
+}
+
+.v2-app h1,
+.v2-app h2,
+.v2-app h3,
+.v2-app p {
+  overflow-wrap: anywhere;
+}
+
+.v2-app h1,
+.v2-app h2,
+.v2-app h3 {
+  font-family: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.04em;
+}
+

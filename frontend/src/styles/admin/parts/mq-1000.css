@@ -1,0 +1,26 @@
+@media (max-width: 1000px) {
+  .admin-content {
+    padding-inline: 30px;
+  }
+
+  .admin-sidebar {
+    width: 218px;
+  }
+
+  .admin-main {
+    margin-left: 218px;
+  }
+
+  .sidebar-collapsed .admin-main {
+    margin-left: 74px;
+  }
+
+  .git-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .frontmatter-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+

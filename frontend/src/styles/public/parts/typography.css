@@ -1,0 +1,10 @@
+.v2-label {
+  margin: 0;
+  color: var(--v2-muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+

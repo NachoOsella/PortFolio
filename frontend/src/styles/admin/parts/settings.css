@@ -1,0 +1,62 @@
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.settings-panel,
+.security-panel {
+  min-height: 360px;
+}
+.settings-form {
+  display: grid;
+  gap: 17px;
+  padding: 22px;
+}
+.security-panel > p {
+  margin: 0;
+  padding: 24px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.architecture-note {
+  display: grid;
+  gap: 7px;
+  margin: 0 24px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  color: var(--ink-soft);
+  font:
+    11px ui-monospace,
+    monospace;
+}
+.architecture-note i {
+  color: var(--accent);
+  font-style: normal;
+}
+.admin-app .loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 180px;
+  color: var(--muted);
+  font:
+    11px ui-monospace,
+    monospace;
+}
+.admin-app .spin {
+  animation: spin 1s linear infinite;
+}
+.admin-app .notice-banner {
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 0;
+  margin-bottom: 18px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

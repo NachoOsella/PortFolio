@@ -3,13 +3,11 @@ title: Notes from building with coding agents
 slug: coding-agents-notes
 description: What stays human when the first draft of a system can arrive in minutes.
 status: published
-featured: false
 category: Practice
 tags:
   - Coding agents
   - TypeScript
   - Workflow
-coverImage: /images/blog/coding-agents-notes.webp
 publishedAt: 2026-05-08
 updatedAt: 2026-05-12
 seoTitle: Notes from building with coding agents

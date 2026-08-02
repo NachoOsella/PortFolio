@@ -3,13 +3,11 @@ title: A small, honest authentication boundary in Spring Boot
 slug: spring-boot-authentication
 description: What the browser should never own, and how a backend boundary keeps the model honest.
 status: published
-featured: false
 category: Spring Boot
 tags:
   - Java
   - Spring Boot
   - Security
-coverImage: /images/blog/spring-boot-authentication.webp
 publishedAt: 2026-06-29
 updatedAt: 2026-07-02
 seoTitle: A small authentication boundary in Spring Boot

@@ -1,0 +1,87 @@
+.message-list {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+.message-list-item {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  padding: 15px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  text-align: left;
+}
+.message-list-item.active,
+.message-list-item:hover {
+  background: var(--surface-soft);
+}
+.message-unread {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  margin-top: 5px;
+  border-radius: 0;
+  background: transparent;
+}
+.message-unread.is-new {
+  background: var(--accent);
+}
+.message-list-item div {
+  min-width: 0;
+}
+.message-list-item strong,
+.message-list-item span,
+.message-list-item small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.message-list-item strong {
+  color: var(--ink);
+  font-size: 12px;
+}
+.message-list-item span {
+  margin-top: 3px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+.message-list-item small {
+  margin-top: 5px;
+  color: var(--muted);
+  font:
+    9px ui-monospace,
+    monospace;
+}
+.message-detail {
+  min-height: 100%;
+}
+.message-detail-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 25px 25px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.message-detail-head h3 {
+  margin: 8px 0;
+  font-size: 21px;
+}
+.message-detail-head span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.message-body {
+  max-width: 620px;
+  padding: 25px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+.message-detail > .button {
+  margin: 0 25px;
+}

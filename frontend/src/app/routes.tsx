@@ -1,6 +1,6 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import { PublicLayoutV2 } from '@/layouts/PublicLayoutV2';
+import { PublicLayout } from '@/layouts/PublicLayout';
 import {
   HomePage,
   ProjectsPage,
@@ -8,9 +8,10 @@ import {
   BlogPage,
   BlogPostPage,
   AboutPage,
+  StaticPage,
   ContactPage,
   LoginPage,
-} from '@/pages/public-v2';
+} from '@/pages/public';
 import { NotFound } from '@/components/RouteStates';
 import { LoadingState } from '@/components/ui';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
@@ -19,34 +20,34 @@ const AdminLayout = lazy(() =>
   import('@/layouts/AdminLayout').then((module) => ({ default: module.AdminLayout })),
 );
 const AdminOverview = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminOverview })),
+  import('@/pages/admin/overview').then((module) => ({ default: module.AdminOverview })),
 );
 const AdminContent = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminContent })),
+  import('@/pages/admin/content').then((module) => ({ default: module.AdminContent })),
 );
 const AdminProjects = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminProjects })),
+  import('@/pages/admin/projects').then((module) => ({ default: module.AdminProjects })),
 );
 const AdminPosts = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminPosts })),
+  import('@/pages/admin/posts').then((module) => ({ default: module.AdminPosts })),
 );
 const AdminPages = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminPages })),
+  import('@/pages/admin/pages').then((module) => ({ default: module.AdminPages })),
 );
 const AdminFiles = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminFiles })),
+  import('@/pages/admin/files').then((module) => ({ default: module.AdminFiles })),
 );
 const AdminGit = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminGit })),
+  import('@/pages/admin/git').then((module) => ({ default: module.AdminGit })),
 );
 const AdminMessages = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminMessages })),
+  import('@/pages/admin/messages').then((module) => ({ default: module.AdminMessages })),
 );
 const AdminSettings = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.AdminSettings })),
+  import('@/pages/admin/settings').then((module) => ({ default: module.AdminSettings })),
 );
 const EditorPage = lazy(() =>
-  import('@/pages/admin').then((module) => ({ default: module.EditorPage })),
+  import('@/pages/admin/editor').then((module) => ({ default: module.EditorPage })),
 );
 
 function deferred(element: ReactNode) {
@@ -56,7 +57,7 @@ function deferred(element: ReactNode) {
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <PublicLayoutV2 />,
+    element: <PublicLayout />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'projects', element: <ProjectsPage /> },
@@ -64,6 +65,8 @@ export const router = createBrowserRouter([
       { path: 'blog', element: <BlogPage /> },
       { path: 'blog/:slug', element: <BlogPostPage /> },
       { path: 'about', element: <AboutPage /> },
+      { path: 'now', element: <StaticPage slug="now" /> },
+      { path: 'uses', element: <StaticPage slug="uses" /> },
       { path: 'contact', element: <ContactPage /> },
       { path: 'login', element: <LoginPage /> },
     ],

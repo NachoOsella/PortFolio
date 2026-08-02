@@ -31,7 +31,6 @@ export interface ProjectFrontmatter extends BaseFrontmatter {
   featured: boolean;
   repositoryUrl?: string;
   liveUrl?: string;
-  coverImage?: string;
   publishedAt?: string;
   displayOrder?: number;
 }
@@ -39,8 +38,6 @@ export interface ProjectFrontmatter extends BaseFrontmatter {
 export interface BlogPostFrontmatter extends BaseFrontmatter {
   category: string;
   tags: string[];
-  featured: boolean;
-  coverImage?: string;
   publishedAt: string;
   seoTitle?: string;
   seoDescription?: string;
@@ -65,6 +62,10 @@ export interface MarkdownDocument<TFrontmatter extends ParsedFrontmatter = Parse
   updatedAt: string;
   synchronizationStatus: SynchronizationStatus;
 }
+
+export type ProjectDocument = MarkdownDocument<ProjectFrontmatter>;
+export type PostDocument = MarkdownDocument<BlogPostFrontmatter>;
+export type PageDocument = MarkdownDocument<PageFrontmatter>;
 
 export interface ContentFileSummary {
   path: string;

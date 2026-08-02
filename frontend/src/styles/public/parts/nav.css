@@ -1,0 +1,118 @@
+.v2-nav {
+  position: fixed;
+  z-index: 40;
+  top: 0;
+  right: 0;
+  left: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--v2-line) 78%, transparent);
+  background: color-mix(in srgb, var(--v2-bg) 88%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.v2-nav-inner {
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.v2-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--v2-fg);
+  font-size: 13px;
+  font-weight: 720;
+}
+
+.v2-brand-mark {
+  width: 34px;
+  height: 34px;
+  color: var(--v2-fg);
+}
+
+.v2-nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2vw, 32px);
+  color: var(--v2-muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.v2-nav-links a {
+  position: relative;
+  padding-block: 12px;
+  transition: color 220ms ease;
+}
+
+.v2-nav-links a::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  left: 0;
+  height: 1px;
+  background: var(--v2-yellow);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 300ms var(--v2-ease);
+}
+
+.v2-nav-links a:hover,
+.v2-nav-links a.active {
+  color: var(--v2-fg);
+}
+
+.v2-nav-links a:hover::after,
+.v2-nav-links a.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.v2-action,
+.v2-app .button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid var(--v2-line);
+  border-radius: 0;
+  padding: 0 15px;
+  background: transparent;
+  color: var(--v2-fg);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: color 260ms ease, background 260ms ease, border-color 260ms ease, transform 260ms var(--v2-ease);
+}
+
+.v2-action:hover,
+.v2-app .button:hover {
+  border-color: var(--v2-yellow);
+  background: var(--v2-yellow);
+  color: var(--v2-bg);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+.v2-action:active,
+.v2-app .button:active {
+  transform: scale(0.98);
+}
+
+.v2-menu-button {
+  display: none;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  padding: 8px;
+  background: transparent;
+  color: var(--v2-fg);
+}
+
+.v2-mobile-menu {
+  display: none;
+}
+

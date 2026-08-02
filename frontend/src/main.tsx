@@ -5,8 +5,8 @@ import { QueryProvider } from '@/context/QueryProvider';
 import { AuthProvider } from '@/context/AuthContext';
 import { router } from '@/app/routes';
 import '@/styles.css';
-import '@/styles/public-v2.css';
-import '@/styles/admin.css';
+import '@/styles/public/index.css';
+import '@/styles/admin/index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

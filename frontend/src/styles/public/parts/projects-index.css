@@ -1,0 +1,84 @@
+.v2-project-index-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--v2-line);
+  background: var(--v2-line);
+}
+
+.v2-project-index-card {
+  min-width: 0;
+  background: var(--v2-bg);
+}
+
+.v2-project-index-link {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.v2-project-index-artwork {
+  position: relative;
+  min-height: min(34vw, 480px);
+  overflow: hidden;
+  background: var(--tone, var(--v2-yellow));
+  color: var(--v2-bg);
+}
+
+.v2-project-index-copy {
+  display: grid;
+  min-height: 220px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  padding: 28px;
+  background: var(--v2-bg);
+}
+
+.v2-project-index-copy > div > span {
+  color: var(--v2-muted);
+  font: 10px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+  text-transform: uppercase;
+}
+
+.v2-project-index-copy h2 {
+  max-width: 12ch;
+  margin: 30px 0 18px;
+  font-size: clamp(2.3rem, 4vw, 4.6rem);
+  font-weight: 690;
+  line-height: 0.9;
+}
+
+.v2-project-index-copy p {
+  max-width: 38ch;
+  margin: 0;
+  color: var(--v2-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.v2-project-index-card:hover .v2-project-open,
+.v2-project-index-link:focus-visible .v2-project-open {
+  border-color: var(--tone);
+  background: var(--tone);
+  color: var(--v2-bg);
+  transform: translate(6px, -6px);
+}
+
+.v2-project-index-card:hover .v2-project-diagram strong {
+  letter-spacing: -0.04em;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.v2-project-index-card:hover .v2-diagram-node-1 {
+  transform: translate(-50%, -8px);
+}
+
+.v2-project-index-card:hover .v2-diagram-node-2 {
+  transform: translate(8px, -50%);
+}
+
+.v2-project-index-card:hover .v2-diagram-node-3 {
+  transform: translate(-50%, 8px);
+}
+

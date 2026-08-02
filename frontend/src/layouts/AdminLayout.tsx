@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { StatusDot } from '@/components/ui';
-import { SignatureMark } from '@/components/v2/SignatureMark';
+import { SignatureMark } from '@/components/SignatureMark';
 import { useGitStatus } from '@/hooks/useRepositories';
 
 const navGroups = [

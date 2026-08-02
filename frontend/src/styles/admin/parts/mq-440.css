@@ -1,0 +1,18 @@
+@media (max-width: 440px) {
+  .admin-header h1 {
+    font-size: 14px;
+  }
+
+  .admin-header-actions .admin-user {
+    display: none;
+  }
+
+  .stat-grid,
+  .git-overview {
+    gap: 8px;
+  }
+
+  .admin-stat strong {
+    font-size: 25px;
+  }
+}

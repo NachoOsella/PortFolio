@@ -13,7 +13,6 @@ technologies:
   - Shell
   - Git
 repositoryUrl: https://github.com/example/dotfiles-manager
-coverImage: /images/projects/dotfiles-manager/cover.webp
 publishedAt: 2026-03-02
 updatedAt: 2026-04-09
 displayOrder: 5

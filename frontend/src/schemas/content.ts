@@ -20,7 +20,6 @@ export const projectFrontmatterSchema = z
     featured: z.boolean(),
     repositoryUrl: z.string().url().optional(),
     liveUrl: z.string().url().optional(),
-    coverImage: z.string().optional(),
     publishedAt: z.coerce.string().optional(),
     displayOrder: z.number().optional(),
   })
@@ -31,8 +30,6 @@ export const blogPostFrontmatterSchema = z
     ...baseFrontmatter,
     category: z.string().min(1),
     tags: z.array(z.string()).min(1),
-    featured: z.boolean(),
-    coverImage: z.string().optional(),
     publishedAt: z.coerce.string(),
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),

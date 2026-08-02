@@ -1,0 +1,123 @@
+.v2-state-wrap {
+  min-height: 70dvh;
+  padding-block: 120px;
+}
+
+.v2-app .empty-state {
+  display: flex;
+  min-height: 280px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  border-top: 1px solid var(--v2-line);
+  border-bottom: 1px solid var(--v2-line);
+}
+
+.v2-app .empty-mark {
+  margin-bottom: 18px;
+  color: var(--v2-yellow);
+  font: 28px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.v2-app .empty-state h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.v2-app .empty-state p {
+  max-width: 38ch;
+  margin: 0;
+  color: var(--v2-muted);
+  font-size: 13px;
+}
+
+.v2-error-app {
+  min-height: 100dvh;
+}
+
+.v2-not-found {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-block: 120px;
+}
+
+.v2-not-found > svg {
+  margin-bottom: 26px;
+  color: var(--v2-blue);
+}
+
+.v2-not-found h1 {
+  max-width: 10ch;
+  margin: 16px 0 18px;
+  font-size: clamp(3.8rem, 8vw, 8rem);
+  line-height: 0.86;
+}
+
+.v2-not-found > p:not(.v2-label) {
+  max-width: 42ch;
+  margin: 0 0 30px;
+  color: var(--v2-muted);
+}
+
+.v2-content-error {
+  display: flex;
+  min-height: 50dvh;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  color: var(--v2-muted);
+}
+
+.v2-content-error p {
+  margin: 0;
+}
+
+.v2-content-error a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--v2-yellow);
+  font-size: 12px;
+}
+
+.v2-app .loading-state {
+  display: grid;
+  min-height: 420px;
+  align-content: center;
+  gap: 14px;
+}
+
+.v2-app .loading-line {
+  display: block;
+  width: 58%;
+  height: 16px;
+  background: var(--v2-bg-raised);
+}
+
+.v2-app .loading-line-wide {
+  width: 78%;
+  height: 74px;
+}
+
+.v2-app .loading-line-short {
+  width: 34%;
+}
+
+.v2-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 46px;
+  color: var(--v2-muted);
+  font-size: 12px;
+  transition: color 200ms ease;
+}
+
+.v2-back:hover {
+  color: var(--v2-yellow);
+}
+

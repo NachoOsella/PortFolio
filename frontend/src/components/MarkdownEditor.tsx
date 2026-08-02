@@ -13,10 +13,8 @@ import {
   Maximize2,
   Minus,
   Quote,
-  Redo2,
   Save,
   Table2,
-  Undo2,
   X,
 } from 'lucide-react';
 import { buildMarkdown, parseMarkdown, readingTime, slugify } from '@/lib/content';
@@ -136,13 +134,6 @@ export function MarkdownEditor({
               <Icon size={16} />
             </button>
           ))}
-          <span className="toolbar-divider" />
-          <button title="Undo" aria-label="Undo">
-            <Undo2 size={16} />
-          </button>
-          <button title="Redo" aria-label="Redo">
-            <Redo2 size={16} />
-          </button>
         </div>
         <div className="editor-toolbar-right">
           <button className={mode === 'write' ? 'active' : ''} onClick={() => setMode('write')}>
@@ -285,5 +276,5 @@ export function MarkdownEditor({
 function newDocument(collection: ContentCollection) {
   const title =
     collection === 'projects' ? 'New project' : collection === 'posts' ? 'New article' : 'New page';
-  return `---\ntitle: ${title}\nslug: ${slugify(title)}\ndescription: Add a short description.\nstatus: draft\nupdatedAt: ${new Date().toISOString().slice(0, 10)}\n${collection === 'projects' ? 'projectType: Full-stack application\nrole: Full-stack developer\nduration: Ongoing\ntechnologies:\n  - React\nfeatured: false\n' : ''}${collection === 'posts' ? 'category: React\ntags:\n  - React\nfeatured: false\npublishedAt: ${new Date().toISOString().slice(0, 10)}\n' : ''}---\n\n# ${title}\n\nStart writing here.\n`;
+  return `---\ntitle: ${title}\nslug: ${slugify(title)}\ndescription: Add a short description.\nstatus: draft\nupdatedAt: ${new Date().toISOString().slice(0, 10)}\n${collection === 'projects' ? 'projectType: Full-stack application\nrole: Full-stack developer\nduration: Ongoing\ntechnologies:\n  - React\nfeatured: false\n' : ''}${collection === 'posts' ? 'category: React\ntags:\n  - React\npublishedAt: ${new Date().toISOString().slice(0, 10)}\n' : ''}---\n\n# ${title}\n\nStart writing here.\n`;
 }

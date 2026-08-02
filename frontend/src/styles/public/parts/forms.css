@@ -1,0 +1,82 @@
+.v2-app .field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.v2-app .field-label {
+  color: var(--v2-fg);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.v2-app .field-hint,
+.v2-app .field-error {
+  color: var(--v2-muted);
+  font-size: 11px;
+}
+
+.v2-app .field-error,
+.v2-app .v2-form-error {
+  color: var(--v2-red);
+}
+
+.v2-app .field {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--v2-line);
+  border-radius: 0;
+  outline: 0;
+  padding: 0 12px;
+  background: var(--v2-bg);
+  color: var(--v2-fg);
+  font: 13px/1.5 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.v2-app .textarea {
+  min-height: 130px;
+  padding-top: 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.v2-app .field::placeholder {
+  color: var(--v2-muted);
+}
+
+.v2-app .field:focus {
+  border-color: var(--v2-yellow);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--v2-yellow) 35%, transparent);
+}
+
+.v2-app .button-primary {
+  border-color: var(--v2-yellow);
+  background: var(--v2-yellow);
+  color: var(--v2-bg);
+}
+
+.v2-form-error {
+  margin: 0;
+  color: var(--v2-red);
+  font-size: 12px;
+}
+
+.v2-success {
+  display: flex;
+  min-height: 430px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.v2-success h2 {
+  margin: 30px 0 10px;
+  font-size: 38px;
+}
+
+.v2-success p {
+  color: var(--v2-muted);
+}
+

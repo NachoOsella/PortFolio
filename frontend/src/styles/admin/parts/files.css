@@ -1,0 +1,68 @@
+.folder-tree {
+  min-height: 450px;
+  padding: 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+.tree-root,
+.tree-folder {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 11px 8px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.tree-root {
+  margin-top: 14px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.tree-folder {
+  padding-left: 27px;
+  border-top: 1px solid var(--line);
+}
+.tree-folder span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tree-folder b {
+  color: var(--muted);
+  font:
+    10px ui-monospace,
+    monospace;
+}
+.tree-note {
+  display: flex;
+  gap: 8px;
+  margin-top: 45px;
+  padding: 12px 10px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  color: var(--muted);
+}
+.tree-note p {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.tree-note strong {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.file-manager-panel {
+  min-height: 450px;
+}
+.file-manager-panel .panel-heading {
+  align-items: center;
+}
+.file-manager-panel .search-field {
+  max-width: 220px;
+}
+.admin-app .button-row {
+  display: flex;
+  gap: 8px;
+}

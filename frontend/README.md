@@ -7,10 +7,10 @@ The public website is the product. The private Studio workspace is a realistic b
 ## Technology stack
 
 - React 19, TypeScript, Vite, pnpm
-- Tailwind CSS v4 and a custom design system inspired by shadcn/ui primitives
+- A hand-written custom design system in CSS (no utility framework, no shadcn)
 - React Router, TanStack Query, Motion for React
 - React Hook Form, Zod, Lucide React
-- React Markdown, remark-gfm, rehype-highlight, gray-matter
+- React Markdown, remark-gfm
 - Vitest, jsdom, React Testing Library
 
 ## Installation
@@ -51,7 +51,6 @@ content/
 ├── posts/           # Blog Markdown files
 └── pages/           # Static page Markdown files
 src/
-├── api/             # Centralized future HTTP client
 ├── app/             # Router and app metadata
 ├── components/      # Public, Markdown, editor, and UI components
 ├── context/         # Query and mock auth providers

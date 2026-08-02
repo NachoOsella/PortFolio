@@ -13,7 +13,6 @@ technologies:
   - Stripe
   - Vite
 liveUrl: https://example.com/el-brasero
-coverImage: /images/projects/el-brasero/cover.webp
 publishedAt: 2026-05-22
 updatedAt: 2026-06-04
 displayOrder: 3

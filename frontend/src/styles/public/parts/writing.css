@@ -1,0 +1,264 @@
+.v2-writing {
+  padding-block: clamp(110px, 14vw, 190px);
+  border-top: 1px solid var(--v2-line);
+}
+
+.v2-writing-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.3fr);
+  gap: 48px;
+  align-items: end;
+  margin-bottom: clamp(54px, 7vw, 96px);
+}
+
+.v2-writing-heading h2 {
+  max-width: 12ch;
+  margin: 0;
+  font-size: clamp(3.5rem, 7vw, 7rem);
+  font-weight: 690;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+}
+
+.v2-writing-heading h2 span {
+  color: var(--v2-yellow);
+}
+
+.v2-writing-heading p {
+  max-width: 31ch;
+  margin: 0 0 8px;
+  color: var(--v2-muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.v2-writing-carousel {
+  padding-inline: 0;
+}
+
+.v2-writing-carousel-meta {
+  display: grid;
+  grid-template-columns: auto minmax(80px, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 18px;
+  color: var(--v2-muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.v2-writing-carousel-meta i {
+  display: block;
+  height: 1px;
+  overflow: hidden;
+  background: var(--v2-line);
+}
+
+.v2-writing-carousel-meta b {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--v2-yellow);
+  transform-origin: left;
+  transition: transform 550ms var(--v2-ease);
+}
+
+.v2-writing-viewport {
+  position: relative;
+}
+
+/* Base carousel layout so the component is usable outside the writing index. */
+.carousel {
+  position: relative;
+}
+
+.carousel-content {
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  min-width: 100%;
+}
+
+.carousel-previous,
+.carousel-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.v2-writing-viewport .carousel-content {
+  overflow: hidden;
+  border: 1px solid var(--v2-line);
+}
+
+.v2-writing-track {
+  display: flex;
+  width: 100%;
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+.v2-writing-slide {
+  --tone: var(--v2-yellow);
+  position: relative;
+  width: 100%;
+  min-width: 100%;
+  min-height: min(64vw, 620px);
+  overflow: hidden;
+  background: var(--tone);
+  color: var(--v2-bg);
+}
+
+.v2-writing-slide::before,
+.v2-writing-slide::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.v2-writing-slide::before {
+  inset: 12% 6%;
+  border: 1px solid color-mix(in srgb, var(--v2-bg) 25%, transparent);
+  transform: rotate(-3deg);
+}
+
+.v2-writing-slide::after {
+  right: -0.18em;
+  bottom: -0.43em;
+  color: color-mix(in srgb, var(--v2-bg) 14%, transparent);
+  content: '///';
+  font-family: 'Archivo Variable', sans-serif;
+  font-size: clamp(15rem, 29vw, 29rem);
+  font-weight: 800;
+  letter-spacing: -0.2em;
+  line-height: 1;
+}
+
+.v2-writing-slide > a {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: inherit;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(25px, 4vw, 54px);
+}
+
+.v2-writing-slide-top,
+.v2-writing-slide-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.v2-writing-slide-copy {
+  max-width: min(840px, 78%);
+  margin-block: 52px;
+}
+
+.v2-writing-slide h3 {
+  max-width: 12ch;
+  margin: 0 0 22px;
+  font-size: clamp(3.6rem, 7vw, 7.4rem);
+  font-weight: 730;
+  letter-spacing: -0.065em;
+  line-height: 0.83;
+  text-wrap: balance;
+}
+
+.v2-writing-slide p {
+  max-width: 52ch;
+  margin: 0;
+  color: color-mix(in srgb, var(--v2-bg) 76%, transparent);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.v2-writing-slide-bottom > span:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 8px;
+  font-family: 'Manrope Variable', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: gap 260ms var(--v2-ease);
+}
+
+.v2-writing-slide > a:hover .v2-writing-slide-bottom > span:last-child,
+.v2-writing-slide > a:focus-visible .v2-writing-slide-bottom > span:last-child {
+  gap: 16px;
+}
+
+.v2-writing-side-controls {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: -25px;
+  left: -25px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.v2-writing-side-controls button {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border: 1px solid var(--v2-line);
+  background: var(--v2-bg);
+  color: var(--v2-fg);
+  pointer-events: auto;
+  transition: background 220ms ease, color 220ms ease, border-color 220ms ease, transform 220ms var(--v2-ease);
+}
+
+.v2-writing-side-controls button:hover,
+.v2-writing-side-controls button:focus-visible {
+  border-color: var(--v2-blue);
+  background: var(--v2-blue);
+  color: var(--v2-bg);
+  transform: scale(1.06);
+}
+
+.v2-writing-carousel-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.v2-writing-carousel-footer > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border-bottom: 1px solid var(--v2-fg);
+  padding-bottom: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: gap 260ms var(--v2-ease), border-color 220ms ease;
+}
+
+.v2-writing-carousel-footer > a:hover {
+  gap: 15px;
+  border-color: var(--v2-yellow);
+}
+

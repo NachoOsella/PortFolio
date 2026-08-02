@@ -15,7 +15,6 @@ technologies:
   - Docker
 repositoryUrl: https://github.com/example/modular-erp
 liveUrl: https://example.com/modular-erp
-coverImage: /images/projects/modular-erp/cover.webp
 publishedAt: 2026-07-10
 updatedAt: 2026-07-28
 displayOrder: 1

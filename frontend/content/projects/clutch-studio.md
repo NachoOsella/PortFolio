@@ -13,7 +13,6 @@ technologies:
   - Motion
   - Sanity
 liveUrl: https://example.com/clutch-studio
-coverImage: /images/projects/clutch-studio/cover.webp
 publishedAt: 2026-04-11
 updatedAt: 2026-05-13
 displayOrder: 4

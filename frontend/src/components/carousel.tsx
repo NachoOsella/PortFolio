@@ -121,7 +121,7 @@ export function CarouselPrevious({ className, ...props }: React.ComponentProps<'
     <button
       type="button"
       className={cn('carousel-previous', className)}
-      aria-label="Previous article"
+      aria-label="Previous"
       disabled={!canScrollPrevious}
       onClick={scrollPrevious}
       {...props}
@@ -137,7 +137,7 @@ export function CarouselNext({ className, ...props }: React.ComponentProps<'butt
     <button
       type="button"
       className={cn('carousel-next', className)}
-      aria-label="Next article"
+      aria-label="Next"
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}

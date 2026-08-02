@@ -1,0 +1,39 @@
+/* Premium minimal public portfolio with a restrained Arch and terminal influence. */
+:root {
+  --v2-bg: #1d2021;
+  --v2-bg-soft: #282828;
+  --v2-bg-raised: #32302f;
+  --v2-fg: #d4be98;
+  --v2-fg-soft: #ddc7a1;
+  --v2-muted: #a89984;
+  --v2-line: #45403d;
+  --v2-yellow: #d8a657;
+  --v2-orange: #e78a4e;
+  --v2-red: #ea6962;
+  --v2-green: #a9b665;
+  --v2-aqua: #89b482;
+  --v2-blue: #7daea3;
+  --v2-purple: #d3869b;
+  --v2-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --v2-max: 1380px;
+  --background: var(--v2-bg);
+  --foreground: var(--v2-fg);
+  --card: var(--v2-bg-soft);
+  --card-foreground: var(--v2-fg);
+  --popover: var(--v2-bg-soft);
+  --popover-foreground: var(--v2-fg);
+  --primary: var(--v2-yellow);
+  --primary-foreground: var(--v2-bg);
+  --secondary: var(--v2-bg-raised);
+  --secondary-foreground: var(--v2-fg);
+  --muted: var(--v2-bg-raised);
+  --muted-foreground: var(--v2-muted);
+  --accent: var(--v2-bg-raised);
+  --accent-foreground: var(--v2-fg);
+  --destructive: var(--v2-red);
+  --border: var(--v2-line);
+  --input: var(--v2-line);
+  --ring: var(--v2-yellow);
+  --radius: 0;
+}
+

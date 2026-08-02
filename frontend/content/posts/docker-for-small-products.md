@@ -3,13 +3,11 @@ title: Docker Compose for small product teams
 slug: docker-for-small-products
 description: A pragmatic local environment that makes a full-stack system easier to understand.
 status: published
-featured: false
 category: Delivery
 tags:
   - Docker
   - Spring Boot
   - PostgreSQL
-coverImage: /images/blog/docker-for-small-products.webp
 publishedAt: 2026-06-14
 updatedAt: 2026-06-18
 seoTitle: Docker Compose for small product teams

@@ -1,0 +1,181 @@
+
+/* Admin primitives reuse the public v2 field, type, and control language. */
+.admin-app,
+.admin-app *,
+.admin-app *::before,
+.admin-app *::after {
+  box-sizing: border-box;
+}
+
+.admin-app {
+  font-family: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.admin-app a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.admin-app button,
+.admin-app input,
+.admin-app textarea,
+.admin-app select {
+  font: inherit;
+}
+
+.admin-app h1,
+.admin-app h2,
+.admin-app h3,
+.admin-app p {
+  overflow-wrap: anywhere;
+}
+
+.admin-app .button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  transition: background 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms var(--ease);
+}
+
+.admin-app .button:hover {
+  transform: translateY(-1px);
+}
+
+.admin-app .button-sm {
+  min-height: 36px;
+  padding-inline: 12px;
+  font-size: 11px;
+}
+
+.admin-app .button-lg {
+  min-height: 52px;
+  padding-inline: 20px;
+}
+
+.admin-app .badge {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 24px;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  padding: 0 8px;
+  color: var(--ink-soft);
+  font: 10px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  white-space: nowrap;
+}
+
+.admin-app .field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-app .field-label {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-app .field-hint,
+.admin-app .field-error {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.admin-app .field-error,
+.admin-app .form-alert {
+  color: var(--red);
+}
+
+.admin-app .field {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  outline: 0;
+  padding: 0 12px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 13px;
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.admin-app .field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.admin-app .field::placeholder {
+  color: var(--muted);
+}
+
+.admin-app .textarea {
+  min-height: 130px;
+  padding-top: 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.admin-app .search-field {
+  display: flex;
+  min-height: 44px;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  padding: 0 12px;
+  background: var(--bg);
+  color: var(--muted);
+}
+
+.admin-app .search-field:focus-within {
+  border-color: var(--accent);
+}
+
+.admin-app .search-field input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.admin-app .search-field button,
+.admin-app .collapse-button {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+}
+
+.admin-app .search-field button:hover,
+.admin-app .collapse-button:hover {
+  color: var(--accent);
+}
+
+.admin-app .muted {
+  color: var(--muted);
+}
+
+.admin-app .loading-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+

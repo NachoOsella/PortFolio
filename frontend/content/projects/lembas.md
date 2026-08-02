@@ -12,7 +12,6 @@ technologies:
   - TypeScript
   - Node.js
   - PostgreSQL
-coverImage: /images/projects/lembas/cover.webp
 publishedAt: 2026-06-18
 updatedAt: 2026-07-20
 displayOrder: 2
