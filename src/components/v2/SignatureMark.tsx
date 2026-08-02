@@ -16,8 +16,6 @@ export function SignatureMark({ className = '' }: { className?: string }) {
       />
       <path d="M12 17h8v30h-8z" fill="currentColor" />
       <circle cx="41" cy="32" r="13" fill="none" stroke="currentColor" strokeWidth="5.5" />
-      <path d="m25 20 12 12-6 6-12-12z" fill="var(--signature-accent, #d8a657)" />
-      <circle cx="25" cy="20" r="2.25" fill="var(--signature-accent, #d8a657)" />
     </svg>
   );
 }

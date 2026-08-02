@@ -73,15 +73,6 @@ export function HeroScene() {
     <section className="v2-hero">
       <div className="v2-shell v2-hero-inner">
         <div className="v2-hero-copy">
-          <motion.p
-            className="v2-hero-role"
-            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease }}
-          >
-            Full-stack product developer
-          </motion.p>
-
           <h1 className="v2-hero-title">
             {['Full-stack', 'products,', 'built to', 'last.'].map((line, index) => (
               <span className="v2-title-mask" key={line}>

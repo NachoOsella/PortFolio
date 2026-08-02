@@ -124,7 +124,6 @@ body {
   width: 34px;
   height: 34px;
   color: var(--v2-fg);
-  --signature-accent: var(--v2-yellow);
 }
 
 .v2-nav-links {
@@ -244,23 +243,6 @@ body {
   align-self: center;
 }
 
-.v2-hero-role {
-  width: fit-content;
-  margin: 0 0 clamp(28px, 5vh, 52px);
-  color: var(--v2-muted);
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.v2-hero-role::before {
-  content: '$';
-  margin-right: 9px;
-  color: var(--v2-yellow);
-}
-
 .v2-hero-title {
   min-width: 0;
   max-width: 8ch;
@@ -289,6 +271,7 @@ body {
   gap: clamp(32px, 6vw, 90px);
   align-items: end;
   margin-top: clamp(38px, 7vh, 72px);
+  transform: translateY(-26px);
 }
 
 .v2-hero-footer > p {
@@ -1528,7 +1511,6 @@ body {
   right: clamp(22px, 4vw, 48px);
   width: clamp(72px, 7vw, 96px);
   color: color-mix(in srgb, var(--v2-bg) 94%, var(--v2-orange));
-  --signature-accent: var(--v2-yellow);
   transform: rotate(-7deg);
 }
 
@@ -2019,6 +2001,7 @@ body {
     grid-template-columns: 1fr;
     gap: 28px;
     margin-top: 0;
+    transform: translateY(-12px);
   }
 
   .v2-hero-footer > p {
