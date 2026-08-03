@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Copy, Mail, Send } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Copy, Eye, EyeOff, Mail, Send } from 'lucide-react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 import { BlogIndex } from '@/components/BlogIndex';
@@ -439,6 +439,7 @@ export function LoginPage() {
   const [params] = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -471,7 +472,26 @@ export function LoginPage() {
         </div>
         <form onSubmit={submit}>
           <Field label="Email"><Input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></Field>
-          <Field label="Password"><Input type="password" value={password} onChange={(event) => setPassword(event.target.value)} minLength={6} required /></Field>
+          <Field label="Password">
+            <div className="v2-password-field">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                minLength={6}
+                required
+              />
+              <button
+                type="button"
+                className="v2-password-toggle"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+                onClick={() => setShowPassword((visible) => !visible)}
+              >
+                {showPassword ? <EyeOff aria-hidden="true" size={17} /> : <Eye aria-hidden="true" size={17} />}
+              </button>
+            </div>
+          </Field>
           {error ? <p className="v2-form-error" role="alert">{error}</p> : null}
           <Button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Enter studio'}</Button>
         </form>

@@ -191,6 +191,33 @@
   background: var(--v2-bg-soft);
 }
 
+.v2-password-field {
+  position: relative;
+}
+
+.v2-login .v2-password-field .field {
+  padding-right: 48px;
+}
+
+.v2-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--v2-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.v2-password-toggle:hover {
+  color: var(--v2-fg);
+}
+
 .v2-contact-form-wrap form,
 .v2-login form {
   display: grid;

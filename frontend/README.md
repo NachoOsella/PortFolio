@@ -1,8 +1,8 @@
 # Ignacio Osella Portfolio + Markdown Studio
 
-A premium React/Vite portfolio and frontend-only Markdown content management system for Ignacio Osella, a full-stack developer focused on React, TypeScript, Java, Spring Boot, relational databases, Docker, and web application architecture.
+A premium React/Vite portfolio and Markdown content management client for Ignacio Osella, a full-stack developer focused on React, TypeScript, Java, Spring Boot, relational databases, Docker, and web application architecture.
 
-The public website is the product. The private Studio workspace is a realistic browser mock for authoring Markdown, previewing content, importing and exporting files, and rehearsing server and Git workflows before a future Java/Spring Boot API exists.
+The public website is the product. The private Studio workspace uses repository interfaces so it can run against the Spring Boot API backed by GitHub, with a local mock fallback for isolated frontend development.
 
 ## Technology stack
 
@@ -41,7 +41,7 @@ pnpm test:watch   # Vitest watch mode
 VITE_API_URL=http://localhost:8080/api
 ```
 
-`VITE_API_URL` is a future Java API base URL. The current application uses mock repositories and does not call it.
+When `VITE_API_URL` is set, content, authentication, and Git repository adapters call the Spring Boot backend. Remove it to use the local mock fallback.
 
 ## Folder structure
 
@@ -59,7 +59,7 @@ src/
 ├── lib/             # Markdown, frontmatter, date, and reading utilities
 ├── mocks/           # Seed Markdown imports, messages, and Git history
 ├── pages/           # Public and admin route composition
-├── repositories/    # Repository interfaces and local mock adapters
+├── repositories/    # Repository interfaces, API adapters, and local mock fallback
 ├── schemas/         # Strict Zod frontmatter schemas
 ├── services/        # Downloads, drafts, and message persistence
 ├── styles.css       # Global reset, fonts, and accessibility defaults
@@ -135,30 +135,19 @@ Exports preserve YAML frontmatter, Markdown formatting, unknown metadata, and UT
 
 ## Local mock persistence
 
-`contentRepository`, `gitRepository`, `authRepository`, message persistence, and draft persistence use versioned localStorage keys behind service/repository boundaries. Pages and components do not read localStorage directly for content. Clear site storage to reset the browser demo to seeded content.
+When `VITE_API_URL` is absent, `contentRepository`, `gitRepository`, `authRepository`, message persistence, and draft persistence use versioned localStorage keys behind service/repository boundaries. When it is present, content, authentication, and Git calls use the backend; drafts remain browser-local. Pages and components do not read localStorage directly for remote content.
 
-The mock repository simulates promise latency, CRUD operations, version numbers, modified timestamps, synchronization states, and opt-in recoverable failures via the browser console:
+The mock fallback simulates promise latency, CRUD operations, version numbers, modified timestamps, synchronization states, and opt-in recoverable failures via the browser console:
 
 ```js
 localStorage.setItem('ignacio-mock-errors', 'true');
 ```
 
-## Authentication warning
+## Authentication and Git behavior
 
-The login screen is not secure authentication. It is an isolated mock session layer used only to demonstrate protected routes and UI states. It should not be used with real credentials. Production authentication must be implemented by Spring Boot with secure HttpOnly cookies, server-side session validation, authorization checks, expiry handling, and audit logs.
+With the API adapter enabled, login is owned by Spring Boot. The browser receives only an HttpOnly session cookie and never sees the configured user hashes or GitHub token. Without the API adapter, the login screen falls back to the intentionally insecure mock used by frontend tests.
 
-## Mock Git workflow
-
-The Studio Git screen models a deliberately explicit flow:
-
-1. Edit a Markdown file.
-2. Save it to the mock content server.
-3. Review modified, added, deleted, and untracked files.
-4. Enter or accept a commit message suggestion.
-5. Create a local commit.
-6. Push explicitly to the mock remote.
-
-The browser never executes Git commands and never stores repository tokens, GitHub personal access tokens, SSH private keys, or remote credentials. A real backend must perform Git operations securely.
+GitHub Contents API writes create remote commits immediately. The API adapter therefore treats content saves as synchronized and the Studio Git screen exposes remote history and no-op push/pull acknowledgements. The browser never executes Git commands or stores repository credentials.
 
 ## Synchronization states
 
@@ -171,25 +160,19 @@ The content types distinguish the following states:
 - `commit-required`, `committed`, `push-required`, `pushed`: Git workflow states.
 - `conflict` and `error`: recoverable exceptional states that future API responses can expose.
 
-## Replacing mock repositories with the Java API
+## Spring Boot API adapter
 
-The future adapter should implement the repository interfaces in `src/repositories/`. TanStack Query hooks should remain the UI data boundary; the current browser mock does not include an API client.
-
-Conceptually:
+The adapters in `src/repositories/apiRepositories.ts` implement the same repository interfaces as the mock adapters. TanStack Query hooks remain the UI data boundary.
 
 ```text
 React frontend
-    ↓ REST API
+    ↓ REST API + HttpOnly cookie
 Spring Boot backend
-    ↓
-Server content directory
-    ↓
-Git repository
-    ↓
-Remote Git hosting provider
+    ↓ GitHub Contents API
+GitHub repository / frontend/content/*.md
 ```
 
-The Spring Boot backend, not the browser, will parse and validate files, write to the server content directory, manage file locking, execute Git operations, authenticate securely, hold repository credentials, detect conflicts, manage backups, and write audit logs. Future endpoints can follow the contracts in the brief: `/api/content`, `/api/content/file`, `/api/content/import`, `/api/content/export`, `/api/git/status`, `/api/git/history`, `/api/git/commit`, `/api/git/push`, `/api/git/pull`, `/api/git/sync`, and `/api/auth/*`.
+The backend, not the browser, parses and validates Markdown, owns authentication, holds the GitHub token, and writes commits. See [`../backend/README.md`](../backend/README.md) for environment setup and the complete endpoint contract.
 
 ## Production build
 

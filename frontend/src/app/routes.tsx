@@ -34,6 +34,9 @@ const AdminPosts = lazy(() =>
 const AdminPages = lazy(() =>
   import('@/pages/admin/pages').then((module) => ({ default: module.AdminPages })),
 );
+const AdminAbout = lazy(() =>
+  import('@/pages/admin/about').then((module) => ({ default: module.AdminAbout })),
+);
 const AdminFiles = lazy(() =>
   import('@/pages/admin/files').then((module) => ({ default: module.AdminFiles })),
 );
@@ -86,7 +89,13 @@ export const router = createBrowserRouter([
           { path: 'posts', element: deferred(<AdminPosts />) },
           { path: 'posts/new', element: deferred(<EditorPage collection="posts" />) },
           { path: 'posts/:slug/edit', element: deferred(<EditorPage collection="posts" />) },
+          { path: 'about', element: deferred(<AdminAbout />) },
+          {
+            path: 'about/edit',
+            element: deferred(<EditorPage collection="pages" fixedSlug="about" />),
+          },
           { path: 'pages', element: deferred(<AdminPages />) },
+          { path: 'pages/new', element: deferred(<EditorPage collection="pages" />) },
           { path: 'pages/:slug/edit', element: deferred(<EditorPage collection="pages" />) },
           { path: 'files', element: deferred(<AdminFiles />) },
           { path: 'git', element: deferred(<AdminGit />) },

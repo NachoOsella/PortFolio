@@ -4,12 +4,20 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Check } from 'lucide-react';
 import { useContentFile, useContentFiles } from '@/hooks/useRepositories';
 import { contentRepository } from '@/repositories/contentRepository';
+import { apiEnabled } from '@/repositories/apiClient';
 import { MarkdownEditor } from '@/components/MarkdownEditor';
 import { LoadingState } from '@/components/ui';
 import type { ContentCollection } from '@/types';
 
-export function EditorPage({ collection }: { collection: ContentCollection }) {
-  const { slug } = useParams();
+export function EditorPage({
+  collection,
+  fixedSlug,
+}: {
+  collection: ContentCollection;
+  fixedSlug?: string;
+}) {
+  const { slug: routeSlug } = useParams();
+  const slug = fixedSlug ?? routeSlug;
   const { data: files, isLoading: filesLoading } = useContentFiles({ collection });
   const match = files?.find((file) => file.slug === slug);
   const { data: document, isLoading: docLoading } = useContentFile(match?.path);
@@ -32,8 +40,12 @@ export function EditorPage({ collection }: { collection: ContentCollection }) {
       setError('');
       void queryClient.invalidateQueries({ queryKey: ['content-files'] });
       void queryClient.invalidateQueries({ queryKey: ['content-file'] });
-      if (!document)
-        navigate(`/admin/${collection}/${next.frontmatter.slug}/edit`, { replace: true });
+      if (!document) {
+        const nextRoute = fixedSlug
+          ? `/admin/${fixedSlug}/edit`
+          : `/admin/${collection}/${next.frontmatter.slug}/edit`;
+        navigate(nextRoute, { replace: true });
+      }
       window.setTimeout(() => setSaved(false), 1800);
     },
     onError: (cause) =>
@@ -47,15 +59,18 @@ export function EditorPage({ collection }: { collection: ContentCollection }) {
           <Link className="admin-back-link" to={`/admin/${collection}`}>
             <ArrowLeft size={14} /> Back to {collection}
           </Link>
-          <h2>{document?.frontmatter.title ?? `New ${collection.slice(0, -1)}`}</h2>
-          <p>{document?.path ?? `content/${collection}/new.md`}</p>
+          <h2>
+            {document?.frontmatter.title ??
+              (fixedSlug === 'about' ? 'About me' : `New ${collection.slice(0, -1)}`)}
+          </h2>
+          <p>{document?.path ?? `content/${collection}/${fixedSlug ?? 'new'}.md`}</p>
         </div>
         <div className="editor-head-status">
           {error && <span className="form-alert">{error}</span>}
           {saved && (
             <span className="saved-feedback">
               <Check size={15} />
-              Saved to mock server
+              {apiEnabled ? 'Saved to GitHub' : 'Saved to mock server'}
             </span>
           )}
         </div>
@@ -63,6 +78,8 @@ export function EditorPage({ collection }: { collection: ContentCollection }) {
       <MarkdownEditor
         document={document}
         collection={collection}
+        initialTitle={fixedSlug === 'about' ? 'About' : undefined}
+        initialSlug={fixedSlug}
         onSave={(raw) => save.mutate(raw)}
         saving={save.isPending}
       />

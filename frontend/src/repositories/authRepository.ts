@@ -1,5 +1,7 @@
 import type { UserSession } from '@/types';
 import { safeStorage } from '@/lib/storage';
+import { apiAuthRepository } from './apiRepositories';
+import { apiEnabled } from './apiClient';
 
 const SESSION_KEY = 'ignacio-session-v1';
 const wait = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -10,7 +12,7 @@ export interface AuthRepository {
   session(): Promise<UserSession | null>;
 }
 
-export const authRepository: AuthRepository = {
+const mockAuthRepository: AuthRepository = {
   async login(email, password, remember) {
     await wait();
     if (!email.includes('@') || password.length < 6)
@@ -37,3 +39,5 @@ export const authRepository: AuthRepository = {
     return raw ? (JSON.parse(raw) as UserSession) : null;
   },
 };
+
+export const authRepository: AuthRepository = apiEnabled ? apiAuthRepository : mockAuthRepository;

@@ -1,0 +1,13 @@
+.git
+.gitignore
+.artifacts
+.impeccable
+
+backend/.env
+backend/target
+frontend/node_modules
+frontend/dist
+frontend/.env
+frontend/.env.local
+coverage
+**/*.log

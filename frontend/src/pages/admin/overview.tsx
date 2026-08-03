@@ -1,5 +1,13 @@
 import { Link } from 'react-router-dom';
-import { Archive, ArrowUpRight, CircleAlert, FilePlus2, Folder, GitCommitHorizontal, Plus } from 'lucide-react';
+import {
+  Archive,
+  ArrowUpRight,
+  CircleAlert,
+  FilePlus2,
+  Folder,
+  GitCommitHorizontal,
+  Plus,
+} from 'lucide-react';
 import { relativeDate } from '@/lib/content';
 import { useContentFiles, useGitHistory, useGitStatus } from '@/hooks/useRepositories';
 import { EmptyState, LinkButton, LoadingState, StatusDot } from '@/components/ui';
@@ -133,7 +141,7 @@ export function AdminOverview() {
             <Plus size={17} />
             <span>New post</span>
           </Link>
-          <Link to="/admin/pages/about/edit">
+          <Link to="/admin/about">
             <FilePlus2 size={17} />
             <span>Edit about</span>
           </Link>

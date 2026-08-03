@@ -1,6 +1,8 @@
 import { seedContent } from '@/mocks/content';
 import { buildMarkdown, createDocument, parseMarkdown } from '@/lib/content';
 import { safeStorage } from '@/lib/storage';
+import { apiContentRepository } from './apiRepositories';
+import { apiEnabled } from './apiClient';
 import type {
   ContentFileSummary,
   ContentQuery,
@@ -82,7 +84,7 @@ function failOccasionally() {
     throw new Error('The mock content server could not complete the request. Try again.');
 }
 
-export const contentRepository: ContentRepository = {
+const mockContentRepository: ContentRepository = {
   async listFiles(query = {}) {
     await wait();
     failOccasionally();
@@ -174,6 +176,10 @@ export const contentRepository: ContentRepository = {
     return document;
   },
 };
+
+export const contentRepository: ContentRepository = apiEnabled
+  ? apiContentRepository
+  : mockContentRepository;
 
 export function resetContentRepository() {
   documents = load();

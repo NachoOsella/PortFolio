@@ -10,7 +10,7 @@ export function AdminSettings() {
         <div>
           <p className="admin-eyebrow">Workspace / Settings</p>
           <h2>Settings</h2>
-          <p>Keep the future API boundary visible while the browser mock stays simple.</p>
+          <p>Configure the backend outside the browser and keep repository credentials server-side.</p>
         </div>
       </div>
       <div className="settings-grid">
@@ -56,22 +56,21 @@ export function AdminSettings() {
           <div className="panel-heading">
             <div>
               <p className="panel-kicker">Security boundary</p>
-              <h3>Frontend mock only</h3>
+              <h3>Backend security boundary</h3>
             </div>
             <CircleAlert size={18} />
           </div>
           <p>
-            This browser demo never stores repository credentials, executes Git, or writes a
-            production filesystem. The future Spring Boot service must own authentication with
-            secure HttpOnly cookies, authorization, file locking, Git credentials, backups, conflict
-            detection, and audit logs.
+            The browser never stores repository credentials, executes Git, or writes a production
+            filesystem. The Spring Boot service owns authentication with secure HttpOnly cookies,
+            authorization, Markdown validation, GitHub synchronization, and conflict handling.
           </p>
           <div className="architecture-note">
             <span>React frontend</span>
             <i>↓ REST API</i>
             <span>Spring Boot backend</span>
             <i>↓</i>
-            <span>Content directory + Git</span>
+            <span>GitHub Markdown files</span>
           </div>
         </section>
       </div>

@@ -25,12 +25,12 @@
 
 ## Overview
 
-This repository is the home of Ignacio Osella's personal portfolio and its future content platform. The public experience presents selected projects, technical writing, professional context, and contact information through a restrained Gruvbox-inspired visual system.
+This repository is the home of Ignacio Osella's personal portfolio and its Markdown-first content platform. The public experience presents selected projects, technical writing, professional context, and contact information through a restrained Gruvbox-inspired visual system.
 
 The project is intentionally Markdown-first: projects, articles, and static pages are authored as files, validated through frontmatter schemas, and rendered consistently across the public site and the private Studio workspace.
 
 > [!NOTE]
-> The current release is frontend-only. The backend and Docker layers are prepared for a future Spring Boot API, server-side authentication, filesystem persistence, and secure Git workflows.
+> The Spring Boot backend stores no application data in a database or local filesystem. It validates Markdown and synchronizes it through the GitHub Contents API. Users are configured with bcrypt hashes in environment variables.
 
 ## What is included
 
@@ -49,17 +49,19 @@ The `/admin` workspace is a browser-based content-management prototype for:
 - Creating and editing projects, posts, and pages.
 - Previewing Markdown and validating YAML frontmatter.
 - Importing and exporting content files.
-- Managing drafts and local persistence.
-- Reviewing simulated Git status, commits, and pushes.
+- Managing drafts and local persistence when the API is disabled.
+- Reviewing GitHub-backed history and synchronization status when the API is enabled.
 - Handling messages, settings, and protected routes.
 
 > [!WARNING]
-> Studio authentication and Git actions are mocks for the frontend prototype. The browser does not execute Git commands, write to a server filesystem, or store real credentials.
+> Keep `GITHUB_TOKEN` and `APP_AUTH_USERS` on the backend only. The browser never receives repository credentials or password hashes.
 
 ## Technology
 
 - React 19 and TypeScript
 - Vite 7 and pnpm
+- Spring Boot 3.4, Java 21, and GitHub Contents API
+- Docker Compose and Caddy
 - Tailwind CSS 4 with a custom design system
 - React Router and TanStack Query
 - Motion for React
@@ -78,13 +80,13 @@ The `/admin` workspace is a browser-based content-management prototype for:
 │   │   ├── app/              # Metadata and route configuration
 │   │   ├── components/       # Public, editor, and UI components
 │   │   ├── layouts/          # Public and protected layouts
-│   │   ├── repositories/     # Mock repositories and future API boundaries
+│   │   ├── repositories/     # Repository interfaces, API adapters, and mock fallback
 │   │   ├── schemas/          # Frontmatter validation schemas
 │   │   ├── services/         # Drafts, downloads, and persistence
 │   │   └── styles/            # Public and Studio visual systems
 │   └── package.json
-├── backend/                  # Future Spring Boot API
-├── docker/                   # Future Dockerfiles and Compose configuration
+├── backend/                  # Spring Boot API and GitHub integration
+├── docker/                   # Dockerfiles and Compose configuration
 └── README.md
 ```
 
@@ -119,6 +121,19 @@ pnpm format       # Format the source tree with Prettier
 pnpm test         # Run the test suite once
 pnpm test:watch   # Run tests in watch mode
 ```
+
+### Run the backend
+
+Configure `backend/.env` from [`backend/.env.example`](backend/.env.example), then start the API:
+
+```bash
+cd backend
+mvn test
+set -a && . ./.env && set +a
+mvn spring-boot:run
+```
+
+Start the frontend with `VITE_API_URL=http://localhost:8080/api` to use GitHub-backed content.
 
 ## Content model
 
@@ -162,23 +177,21 @@ The frontend preserves unknown frontmatter fields when known metadata is edited.
 | Public | `/`, `/projects`, `/projects/:slug`, `/blog`, `/blog/:slug`, `/about`, `/contact` |
 | Studio | `/admin`, `/admin/content`, `/admin/projects`, `/admin/posts`, `/admin/pages`, `/admin/files`, `/admin/git`, `/admin/messages`, `/admin/settings` |
 
-## Future architecture
+## Architecture
 
-The current repository boundaries are designed to evolve without moving content logic into the UI:
+Content stays in Markdown files in GitHub. The API is the only component allowed to authenticate users or write repository content:
 
 ```text
 React frontend
-      │ REST API
+      │ REST API + HttpOnly cookie
       ▼
 Spring Boot backend
-      │
-      ├── Authentication and authorization
-      ├── Markdown validation and filesystem persistence
-      ├── File locking, backups, and audit logs
-      └── Secure Git operations
+      │ GitHub Contents API
+      ▼
+GitHub repository / frontend/content/*.md
 ```
 
-`frontend/src/repositories/` contains the interfaces that future REST adapters can implement. The browser mock keeps the public experience usable while the backend is being built.
+`frontend/src/repositories/` contains API adapters with a local mock fallback. See [`backend/README.md`](backend/README.md) for setup, environment variables, security behavior, and endpoints.
 
 ## Environment
 
@@ -188,7 +201,7 @@ Copy `frontend/.env.example` to `frontend/.env`:
 VITE_API_URL=http://localhost:8080/api
 ```
 
-`VITE_API_URL` is reserved for the future Java API. The current frontend uses local mock repositories and does not call this endpoint.
+When `VITE_API_URL` is set, the frontend calls the Spring Boot API. Remove it to run the local mock fallback.
 
 ## Design direction
 
@@ -204,4 +217,4 @@ The visual system is documented in [`frontend/DESIGN.md`](frontend/DESIGN.md), a
 
 ## Project status
 
-The public portfolio and frontend Studio prototype are implemented. The next major layer is the Spring Boot backend that will replace local mock repositories with secure server-side content, authentication, and Git workflows.
+The public portfolio, API-backed Studio adapters, and Spring Boot GitHub backend are implemented. Docker deployment remains a separate layer.

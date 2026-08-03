@@ -20,6 +20,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .then(setSession)
       .finally(() => setLoading(false));
   }, []);
+  useEffect(() => {
+    const handleUnauthorized = () => setSession(null);
+    window.addEventListener('portfolio:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('portfolio:unauthorized', handleUnauthorized);
+  }, []);
   const login = async (email: string, password: string, remember: boolean) => {
     const next = await authRepository.login(email, password, remember);
     setSession(next);

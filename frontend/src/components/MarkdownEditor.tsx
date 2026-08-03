@@ -41,15 +41,19 @@ type EditorMode = 'split' | 'write' | 'preview';
 export function MarkdownEditor({
   document,
   collection,
+  initialTitle,
+  initialSlug,
   onSave,
   saving,
 }: {
   document?: MarkdownDocument;
   collection: ContentCollection;
+  initialTitle?: string;
+  initialSlug?: string;
   onSave: (raw: string) => void;
   saving: boolean;
 }) {
-  const initial = document?.raw ?? newDocument(collection);
+  const initial = document?.raw ?? newDocument(collection, initialTitle, initialSlug);
   const [raw, setRaw] = useState(initial);
   const [mode, setMode] = useState<EditorMode>('split');
   const [fullscreen, setFullscreen] = useState(false);
@@ -273,8 +277,14 @@ export function MarkdownEditor({
   );
 }
 
-function newDocument(collection: ContentCollection) {
+function newDocument(collection: ContentCollection, initialTitle?: string, initialSlug?: string) {
   const title =
-    collection === 'projects' ? 'New project' : collection === 'posts' ? 'New article' : 'New page';
-  return `---\ntitle: ${title}\nslug: ${slugify(title)}\ndescription: Add a short description.\nstatus: draft\nupdatedAt: ${new Date().toISOString().slice(0, 10)}\n${collection === 'projects' ? 'projectType: Full-stack application\nrole: Full-stack developer\nduration: Ongoing\ntechnologies:\n  - React\nfeatured: false\n' : ''}${collection === 'posts' ? 'category: React\ntags:\n  - React\npublishedAt: ${new Date().toISOString().slice(0, 10)}\n' : ''}---\n\n# ${title}\n\nStart writing here.\n`;
+    initialTitle ??
+    (collection === 'projects'
+      ? 'New project'
+      : collection === 'posts'
+        ? 'New article'
+        : 'New page');
+  const slug = initialSlug ?? slugify(title);
+  return `---\ntitle: ${title}\nslug: ${slug}\ndescription: Add a short description.\nstatus: draft\nupdatedAt: ${new Date().toISOString().slice(0, 10)}\n${collection === 'projects' ? 'projectType: Full-stack application\nrole: Full-stack developer\nduration: Ongoing\ntechnologies:\n  - React\nfeatured: false\n' : ''}${collection === 'posts' ? 'category: React\ntags:\n  - React\npublishedAt: ${new Date().toISOString().slice(0, 10)}\n' : ''}---\n\n# ${title}\n\nStart writing here.\n`;
 }

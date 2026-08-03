@@ -6,7 +6,14 @@ import { relativeDate } from '@/lib/content';
 import { useContentFiles } from '@/hooks/useRepositories';
 import { contentRepository, exportDocument } from '@/repositories/contentRepository';
 import { downloadMarkdown } from '@/services/download';
-import { Badge, EmptyState, LinkButton, LoadingState, SearchField, StatusDot } from '@/components/ui';
+import {
+  Badge,
+  EmptyState,
+  LinkButton,
+  LoadingState,
+  SearchField,
+  StatusDot,
+} from '@/components/ui';
 import type { ContentCollection, ContentFileSummary, PublicationStatus } from '@/types';
 
 export function AdminStat({
@@ -66,11 +73,13 @@ export function ContentList({
   title,
   description,
   newLabel,
+  excludeSlugs = [],
 }: {
   collection: ContentCollection;
   title: string;
   description: string;
   newLabel: string;
+  excludeSlugs?: string[];
 }) {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<'all' | PublicationStatus>('all');
@@ -98,6 +107,7 @@ export function ContentList({
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['content-files'] }),
   });
   const rows = (files ?? [])
+    .filter((file) => !excludeSlugs.includes(file.slug))
     .slice()
     .sort((a, b) =>
       sort === 'title' ? a.title.localeCompare(b.title) : b.updatedAt.localeCompare(a.updatedAt),

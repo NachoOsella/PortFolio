@@ -13,6 +13,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
+  UserRound,
   X,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -28,6 +29,7 @@ const navGroups = [
       { label: 'Content', to: '/admin/content', icon: FileText },
       { label: 'Projects', to: '/admin/projects', icon: FolderKanban },
       { label: 'Blog posts', to: '/admin/posts', icon: FileText },
+      { label: 'About me', to: '/admin/about', icon: UserRound },
       { label: 'Pages', to: '/admin/pages', icon: FileText },
     ],
   },

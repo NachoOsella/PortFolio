@@ -1,6 +1,8 @@
 import { seedCommits } from '@/mocks/content';
 import { contentRepository, markFilesSynced } from './contentRepository';
 import { safeStorage } from '@/lib/storage';
+import { apiGitRepository } from './apiRepositories';
+import { apiEnabled } from './apiClient';
 import type {
   CreateCommitInput,
   GitCommit,
@@ -60,7 +62,7 @@ function persistCommits(commits: GitCommit[]) {
   safeStorage().setItem(COMMITS_KEY, JSON.stringify(commits));
 }
 
-export const gitRepository: GitRepository = {
+const mockGitRepository: GitRepository = {
   async getStatus() {
     await wait(220);
     const stored = getStoredStatus();
@@ -118,3 +120,5 @@ export const gitRepository: GitRepository = {
     return { success: true, updatedFiles: [], message: 'Remote changes pulled cleanly.' };
   },
 };
+
+export const gitRepository: GitRepository = apiEnabled ? apiGitRepository : mockGitRepository;

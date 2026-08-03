@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CircleAlert, GitCommitHorizontal, RefreshCw, Upload, X } from 'lucide-react';
 import { relativeDate, suggestCommitMessage } from '@/lib/content';
 import { useGitAction, useGitHistory, useGitStatus } from '@/hooks/useRepositories';
+import { apiEnabled } from '@/repositories/apiClient';
 import { gitRepository } from '@/repositories/gitRepository';
 import { Badge, Button, EmptyState, Field, LoadingState, StatusDot, Textarea } from '@/components/ui';
 
@@ -54,7 +55,11 @@ export function AdminGit() {
         <div>
           <p className="admin-eyebrow">Operations / Git</p>
           <h2>Repository, made legible.</h2>
-          <p>Review content changes before they leave the browser mock.</p>
+          <p>
+            {apiEnabled
+              ? 'Every content save creates a commit on the configured GitHub branch.'
+              : 'Review content changes before they leave the browser mock.'}
+          </p>
         </div>
         <div className="git-branch">
           <GitCommitHorizontal size={16} />
@@ -121,7 +126,13 @@ export function AdminGit() {
           <div className="panel-heading">
             <div>
               <p className="panel-kicker">Working tree</p>
-              <h3>{files.length ? 'Changes to review' : 'Clean repository'}</h3>
+              <h3>
+                {files.length
+                  ? 'Changes to review'
+                  : apiEnabled
+                    ? 'GitHub is synchronized'
+                    : 'Clean repository'}
+              </h3>
             </div>
             <Button
               variant="ghost"
@@ -157,34 +168,47 @@ export function AdminGit() {
             </div>
           ) : (
             <EmptyState
-              title="Nothing to commit"
-              description="Save a Markdown file to create a new local change."
+              title={apiEnabled ? 'Nothing pending' : 'Nothing to commit'}
+              description={
+                apiEnabled
+                  ? 'The GitHub Contents API commits each Markdown save immediately.'
+                  : 'Save a Markdown file to create a new local change.'
+              }
             />
           )}
         </section>
         <section className="admin-panel commit-panel">
           <div className="panel-heading">
             <div>
-              <p className="panel-kicker">Create commit</p>
-              <h3>Write a useful message</h3>
+              <p className="panel-kicker">{apiEnabled ? 'Remote publishing' : 'Create commit'}</p>
+              <h3>{apiEnabled ? 'Every save is a GitHub commit' : 'Write a useful message'}</h3>
             </div>
             <GitCommitHorizontal size={19} />
           </div>
-          <Field label="Commit message" hint="A short message makes history easier to scan.">
-            <Textarea
-              rows={4}
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              placeholder={suggestion}
-            />
-          </Field>
-          <button className="suggestion" onClick={() => setMessage(suggestion)}>
-            Use suggestion: <strong>{suggestion}</strong>
-          </button>
-          <Button onClick={() => void doCommit()} disabled={!files.length || commit.isPending}>
-            <GitCommitHorizontal size={15} />
-            {commit.isPending ? 'Committing…' : 'Create commit'}
-          </Button>
+          {apiEnabled ? (
+            <p className="git-subtext">
+              Saves are validated and committed directly through the GitHub Contents API. There is
+              no local staging area or separate push step.
+            </p>
+          ) : (
+            <>
+              <Field label="Commit message" hint="A short message makes history easier to scan.">
+                <Textarea
+                  rows={4}
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
+                  placeholder={suggestion}
+                />
+              </Field>
+              <button className="suggestion" onClick={() => setMessage(suggestion)}>
+                Use suggestion: <strong>{suggestion}</strong>
+              </button>
+              <Button onClick={() => void doCommit()} disabled={!files.length || commit.isPending}>
+                <GitCommitHorizontal size={15} />
+                {commit.isPending ? 'Committing…' : 'Create commit'}
+              </Button>
+            </>
+          )}
         </section>
       </div>
       <section className="admin-panel git-history">
@@ -193,15 +217,17 @@ export function AdminGit() {
             <p className="panel-kicker">History</p>
             <h3>Recent commits</h3>
           </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => void doPush()}
-            disabled={!status.ahead || push.isPending}
-          >
-            <Upload size={14} />
-            {push.isPending ? 'Pushing…' : 'Push to remote'}
-          </Button>
+          {!apiEnabled && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => void doPush()}
+              disabled={!status.ahead || push.isPending}
+            >
+              <Upload size={14} />
+              {push.isPending ? 'Pushing…' : 'Push to remote'}
+            </Button>
+          )}
         </div>
         {commits?.map((commit) => (
           <div className="history-row" key={commit.id}>

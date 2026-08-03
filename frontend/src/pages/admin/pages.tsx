@@ -4,9 +4,10 @@ export function AdminPages() {
   return (
     <ContentList
       collection="pages"
-      title="Pages"
-      description="Static pages that keep the public site grounded."
+      title="Other pages"
+      description="Static pages beyond the dedicated About me section."
       newLabel="New page"
+      excludeSlugs={['about']}
     />
   );
 }
