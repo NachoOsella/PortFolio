@@ -1,10 +1,9 @@
 const projectSignals: Record<string, [string, string, string]> = {
-  'modular-erp': ['Inventory', 'People', 'Orders'],
-  lembas: ['Classes', 'Resources', 'Progress'],
-  'el-brasero': ['Menu', 'Kitchen', 'Pickup'],
-  'clutch-studio': ['Stories', 'Bookings', 'Delivery'],
-  'dotfiles-manager': ['Track', 'Sync', 'Restore'],
-  'starship-simulation': ['Routes', 'Signals', 'Decisions'],
+  lembas: ['Catalog', 'Stock', 'Orders'],
+  planai: ['Chat', 'Plan', 'Tasks'],
+  gruvboxitator: ['Pixels', 'Palette', 'Presets'],
+  'java-logic-trainer': ['Exercises', 'Tests', 'Progress'],
+  portfolio: ['Markdown', 'Studio', 'Publish'],
 };
 
 export function ProjectDiagram({ slug, title }: { slug: string; title: string }) {

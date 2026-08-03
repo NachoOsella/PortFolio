@@ -34,7 +34,7 @@ function getStoredStatus(): GitStatus {
     }
   return {
     branch: 'main',
-    modified: ['content/projects/modular-erp.md', 'content/posts/ui-engineering-details.md'],
+    modified: ['content/projects/lembas.md', 'content/posts/markdown-first-portfolio.md'],
     added: [],
     deleted: [],
     untracked: [],
