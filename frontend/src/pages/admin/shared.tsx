@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Archive, ArrowUpRight, Copy, Download, FilePlus2, Plus, Trash2 } from 'lucide-react';
+import { Archive, ArrowUpRight, Copy, Download, Plus, Trash2 } from 'lucide-react';
+import { createRecordCode, createRevision } from '@/lib/archive';
 import { relativeDate } from '@/lib/content';
 import { useContentFiles } from '@/hooks/useRepositories';
 import { contentRepository, exportDocument } from '@/repositories/contentRepository';
@@ -31,8 +32,9 @@ export function AdminStat({
 }) {
   return (
     <div className={`admin-stat ${tone === 'amber' ? 'stat-amber' : ''}`}>
-      <div className="stat-icon">
-        <Icon size={17} />
+      <div className="stat-record">
+        <span>{createRecordCode(label, value, 'L')}</span>
+        <Icon size={15} aria-hidden="true" />
       </div>
       <strong>{value}</strong>
       <span>{label}</span>
@@ -44,9 +46,7 @@ export function AdminStat({
 export function FileRow({ file }: { file: ContentFileSummary }) {
   return (
     <div className="file-row">
-      <span className="file-icon">
-        <FilePlus2 size={15} />
-      </span>
+      <span className="file-record-code">{createRecordCode(file.title, 0, 'D')}</span>
       <div>
         <strong>{file.title}</strong>
         <span>{file.path}</span>
@@ -184,14 +184,10 @@ export function ContentList({
                 <tr key={file.path}>
                   <td>
                     <Link className="table-file" to={editPath(file)}>
-                      <span className="file-icon">
-                        <FilePlus2 size={14} />
-                      </span>
+                      <span className="table-record-code">{createRecordCode(file.title, 0, collection.slice(0, 1).toUpperCase())}</span>
                       <span>
                         <strong>{file.title}</strong>
-                        <small>
-                          {file.filename} · {file.slug}
-                        </small>
+                        <small>{file.filename} · {createRevision(file.updatedAt)}</small>
                       </span>
                     </Link>
                   </td>

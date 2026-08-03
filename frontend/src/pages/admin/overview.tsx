@@ -36,9 +36,9 @@ export function AdminOverview() {
     <div className="admin-page">
       <div className="admin-intro">
         <div>
-          <p className="admin-eyebrow">{todayLabel}</p>
-          <h2>Good morning, Ignacio.</h2>
-          <p>Here is the state of your content workspace.</p>
+          <p className="admin-eyebrow">Ledger opened / {todayLabel}</p>
+          <h2>Content register.</h2>
+          <p>Files, publication state and repository activity in one operational record.</p>
         </div>
         <LinkButton to="/admin/projects/new">
           <Plus size={16} />

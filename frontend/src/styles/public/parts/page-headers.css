@@ -13,6 +13,28 @@
   margin-bottom: 24px;
 }
 
+.v2-record-stamp {
+  display: grid;
+  min-height: 58px;
+  grid-template-columns: 1fr repeat(3, auto);
+  align-items: center;
+  gap: clamp(18px, 4vw, 54px);
+  margin-bottom: clamp(46px, 7vw, 82px);
+  border-top: 1px solid var(--v2-line);
+  border-bottom: 1px solid var(--v2-line);
+  color: var(--v2-muted);
+  font: 9px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.v2-record-stamp strong {
+  color: var(--v2-yellow);
+  font-family: 'Archivo Variable', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.8rem);
+  letter-spacing: -0.05em;
+}
+
 .v2-case-header h1,
 .v2-article-header h1,
 .v2-page-header h1 {

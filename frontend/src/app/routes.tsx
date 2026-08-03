@@ -12,7 +12,7 @@ import {
   ContactPage,
   LoginPage,
 } from '@/pages/public';
-import { NotFound } from '@/components/RouteStates';
+import { ApplicationError, NotFound } from '@/components/RouteStates';
 import { LoadingState } from '@/components/ui';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 
@@ -61,6 +61,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <PublicLayout />,
+    errorElement: <ApplicationError />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'projects', element: <ProjectsPage /> },
@@ -77,6 +78,7 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     element: <ProtectedRoute />,
+    errorElement: <ApplicationError />,
     children: [
       {
         element: deferred(<AdminLayout />),

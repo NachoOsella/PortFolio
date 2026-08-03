@@ -1,5 +1,6 @@
 export type ContentCollection = 'projects' | 'posts' | 'pages';
 export type PublicationStatus = 'draft' | 'published' | 'scheduled' | 'archived';
+export type InkTone = 'yellow' | 'blue' | 'green' | 'orange' | 'purple' | 'aqua';
 export type SynchronizationStatus =
   | 'clean'
   | 'local-draft'
@@ -19,6 +20,7 @@ export interface BaseFrontmatter {
   slug: string;
   description: string;
   status: PublicationStatus;
+  ink?: InkTone;
   updatedAt: string;
   [key: string]: unknown;
 }

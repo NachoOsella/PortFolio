@@ -3,6 +3,7 @@ title: Why relational data still feels like a design tool
 slug: why-relational-data
 description: Tables, constraints, and explicit relationships can make product decisions easier to see.
 status: published
+ink: aqua
 category: Data
 tags:
   - PostgreSQL

@@ -12,12 +12,11 @@ import {
 } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { createRecordCode, createRevision, getRecordTone } from '@/lib/archive';
 import type { ProjectDocument } from '@/types';
 import { ProjectDiagram } from './ProjectDiagram';
 
 type ProjectListDocument = Pick<ProjectDocument, 'path' | 'frontmatter'>;
-
-const panelTones = ['yellow', 'blue', 'green', 'orange', 'purple', 'aqua'];
 
 export function HorizontalProjects({ projects }: { projects: ProjectListDocument[] }) {
   const outerRef = useRef<HTMLElement>(null);
@@ -207,7 +206,8 @@ function ProjectPanel({
   const mobileArtworkScale = useTransform(mobileSmoothProgress, [0, 0.32, 0.55, 0.78, 1], [0.86, 0.97, 1, 0.98, 0.9]);
   const mobileCopyY = useTransform(mobileSmoothProgress, [0, 0.32, 0.55, 0.78, 1], [42, 12, 0, -10, -24]);
   const item = project.frontmatter;
-  const tone = panelTones[index % panelTones.length];
+  const tone = getRecordTone(item.slug, item.ink);
+  const code = createRecordCode(item.title, index);
   const radius = Math.min(0.18, 0.42 / Math.max(total, 1));
   const isFinalPanel = index === total - 1;
   const focusRange = focusPoint >= 1 - radius
@@ -269,7 +269,7 @@ function ProjectPanel({
               ? { y: mobileArtworkY, scale: mobileArtworkScale }
               : undefined}
         >
-          <span className="v2-project-type">{String(index + 1).padStart(2, '0')} / {item.projectType}</span>
+          <span className="v2-project-type">{code} / {createRevision(item.updatedAt)} / {item.projectType}</span>
           <ProjectDiagram slug={item.slug} title={item.title} />
           <div className="v2-project-sweep">
             <span>{item.technologies.slice(0, 3).join(' / ')}</span>
@@ -277,7 +277,7 @@ function ProjectPanel({
         </motion.div>
         <div className="v2-project-copy">
           <div>
-            <span>{item.duration}</span>
+            <span>OS–P{String(index + 1).padStart(2, '0')} / {item.duration}</span>
             <motion.h3 style={animated ? { y: titleY } : mobileAnimated ? { y: mobileCopyY } : undefined}>{item.title}</motion.h3>
             <p>{item.description}</p>
           </div>

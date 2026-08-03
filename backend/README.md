@@ -1,6 +1,6 @@
 # Portfolio backend
 
-The backend is a Spring Boot REST API. It deliberately has no database and no local content directory: GitHub is the source of truth for every Markdown file.
+The backend is a Spring Boot REST API. It deliberately has no database; Markdown files live in the configured local content directory. GitHub is an optional remote backup used only when an administrator explicitly pushes local changes.
 
 ## Architecture
 
@@ -11,12 +11,16 @@ React frontend
       v
 Spring Boot API
       |
-      | GitHub Contents API
+      | local content directory
       v
-GitHub repository / frontend/content/*.md
+frontend/content/*.md
+      |
+      | explicit Studio push
+      v
+GitHub repository backup
 ```
 
-The service reads Markdown files from the configured GitHub branch, validates YAML frontmatter, and writes changes through the GitHub Contents API. Every write creates a GitHub commit directly. There is no local Git working tree to push later.
+The service reads and writes Markdown files from the configured local content directory, validating YAML frontmatter on every write. The GitHub Contents API is used only by the explicit push action in the Studio. There is no GitHub request during public content rendering.
 
 Authentication users are loaded at startup from `APP_AUTH_USERS`. Passwords must be bcrypt hashes; they are never stored in Markdown, GitHub, or browser storage. Sessions are opaque random tokens held in process memory and sent in a `Secure`/`HttpOnly` cookie in production. A restart invalidates active sessions.
 
@@ -24,7 +28,7 @@ Authentication users are loaded at startup from `APP_AUTH_USERS`. Passwords must
 
 - Java 21
 - Maven 3.9+
-- A GitHub fine-grained token with repository `Contents: Read and write` permission for edits (public reads work without a token)
+- A GitHub fine-grained token with repository `Contents: Read and write` permission when remote backup/push is needed
 
 ## Configuration
 
@@ -52,17 +56,18 @@ APP_AUTH_USERS='owner@example.com|$2y$12$...|Portfolio owner,editor@example.com|
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `GITHUB_OWNER` | yes | GitHub account or organization |
-| `GITHUB_REPOSITORY` | yes | Repository containing the portfolio |
-| `GITHUB_TOKEN` | yes for writes | Fine-grained token, kept only by the backend; leave it empty only for public-read/admin-login UI tests |
+| `GITHUB_OWNER` | only for pushes | GitHub account or organization |
+| `GITHUB_REPOSITORY` | only for pushes | Repository containing the portfolio |
+| `GITHUB_TOKEN` | only for pushes | Fine-grained token, kept only by the backend; leave it empty when GitHub backup is disabled |
 | `GITHUB_BRANCH` | no | Branch to read and modify, defaults to `main` |
-| `GITHUB_CONTENT_ROOT` | no | Remote directory, defaults to `frontend/content` |
+| `GITHUB_CONTENT_ROOT` | no | Remote directory used for pushes, defaults to `frontend/content` |
+| `CONTENT_ROOT` | no | Local Markdown directory, defaults to `/app/content` |
 | `APP_AUTH_USERS` | yes | Comma-separated `email|bcryptHash|displayName` entries |
 | `APP_CORS_ALLOWED_ORIGIN` | no | Frontend origin, defaults to `http://localhost:5173` |
 | `APP_AUTH_COOKIE_SECURE` | no | Set `true` behind HTTPS; defaults to `false` locally |
 | `APP_AUTH_SESSION_TTL` | no | In-memory session lifetime, defaults to `PT12H` |
 
-The application fails fast if users are missing or malformed. GitHub owner and repository are required for reads; `GITHUB_TOKEN` is required before any write. The health endpoint can still be used for deployment diagnostics.
+The application fails fast if users are missing or malformed. GitHub owner and repository are required only when pushing local changes; `GITHUB_TOKEN` is required for pushes. The health endpoint can still be used for deployment diagnostics.
 
 ## API
 
@@ -76,15 +81,15 @@ All URLs are relative to `/api`.
 | `POST` | `/auth/logout` | public | Revokes the current session |
 | `GET` | `/content/files` | public/admin | Lists Markdown summaries; anonymous callers only see published content |
 | `GET` | `/content/file?path=...` | public/admin | Reads one Markdown document |
-| `POST` | `/content/files` | admin | Creates a document and GitHub commit |
+| `POST` | `/content/files` | admin | Creates a local Markdown document |
 | `PUT` | `/content/file` | admin | Validates and updates a document |
 | `POST` | `/content/import` | admin | Imports or overwrites a document |
-| `POST` | `/content/rename` | admin | Renames a document through GitHub |
-| `DELETE` | `/content/file?path=...` | admin | Deletes a document through GitHub |
+| `POST` | `/content/rename` | admin | Renames a local Markdown document |
+| `DELETE` | `/content/file?path=...` | admin | Deletes a local Markdown document |
 | `GET` | `/git/status` | admin | Returns the live branch state |
-| `GET` | `/git/history` | admin | Returns recent commits touching the content root |
-| `POST` | `/git/pull` | admin | Refreshes by reading the remote branch on the next request |
-| `POST` | `/git/push` | admin | No-op acknowledgement; writes already commit remotely |
+| `GET` | `/git/history` | admin | Returns commits created by local push actions in the current process |
+| `POST` | `/git/pull` | admin | No-op; local Markdown remains the source of truth |
+| `POST` | `/git/push` | admin | Pushes local added, modified, and deleted files to GitHub |
 
 Mutating requests other than login and logout require the `X-XSRF-TOKEN` header matching the `XSRF-TOKEN` cookie. Call `GET /api/auth/csrf` before the first mutation. CORS is restricted to the configured frontend origin.
 

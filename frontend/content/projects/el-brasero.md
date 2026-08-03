@@ -3,6 +3,7 @@ title: El Brasero Ordering Website
 slug: el-brasero
 description: A warm, fast ordering experience for an independent restaurant.
 status: published
+ink: green
 featured: false
 projectType: Commerce website
 role: Frontend developer

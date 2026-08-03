@@ -3,6 +3,7 @@ title: Starship Simulation Interface
 slug: starship-simulation
 description: An exploratory interface for reading systems, routes, and decisions in a simulated fleet.
 status: draft
+ink: blue
 featured: false
 projectType: Interface experiment
 role: Product engineer

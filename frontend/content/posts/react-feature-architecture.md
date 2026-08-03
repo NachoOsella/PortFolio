@@ -3,6 +3,7 @@ title: Building reusable feature modules in React
 slug: react-feature-architecture
 description: A practical approach to organizing maintainable React applications around the work users actually do.
 status: published
+ink: yellow
 category: React
 tags:
   - React

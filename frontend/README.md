@@ -41,7 +41,7 @@ pnpm test:watch   # Vitest watch mode
 VITE_API_URL=http://localhost:8080/api
 ```
 
-When `VITE_API_URL` is set, content, authentication, and Git repository adapters call the Spring Boot backend. Remove it to use the local mock fallback.
+When `VITE_API_URL` is set, content, authentication, and Git adapters call the Spring Boot backend. The backend reads local Markdown files and uses GitHub only for explicit pushes. Remove it to use the local mock fallback.
 
 ## Folder structure
 
@@ -147,7 +147,7 @@ localStorage.setItem('ignacio-mock-errors', 'true');
 
 With the API adapter enabled, login is owned by Spring Boot. The browser receives only an HttpOnly session cookie and never sees the configured user hashes or GitHub token. Without the API adapter, the login screen falls back to the intentionally insecure mock used by frontend tests.
 
-GitHub Contents API writes create remote commits immediately. The API adapter therefore treats content saves as synchronized and the Studio Git screen exposes remote history and no-op push/pull acknowledgements. The browser never executes Git commands or stores repository credentials.
+Content saves are written to the backend's local Markdown directory first. The Studio Git screen reports those local changes and pushes them to GitHub only when requested. The browser never executes Git commands or stores repository credentials.
 
 ## Synchronization states
 

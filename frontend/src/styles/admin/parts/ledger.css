@@ -1,0 +1,87 @@
+/* The private studio uses the same archive grammar as the public register. */
+.admin-app .editor-page-head {
+  min-height: 130px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-app .editor-page-head h2 {
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 0.92;
+}
+
+.admin-app .editor-shell,
+.admin-app .folder-tree,
+.admin-app .message-list,
+.admin-app .git-overview {
+  border-right: 0;
+  border-left: 0;
+  background: transparent;
+}
+
+.admin-app .editor-shell,
+.admin-app .folder-tree,
+.admin-app .message-list {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-app .git-overview {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-app .settings-grid,
+.admin-app .git-grid {
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-app .settings-grid > * + *,
+.admin-app .git-grid > * + * {
+  border-left: 1px solid var(--line);
+}
+
+.admin-app .settings-grid .admin-panel,
+.admin-app .git-grid .admin-panel {
+  border: 0;
+  background: transparent;
+}
+
+.admin-app .panel-kicker::before {
+  content: 'REC / ';
+  color: var(--accent);
+}
+
+.admin-app .saved-feedback {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--green);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.admin-app .sync-chip {
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1000px) {
+  .admin-app .settings-grid,
+  .admin-app .git-grid,
+  .overview-grid {
+    gap: 0;
+  }
+
+  .admin-app .settings-grid > * + *,
+  .admin-app .git-grid > * + *,
+  .overview-grid .admin-panel + .admin-panel {
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+}

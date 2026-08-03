@@ -31,13 +31,23 @@
     padding: 0 18px;
   }
 
-  .admin-mobile-trigger {
+  .admin-mobile-trigger,
+  .sidebar-close {
     display: grid;
+    min-width: 44px;
+    min-height: 44px;
     place-items: center;
-    margin-right: 10px;
     border: 0;
     background: transparent;
     color: var(--ink);
+  }
+
+  .admin-mobile-trigger {
+    margin-right: 10px;
+  }
+
+  .sidebar-close {
+    margin-right: -10px;
   }
 
   .admin-header > div:first-of-type {

@@ -1,54 +1,96 @@
 package com.ignacio.portfolio.git;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.ignacio.portfolio.content.ContentPath;
+import com.ignacio.portfolio.content.ContentService;
 import com.ignacio.portfolio.github.GitHubClient;
 
 @Service
 public class GitService {
 
     private final GitHubClient githubClient;
+    private final ContentService contentService;
+    private final List<GitCommit> localHistory = new ArrayList<>();
+    private volatile Instant lastSyncAt;
 
-    public GitService(GitHubClient githubClient) {
+    public GitService(GitHubClient githubClient, ContentService contentService) {
         this.githubClient = githubClient;
+        this.contentService = contentService;
     }
 
     public GitStatus status() {
-        List<GitHubClient.CommitSummary> commits = githubClient.listCommits();
-        String lastSyncAt = commits.isEmpty()
-                ? java.time.Instant.EPOCH.toString()
-                : commits.getFirst().createdAt();
+        List<ContentService.LocalChange> changes = contentService.localChanges();
         return new GitStatus(
                 githubClient.branch(),
+                changes.stream().filter(change -> "modified".equals(change.status())).map(ContentService.LocalChange::path).toList(),
+                changes.stream().filter(change -> "added".equals(change.status())).map(ContentService.LocalChange::path).toList(),
+                changes.stream().filter(change -> "deleted".equals(change.status())).map(ContentService.LocalChange::path).toList(),
                 List.of(),
-                List.of(),
-                List.of(),
-                List.of(),
+                changes.size(),
                 0,
-                0,
-                lastSyncAt,
+                lastSyncAt == null ? "" : lastSyncAt.toString(),
                 false);
     }
 
-    public List<GitCommit> history() {
-        return githubClient.listCommits().stream()
-                .map(commit -> new GitCommit(
-                        commit.id(),
-                        commit.message(),
-                        commit.author(),
-                        commit.createdAt(),
-                        commit.files()))
-                .toList();
+    public synchronized List<GitCommit> history() {
+        return List.copyOf(localHistory);
     }
 
-    public GitPushResult push() {
-        return new GitPushResult(true, 0, "GitHub is the remote source of truth; there is nothing pending to push.");
+    public synchronized GitPushResult push() {
+        List<ContentService.LocalChange> changes = contentService.localChanges();
+        if (changes.isEmpty()) {
+            return new GitPushResult(true, 0, "Local content is already synchronized.");
+        }
+
+        githubClient.requireWriteAccess();
+        List<String> synchronizedPaths = new ArrayList<>();
+        List<String> pushedPaths = new ArrayList<>();
+        for (ContentService.LocalChange change : changes) {
+            ContentPath path = ContentPath.parse(change.path());
+            String message = "content: sync " + path.filename().replaceFirst("\\.md$", "");
+            if ("deleted".equals(change.status())) {
+                githubClient.getFile(path).ifPresent(remote -> {
+                    githubClient.deleteFile(path, remote.sha(), message);
+                });
+            } else {
+                String raw = contentService.readRawForSync(path.value());
+                String sha = githubClient.getFile(path).map(GitHubClient.RemoteFile::sha).orElse(null);
+                githubClient.putFile(path, raw, message, sha);
+            }
+            synchronizedPaths.add(change.path());
+            pushedPaths.add(change.path());
+            contentService.markSynced(List.of(change.path()));
+        }
+
+        contentService.markSynced(synchronizedPaths);
+        Instant syncedAt = Instant.now();
+        lastSyncAt = syncedAt;
+        localHistory.add(0, new GitCommit(
+                UUID.randomUUID().toString().substring(0, 7),
+                "content: synchronize local Markdown",
+                "Ignacio Osella",
+                syncedAt.toString(),
+                List.copyOf(pushedPaths)));
+        return new GitPushResult(
+                true,
+                pushedPaths.size(),
+                pushedPaths.size() == 1
+                        ? "1 local Markdown file pushed to GitHub."
+                        : pushedPaths.size() + " local Markdown files pushed to GitHub.");
     }
 
     public GitPullResult pull() {
-        return new GitPullResult(true, List.of(), "Content is read directly from the configured GitHub branch.", false);
+        return new GitPullResult(
+                true,
+                List.of(),
+                "Local content is the source of truth. GitHub is only used when you push changes.",
+                false);
     }
 
     public record GitStatus(

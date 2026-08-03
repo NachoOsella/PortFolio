@@ -8,6 +8,7 @@
 @import './parts/git.css';
 @import './parts/messages.css';
 @import './parts/settings.css';
+@import './parts/ledger.css';
 @import './parts/mq-reduced-motion.css';
 @import './parts/mq-1000.css';
 @import './parts/mq-760.css';

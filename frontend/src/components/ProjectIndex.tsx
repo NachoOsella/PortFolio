@@ -5,8 +5,7 @@ import { ContentIndexControls } from '@/components/ContentIndexControls';
 import { EmptyState } from '@/components/ui';
 import type { ProjectDocument } from '@/types';
 import { ProjectDiagram } from '@/components/ProjectDiagram';
-
-const projectTones = ['yellow', 'blue', 'green', 'orange', 'purple', 'aqua'];
+import { createRecordCode, createRevision, getRecordTone } from '@/lib/archive';
 
 export function ProjectIndex({ projects }: { projects: ProjectDocument[] }) {
   const [search, setSearch] = useState('');
@@ -64,17 +63,22 @@ export function ProjectIndex({ projects }: { projects: ProjectDocument[] }) {
         />
 
         {visibleProjects.length ? (
-          <div className="v2-project-index-grid">
+          <div className="v2-project-register">
             {visibleProjects.map((project, index) => {
               const item = project.frontmatter;
-              const tone = projectTones[index % projectTones.length];
+              const tone = getRecordTone(item.slug, item.ink);
+              const code = createRecordCode(item.title, index);
               return (
-                <article className={`v2-project-index-card v2-tone-${tone}`} key={project.path}>
-                  <Link to={`/projects/${item.slug}`} className="v2-project-index-link">
+                <article className={`v2-project-record v2-tone-${tone}`} key={project.path}>
+                  <Link to={`/projects/${item.slug}`} className="v2-project-record-link">
+                    <header className="v2-project-record-head">
+                      <strong>{code}</strong>
+                      <span>OS–P{String(index + 1).padStart(2, '0')}</span>
+                      <span>{createRevision(item.updatedAt)}</span>
+                      <span>{item.status}</span>
+                    </header>
                     <div className="v2-project-index-artwork" aria-hidden="true">
-                      <span className="v2-project-type">
-                        {String(index + 1).padStart(2, '0')} / {item.projectType}
-                      </span>
+                      <span className="v2-project-type">{code} / {item.projectType}</span>
                       <ProjectDiagram slug={item.slug} title={item.title} />
                       <div className="v2-project-sweep">
                         <span>{item.technologies.slice(0, 3).join(' / ')}</span>
@@ -82,7 +86,7 @@ export function ProjectIndex({ projects }: { projects: ProjectDocument[] }) {
                     </div>
                     <div className="v2-project-index-copy">
                       <div>
-                        <span>{item.duration}</span>
+                        <span>{item.role} / {item.duration}</span>
                         <h2>{item.title}</h2>
                         <p>{item.description}</p>
                       </div>

@@ -3,6 +3,7 @@ title: Docker Compose for small product teams
 slug: docker-for-small-products
 description: A pragmatic local environment that makes a full-stack system easier to understand.
 status: published
+ink: orange
 category: Delivery
 tags:
   - Docker

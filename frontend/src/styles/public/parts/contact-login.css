@@ -185,10 +185,30 @@
   border-top: 1px solid var(--v2-yellow);
 }
 
+.v2-login-intro > span {
+  display: block;
+  margin-bottom: clamp(34px, 6vw, 72px);
+  color: var(--v2-yellow);
+  font: 10px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.08em;
+}
+
 .v2-login form {
-  padding: clamp(28px, 4vw, 50px);
-  border: 1px solid var(--v2-line);
-  background: var(--v2-bg-soft);
+  position: relative;
+  padding: clamp(32px, 5vw, 64px) 0;
+  border-top: 1px solid var(--v2-yellow);
+  border-bottom: 1px solid var(--v2-line);
+  background: transparent;
+}
+
+.v2-login form::before {
+  position: absolute;
+  top: -18px;
+  right: 0;
+  content: 'ACCESS / LOCAL SIMULATION';
+  color: var(--v2-muted);
+  font: 8px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.06em;
 }
 
 .v2-password-field {

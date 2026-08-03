@@ -8,6 +8,12 @@ services:
         required: false
     environment:
       APP_CORS_ALLOWED_ORIGIN: ${APP_CORS_ALLOWED_ORIGIN:-http://localhost}
+      CONTENT_ROOT: /app/content
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    volumes:
+      - ./frontend/content:/app/content
+      # Bind-mounted content is writable by the host user supplied below.
+      # Override DOCKER_UID and DOCKER_GID for a different host account.
     expose:
       - "8080"
     restart: unless-stopped

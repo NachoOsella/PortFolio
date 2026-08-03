@@ -4,6 +4,7 @@ import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { SignatureMark } from '@/components/SignatureMark';
 import { useAuth } from '@/context/AuthContext';
+import { getRouteRecord } from '@/lib/archive';
 
 const navigation = [
   ['Projects', '/projects'],
@@ -46,10 +47,15 @@ export function PublicLayout() {
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
   const { session } = useAuth();
-  const isContactPage = location.pathname === '/contact';
+  const routeRecord = getRouteRecord(location.pathname);
 
   return (
     <div className="v2-app">
+      <aside className="v2-archive-rail" aria-hidden="true">
+        <span>{routeRecord.code}</span>
+        <span>{routeRecord.section}</span>
+        <span>CURRENT / CBA</span>
+      </aside>
       <header className="v2-nav">
         <div className="v2-shell v2-nav-inner">
           <Link className="v2-brand" to="/" onClick={closeMenu}>
@@ -107,45 +113,16 @@ export function PublicLayout() {
         <Outlet />
       </main>
 
-      <footer className={`v2-footer${isContactPage ? ' v2-footer-contact' : ''}`}>
-        <div className="v2-shell">
-          {!isContactPage ? (
-            <motion.div
-              className="v2-footer-main"
-              initial={reduceMotion ? false : { opacity: 0, y: 42 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="v2-footer-heading">
-                <p>Good work starts<br />before the answer.</p>
-                <span>Bring the question that has not found its shape yet.</span>
-              </div>
-              <motion.div
-                className="v2-footer-inquiry"
-                initial={false}
-                whileInView={reduceMotion ? undefined : { clipPath: 'inset(0 0 0% 0)' }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.85, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <p>A rough note is enough to begin.</p>
-                <a href="mailto:hello@ignacioosella.dev">
-                  hello@ignacioosella.dev <ArrowUpRight size={20} strokeWidth={1.6} />
-                </a>
-                <Link to="/contact">
-                  Write the rest <ArrowUpRight size={18} strokeWidth={1.6} />
-                </Link>
-              </motion.div>
-            </motion.div>
-          ) : null}
-          <div className="v2-footer-bottom">
-            <Link className="v2-brand" to="/">
-              <SignatureMark className="v2-brand-mark" />
-              <span>Ignacio Osella</span>
-            </Link>
-            <span>© {new Date().getFullYear()}</span>
-            <a href="mailto:hello@ignacioosella.dev">Email</a>
-          </div>
+      <footer className="v2-footer">
+        <div className="v2-shell v2-footer-bottom">
+          <Link className="v2-brand" to="/">
+            <SignatureMark className="v2-brand-mark" />
+            <span>Ignacio Osella</span>
+          </Link>
+          <span>{routeRecord.code} / CURRENT COPY</span>
+          <span>Córdoba, AR / UTC−03</span>
+          <span>© {new Date().getFullYear()}</span>
+          <a href="mailto:hello@ignacioosella.dev">Email <ArrowUpRight size={13} /></a>
         </div>
       </footer>
     </div>

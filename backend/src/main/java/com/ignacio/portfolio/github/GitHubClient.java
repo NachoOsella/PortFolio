@@ -108,6 +108,10 @@ public class GitHubClient {
                 200);
     }
 
+    public void requireWriteAccess() {
+        requireWriteConfiguration();
+    }
+
     public List<CommitSummary> listCommits() {
         JsonNode response = request(
                 "GET",

@@ -3,10 +3,9 @@ import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ContentIndexControls } from '@/components/ContentIndexControls';
 import { EmptyState } from '@/components/ui';
+import { createRevision, getRecordTone } from '@/lib/archive';
 import { formatDate, readingTime } from '@/lib/content';
 import type { PostDocument } from '@/types';
-
-const noteTones = ['yellow', 'blue', 'green', 'orange', 'purple', 'aqua'];
 
 export function BlogIndex({ posts }: { posts: PostDocument[] }) {
   const [search, setSearch] = useState('');
@@ -59,17 +58,17 @@ export function BlogIndex({ posts }: { posts: PostDocument[] }) {
           <div className="v2-blog-index-list">
             {visiblePosts.map((post, index) => {
               const item = post.frontmatter;
-              const tone = noteTones[index % noteTones.length];
+              const tone = getRecordTone(item.slug, item.ink);
               return (
                 <article className="v2-blog-index-row" key={post.path}>
                   <Link to={`/blog/${item.slug}`} className="v2-blog-index-link">
                     <span className={`v2-blog-index-number v2-tone-${tone}`} aria-hidden="true">
-                      {String(index + 1).padStart(2, '0')}
+                      N–{String(index + 1).padStart(2, '0')}
                     </span>
                     <div className="v2-blog-index-copy">
                       <div className="v2-blog-index-meta">
-                        <span>{item.category}</span>
-                        <span>{formatDate(item.publishedAt)}</span>
+                        <span>{item.category} / {createRevision(item.updatedAt)}</span>
+                        <span>{formatDate(item.publishedAt)} / INK {tone}</span>
                       </div>
                       <h2>{item.title}</h2>
                       <p>{item.description}</p>

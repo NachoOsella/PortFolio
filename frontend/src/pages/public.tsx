@@ -21,6 +21,7 @@ import {
   usePublicProject,
   usePublicProjects,
 } from '@/hooks/usePublicContent';
+import { createRecordCode, createRevision } from '@/lib/archive';
 import { formatDate, readingTime } from '@/lib/content';
 
 const HorizontalProjects = lazy(() =>
@@ -75,7 +76,47 @@ export function HomePage() {
           <WritingIndex posts={recentPosts} />
         </Suspense>
       )}
+
+      <HomeContactSection />
     </>
+  );
+}
+
+function HomeContactSection() {
+  const reduceMotion = useReducedMotion();
+  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const };
+
+  return (
+    <section className="v2-home-contact" aria-labelledby="home-contact-heading">
+      <div className="v2-shell">
+        <div className="v2-home-contact-grid">
+          <motion.h2
+            id="home-contact-heading"
+            initial={reduceMotion ? false : { opacity: 0, y: 42, clipPath: 'inset(0 0 28% 0)' }}
+            whileInView={{ opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)' }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={transition}
+          >
+            Have a system worth untangling?
+          </motion.h2>
+          <motion.div
+            className="v2-home-contact-copy"
+            initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ ...transition, delay: 0.12 }}
+          >
+            <p>A rough note is enough. Tell me what is taking shape and where it becomes difficult to see.</p>
+            <a className="v2-home-contact-email" href="mailto:hello@ignacioosella.dev">
+              <Mail size={17} strokeWidth={1.6} /> hello@ignacioosella.dev
+            </a>
+            <Link className="v2-home-contact-action" to="/contact">
+              Start a conversation <ArrowUpRight size={22} strokeWidth={1.6} />
+            </Link>
+          </motion.div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -116,6 +157,12 @@ export function ProjectPage() {
           <ArrowLeft size={16} /> Projects
         </Link>
         <header className="v2-case-header">
+          <div className="v2-record-stamp">
+            <strong>{createRecordCode(item.title, Math.max(index, 0))}</strong>
+            <span>OS–P{String(Math.max(index, 0) + 1).padStart(2, '0')}</span>
+            <span>{createRevision(item.updatedAt)}</span>
+            <span>{item.status}</span>
+          </div>
           <h1>{item.title}</h1>
           <p>{item.description}</p>
           <dl>
@@ -198,6 +245,12 @@ export function BlogPostPage() {
       <div className="v2-shell">
         <Link className="v2-back" to="/blog"><ArrowLeft size={16} /> Blog</Link>
         <header className="v2-article-header">
+          <div className="v2-record-stamp">
+            <strong>N–{String(Math.max(index, 0) + 1).padStart(3, '0')}</strong>
+            <span>{item.category}</span>
+            <span>{createRevision(item.updatedAt)}</span>
+            <span>{formatDate(item.publishedAt)}</span>
+          </div>
           <h1>{item.title}</h1>
           <p>{item.description}</p>
           <div className="v2-article-meta">
@@ -324,7 +377,8 @@ export function StaticPage({ slug }: { slug: string }) {
       <Seo title={page.frontmatter.title} description={page.frontmatter.description} path={`/${slug}`} />
       <div className="v2-shell">
         <header className="v2-page-header">
-          <p className="v2-label">{page.frontmatter.title}</p>
+          <p className="v2-label">OS–D / {createRevision(page.frontmatter.updatedAt)}</p>
+          <h1>{page.frontmatter.title}</h1>
           <p>{page.frontmatter.description}</p>
         </header>
         <div className="v2-reading-layout">
@@ -466,15 +520,17 @@ export function LoginPage() {
     <div className="v2-login v2-page-top">
       <Seo title="Studio login" description="Private portfolio content workspace." path="/login" />
       <div className="v2-shell v2-login-layout">
-        <div>
+        <div className="v2-login-intro">
+          <span>PRIVATE STUDIO / ACCESS</span>
           <h1>Content with clear ownership.</h1>
           <p>The browser simulates this workflow. Authentication belongs to the future Spring Boot service.</p>
         </div>
-        <form onSubmit={submit}>
+        <form className="v2-access-form" onSubmit={submit}>
           <Field label="Email"><Input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></Field>
-          <Field label="Password">
+          <Field label="Password" controlId="studio-password">
             <div className="v2-password-field">
               <Input
+                id="studio-password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}

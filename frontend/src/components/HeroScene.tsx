@@ -4,12 +4,12 @@ import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const cubeFaces = [
-  { side: 'front', tone: 'yellow', index: '01', label: 'PRODUCT', value: 'REACT', detail: 'interfaces' },
+  { side: 'front', tone: 'yellow', index: '01', label: 'PRODUCT', value: 'ANGULAR', detail: 'interfaces' },
   { side: 'right', tone: 'blue', index: '02', label: 'SYSTEM', value: 'JAVA', detail: 'services' },
   { side: 'back', tone: 'green', index: '03', label: 'DATA', value: 'POSTGRES', detail: 'contracts' },
   { side: 'left', tone: 'orange', index: '04', label: 'FLOW', value: 'SPRING', detail: 'runtime' },
   { side: 'top', tone: 'aqua', index: '05', label: 'SHIP', value: 'DOCKER', detail: 'delivery' },
-  { side: 'bottom', tone: 'purple', index: '06', label: 'SCALE', value: 'TYPESCRIPT', detail: 'clarity' },
+  { side: 'bottom', tone: 'purple', index: '06', label: 'TYPESCRIPT', value: 'TS', detail: 'clarity' },
 ];
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -73,6 +73,14 @@ export function HeroScene() {
     <section className="v2-hero">
       <div className="v2-shell v2-hero-inner">
         <div className="v2-hero-copy">
+          <motion.p
+            className="v2-hero-record"
+            initial={reduceMotion ? false : { opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.02, ease }}
+          >
+            IGNACIO OSELLA / FULL-STACK DEVELOPER / CÓRDOBA
+          </motion.p>
           <h1 className="v2-hero-title">
             {['Full-stack', 'products,', 'built to', 'last.'].map((line, index) => (
               <span className="v2-title-mask" key={line}>
@@ -89,6 +97,7 @@ export function HeroScene() {
         </div>
 
         <div className="v2-hero-art">
+          <span className="v2-cube-instruction" aria-hidden="true">Drag to rotate / Arrow keys</span>
           <div className="v2-cube-stage">
             <motion.div
               className="v2-cube"

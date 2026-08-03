@@ -3,6 +3,7 @@ title: Clutch Studio
 slug: clutch-studio
 description: A portfolio and booking experience for a small creative production studio.
 status: published
+ink: aqua
 featured: false
 projectType: Marketing website
 role: Full-stack developer

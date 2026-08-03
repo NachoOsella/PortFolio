@@ -3,6 +3,7 @@ title: Learning in public without turning work into performance
 slug: learning-in-public
 description: A sustainable way to share technical progress while keeping the work honest.
 status: draft
+ink: green
 category: Practice
 tags:
   - Learning

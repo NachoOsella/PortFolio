@@ -67,10 +67,6 @@
     min-width: 0;
   }
 
-  .v2-project-index-grid {
-    grid-template-columns: 1fr;
-  }
-
   .v2-project-index-artwork {
     min-height: clamp(270px, 74vw, 350px);
   }
@@ -350,7 +346,7 @@
     z-index: 2;
     top: 26px;
     left: 28px;
-    max-width: 54%;
+    max-width: 72%;
     overflow: hidden;
     font-size: 8px;
     text-overflow: ellipsis;
@@ -598,6 +594,14 @@
     font-size: clamp(1.7rem, 7.5vw, 2.3rem);
   }
 
+  .v2-contact-poster > span {
+    right: auto;
+    left: 24px;
+    max-width: calc(100% - 48px);
+    font-size: 8px;
+    white-space: nowrap;
+  }
+
   .v2-contact-short-fields {
     grid-template-columns: 1fr;
   }
@@ -606,35 +610,13 @@
     flex-direction: column;
   }
 
-  .v2-footer-main {
-    grid-template-columns: 1fr;
-    gap: 58px;
+  .v2-record-stamp {
+    grid-template-columns: 1fr auto;
   }
 
-  .v2-footer-heading {
-    min-height: 0;
-    gap: 34px;
-  }
-
-  .v2-footer-heading p {
-    font-size: 4.2rem;
-  }
-
-  .v2-footer-inquiry {
-    min-height: 300px;
-  }
-
-  .v2-footer-inquiry > p {
-    font-size: 2.8rem;
-  }
-
-  .v2-footer-bottom {
-    flex-wrap: wrap;
-  }
-
-  .v2-footer-bottom .v2-brand {
-    width: 100%;
-    margin-bottom: 16px;
+  .v2-record-stamp span:nth-of-type(1),
+  .v2-record-stamp span:nth-of-type(3) {
+    display: none;
   }
 
   .v2-reading-progress {

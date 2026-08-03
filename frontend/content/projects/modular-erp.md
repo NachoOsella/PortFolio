@@ -3,6 +3,7 @@ title: Modular ERP Platform
 slug: modular-erp
 description: A reusable ERP foundation designed for small and medium businesses.
 status: published
+ink: yellow
 featured: true
 projectType: Full-stack application
 role: Full-stack developer

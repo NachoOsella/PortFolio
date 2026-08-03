@@ -3,6 +3,7 @@ title: Notes from building with coding agents
 slug: coding-agents-notes
 description: What stays human when the first draft of a system can arrive in minutes.
 status: published
+ink: green
 category: Practice
 tags:
   - Coding agents

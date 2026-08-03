@@ -3,6 +3,7 @@ title: The quiet details that make a UI feel finished
 slug: ui-engineering-details
 description: A checklist for states, spacing, and transitions that earn trust without asking for attention.
 status: published
+ink: purple
 category: UI engineering
 tags:
   - Accessibility

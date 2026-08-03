@@ -11,7 +11,8 @@ FROM eclipse-temurin:21-jre-jammy
 RUN useradd --system --uid 10001 --create-home appuser
 WORKDIR /app
 COPY --from=build /workspace/target/portfolio-backend-*.jar /app/app.jar
-RUN chown -R appuser:appuser /app
+# Pre-create the content directory so a fresh named volume inherits appuser ownership.
+RUN mkdir -p /app/content && chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 8080

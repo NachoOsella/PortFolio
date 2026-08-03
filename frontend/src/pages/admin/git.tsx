@@ -46,8 +46,12 @@ export function AdminGit() {
     }
   };
   const doPush = async () => {
-    const result = await push.mutateAsync(undefined);
-    setNotice((result as { message: string }).message);
+    try {
+      const result = await push.mutateAsync(undefined);
+      setNotice((result as { message: string }).message);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Push failed.');
+    }
   };
   return (
     <div className="admin-page">
@@ -57,7 +61,7 @@ export function AdminGit() {
           <h2>Repository, made legible.</h2>
           <p>
             {apiEnabled
-              ? 'Every content save creates a commit on the configured GitHub branch.'
+              ? 'Content is read from the local Markdown directory. Push reviewed changes to GitHub when you are ready.'
               : 'Review content changes before they leave the browser mock.'}
           </p>
         </div>
@@ -171,7 +175,7 @@ export function AdminGit() {
               title={apiEnabled ? 'Nothing pending' : 'Nothing to commit'}
               description={
                 apiEnabled
-                  ? 'The GitHub Contents API commits each Markdown save immediately.'
+                  ? 'Save a Markdown file locally, then push it to GitHub when ready.'
                   : 'Save a Markdown file to create a new local change.'
               }
             />
@@ -181,14 +185,14 @@ export function AdminGit() {
           <div className="panel-heading">
             <div>
               <p className="panel-kicker">{apiEnabled ? 'Remote publishing' : 'Create commit'}</p>
-              <h3>{apiEnabled ? 'Every save is a GitHub commit' : 'Write a useful message'}</h3>
+              <h3>{apiEnabled ? 'Local Markdown is the source of truth' : 'Write a useful message'}</h3>
             </div>
             <GitCommitHorizontal size={19} />
           </div>
           {apiEnabled ? (
             <p className="git-subtext">
-              Saves are validated and committed directly through the GitHub Contents API. There is
-              no local staging area or separate push step.
+              Saves are written to the local content directory first. Push them to GitHub only after
+              reviewing the working tree.
             </p>
           ) : (
             <>
@@ -217,17 +221,15 @@ export function AdminGit() {
             <p className="panel-kicker">History</p>
             <h3>Recent commits</h3>
           </div>
-          {!apiEnabled && (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => void doPush()}
-              disabled={!status.ahead || push.isPending}
-            >
-              <Upload size={14} />
-              {push.isPending ? 'Pushing…' : 'Push to remote'}
-            </Button>
-          )}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => void doPush()}
+            disabled={!status.ahead || push.isPending}
+          >
+            <Upload size={14} />
+            {push.isPending ? 'Pushing…' : apiEnabled ? 'Push to GitHub' : 'Push to remote'}
+          </Button>
         </div>
         {commits?.map((commit) => (
           <div className="history-row" key={commit.id}>

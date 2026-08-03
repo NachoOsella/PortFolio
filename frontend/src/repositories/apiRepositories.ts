@@ -74,7 +74,7 @@ export const apiGitRepository: GitRepository = {
   getStatus: () => apiRequest<GitStatus>('/git/status'),
   getHistory: () => apiRequest<GitCommit[]>('/git/history'),
   createCommit: async () => {
-    throw new Error('GitHub commits are created when Markdown files are saved.');
+    throw new Error('Use Push to GitHub after reviewing local content changes.');
   },
   push: () => apiRequest<GitPushResult>('/git/push', { method: 'POST' }),
   pull: () => apiRequest<GitPullResult>('/git/pull', { method: 'POST' }),

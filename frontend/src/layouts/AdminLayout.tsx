@@ -25,21 +25,21 @@ const navGroups = [
   {
     label: 'Workspace',
     items: [
-      { label: 'Overview', to: '/admin', icon: LayoutDashboard },
-      { label: 'Content', to: '/admin/content', icon: FileText },
-      { label: 'Projects', to: '/admin/projects', icon: FolderKanban },
-      { label: 'Blog posts', to: '/admin/posts', icon: FileText },
-      { label: 'About me', to: '/admin/about', icon: UserRound },
-      { label: 'Pages', to: '/admin/pages', icon: FileText },
+      { label: 'Overview', code: 'L-00', to: '/admin', icon: LayoutDashboard },
+      { label: 'Content', code: 'D-01', to: '/admin/content', icon: FileText },
+      { label: 'Projects', code: 'P-02', to: '/admin/projects', icon: FolderKanban },
+      { label: 'Blog posts', code: 'N-03', to: '/admin/posts', icon: FileText },
+      { label: 'About me', code: 'A-04', to: '/admin/about', icon: UserRound },
+      { label: 'Pages', code: 'D-05', to: '/admin/pages', icon: FileText },
     ],
   },
   {
     label: 'Operations',
     items: [
-      { label: 'Files', to: '/admin/files', icon: FolderKanban },
-      { label: 'Git', to: '/admin/git', icon: GitBranch },
-      { label: 'Messages', to: '/admin/messages', icon: MessageSquare },
-      { label: 'Settings', to: '/admin/settings', icon: Settings },
+      { label: 'Files', code: 'F-06', to: '/admin/files', icon: FolderKanban },
+      { label: 'Git', code: 'G-07', to: '/admin/git', icon: GitBranch },
+      { label: 'Messages', code: 'M-08', to: '/admin/messages', icon: MessageSquare },
+      { label: 'Settings', code: 'S-09', to: '/admin/settings', icon: Settings },
     ],
   },
 ];
@@ -63,7 +63,7 @@ export function AdminLayout() {
   };
   return (
     <div className={`admin-app ${collapsed ? 'sidebar-collapsed' : ''}`}>
-      <aside className={`admin-sidebar ${mobileOpen ? 'mobile-open' : ''}`}>
+      <aside id="admin-sidebar" className={`admin-sidebar ${mobileOpen ? 'mobile-open' : ''}`} aria-label="Admin workspace navigation">
         <div className="admin-brand">
           <Link to="/" className="admin-brand-link" aria-label="Return to Ignacio Osella portfolio">
             <SignatureMark className="admin-brand-mark" />
@@ -81,7 +81,7 @@ export function AdminLayout() {
           {navGroups.map((group) => (
             <div className="admin-nav-group" key={group.label}>
               <p>{!collapsed && group.label}</p>
-              {group.items.map(({ label, to, icon: Icon }) => (
+              {group.items.map(({ label, code, to, icon: Icon }) => (
                 <NavLink
                   key={to}
                   to={to}
@@ -91,6 +91,7 @@ export function AdminLayout() {
                   title={collapsed ? label : undefined}
                 >
                   <Icon size={17} />
+                  {!collapsed && <span className="admin-nav-code">{code}</span>}
                   <span>{!collapsed && label}</span>
                 </NavLink>
               ))}
@@ -115,23 +116,24 @@ export function AdminLayout() {
           aria-label="Close menu"
         />
       )}
-      <section className="admin-main">
+      <div className="admin-main">
         <header className="admin-header">
           <button
             className="admin-mobile-trigger"
             onClick={() => setMobileOpen(true)}
             aria-label="Open admin menu"
+            aria-controls="admin-sidebar"
+            aria-expanded={mobileOpen}
           >
             <Menu size={19} />
           </button>
-          <div>
-            <p className="admin-breadcrumb">
-              Studio / <span>{title}</span>
-            </p>
+          <div className="admin-header-record">
+            <p className="admin-breadcrumb">Private studio / <span>Content ledger</span></p>
             <h1>{title}</h1>
+            <span>WORKING / LOCAL</span>
           </div>
           <div className="admin-header-actions">
-            <div className="sync-chip">
+            <div className="sync-chip" aria-label="Repository status">
               <StatusDot tone={git?.modified.length ? 'amber' : 'green'} />
               <span>
                 {git?.modified.length
@@ -153,10 +155,10 @@ export function AdminLayout() {
             </button>
           </div>
         </header>
-        <div className="admin-content">
+        <main id="main-content" className="admin-content">
           <Outlet />
-        </div>
-      </section>
+        </main>
+      </div>
     </div>
   );
 }

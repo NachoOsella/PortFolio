@@ -3,6 +3,7 @@ title: What makes an ERP module actually reusable?
 slug: reusable-erp-modules
 description: Reuse is a product decision before it becomes a technical abstraction.
 status: published
+ink: aqua
 category: Architecture
 tags:
   - Java

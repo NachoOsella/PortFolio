@@ -30,7 +30,7 @@ This repository is the home of Ignacio Osella's personal portfolio and its Markd
 The project is intentionally Markdown-first: projects, articles, and static pages are authored as files, validated through frontmatter schemas, and rendered consistently across the public site and the private Studio workspace.
 
 > [!NOTE]
-> The Spring Boot backend stores no application data in a database or local filesystem. It validates Markdown and synchronizes it through the GitHub Contents API. Users are configured with bcrypt hashes in environment variables.
+> The Spring Boot backend stores Markdown in the local `frontend/content` directory mounted into Docker. It validates local files and uses the GitHub Contents API only for explicit backup pushes. Users are configured with bcrypt hashes in environment variables.
 
 ## What is included
 
@@ -50,7 +50,7 @@ The `/admin` workspace is a browser-based content-management prototype for:
 - Previewing Markdown and validating YAML frontmatter.
 - Importing and exporting content files.
 - Managing drafts and local persistence when the API is disabled.
-- Reviewing GitHub-backed history and synchronization status when the API is enabled.
+- Reviewing local content changes and pushing selected Markdown changes to GitHub when the API is enabled.
 - Handling messages, settings, and protected routes.
 
 > [!WARNING]
@@ -133,7 +133,7 @@ set -a && . ./.env && set +a
 mvn spring-boot:run
 ```
 
-Start the frontend with `VITE_API_URL=http://localhost:8080/api` to use GitHub-backed content.
+Start the frontend with `VITE_API_URL=http://localhost:8080/api` to use the backend's local Markdown content. GitHub is used only for explicit backup pushes.
 
 ## Content model
 
@@ -179,16 +179,19 @@ The frontend preserves unknown frontmatter fields when known metadata is edited.
 
 ## Architecture
 
-Content stays in Markdown files in GitHub. The API is the only component allowed to authenticate users or write repository content:
+Content stays in local Markdown files mounted into the backend. The API is the only component allowed to authenticate users or write local content; GitHub is an optional backup destination:
 
 ```text
 React frontend
       │ REST API + HttpOnly cookie
       ▼
 Spring Boot backend
-      │ GitHub Contents API
+      │ local filesystem
       ▼
-GitHub repository / frontend/content/*.md
+frontend/content/*.md
+      │ explicit Studio push
+      ▼
+GitHub backup
 ```
 
 `frontend/src/repositories/` contains API adapters with a local mock fallback. See [`backend/README.md`](backend/README.md) for setup, environment variables, security behavior, and endpoints.
@@ -201,7 +204,7 @@ Copy `frontend/.env.example` to `frontend/.env`:
 VITE_API_URL=http://localhost:8080/api
 ```
 
-When `VITE_API_URL` is set, the frontend calls the Spring Boot API. Remove it to run the local mock fallback.
+When `VITE_API_URL` is set, the frontend calls the Spring Boot API, which reads the local Markdown directory. Remove it to run the local mock fallback.
 
 ## Design direction
 
@@ -217,4 +220,4 @@ The visual system is documented in [`frontend/DESIGN.md`](frontend/DESIGN.md), a
 
 ## Project status
 
-The public portfolio, API-backed Studio adapters, and Spring Boot GitHub backend are implemented. Docker deployment remains a separate layer.
+The public portfolio, API-backed Studio adapters, and Spring Boot GitHub backend are implemented. Docker Compose is set up for local use ([`docker-compose.yml`](docker-compose.yml)) and for Dokploy ([`docker-compose.dokploy.yml`](docker-compose.dokploy.yml), see [docker/README.md](docker/README.md)).

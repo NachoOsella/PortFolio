@@ -1,0 +1,60 @@
+# Deployment file for Dokploy (self-hosted PaaS).
+#
+# Differences vs. docker-compose.yml (local dev):
+# - No host ports: Dokploy's reverse proxy routes the domain to the web container.
+# - Caddy listens on :8080 inside the container (SITE_ADDRESS) instead of :80/:443.
+# - Content lives in a persistent named volume instead of a host bind mount,
+#   so Studio edits survive redeploys.
+# - Environment is injected through ${VAR} interpolation from the Dokploy
+#   "Environment" tab (backend/.env is gitignored and does not exist in the clone).
+#
+# Recommended Dokploy setup:
+#   Compose path: ./docker-compose.dokploy.yml
+#   Domain:      your-domain -> service "web", container port 8080, HTTPS on
+#   Environment: see docker/README.md -> "Deploy on Dokploy"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      # Origin that the browser sends requests from (set to your public domain).
+      APP_CORS_ALLOWED_ORIGIN: ${APP_CORS_ALLOWED_ORIGIN:-http://localhost:5173}
+      # Comma-separated entries: email|bcryptHash|displayName.
+      # Without this the /admin login has no users. Dollar signs are fine as-is.
+      APP_AUTH_USERS: ${APP_AUTH_USERS:-}
+      APP_AUTH_COOKIE_SECURE: ${APP_AUTH_COOKIE_SECURE:-true}
+      APP_AUTH_SESSION_TTL: ${APP_AUTH_SESSION_TTL:-PT12H}
+      # Optional: GitHub backup pushes from the Studio. Leave token empty to disable.
+      GITHUB_OWNER: ${GITHUB_OWNER:-NachoOsella}
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY:-portfolio}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITHUB_BRANCH: ${GITHUB_BRANCH:-main}
+      GITHUB_CONTENT_ROOT: ${GITHUB_CONTENT_ROOT:-frontend/content}
+      CONTENT_ROOT: /app/content
+    volumes:
+      # Persistent volume: /admin content edits survive redeploys.
+      - content:/app/content
+    expose:
+      - "8080"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: /api
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      # Caddy binds to the internal port exposed to Dokploy's proxy.
+      SITE_ADDRESS: ":8080"
+    expose:
+      - "8080"
+    restart: unless-stopped
+
+volumes:
+  content:

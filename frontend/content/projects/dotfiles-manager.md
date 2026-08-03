@@ -3,6 +3,7 @@ title: Dotfiles Manager
 slug: dotfiles-manager
 description: A small command-line companion for keeping developer environments portable.
 status: published
+ink: orange
 featured: false
 projectType: Developer tool
 role: Creator

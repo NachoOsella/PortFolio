@@ -10,12 +10,11 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/carousel';
-import { formatDate, readingTime } from '@/lib/content';
+import { createRevision, getRecordTone } from '@/lib/archive';
+import { readingTime } from '@/lib/content';
 import type { PostDocument } from '@/types';
 
 type PostListDocument = Pick<PostDocument, 'path' | 'body' | 'frontmatter'>;
-
-const previewTones = ['yellow', 'blue', 'green', 'orange', 'purple'];
 const carouselId = 'writing-carousel';
 
 export function WritingIndex({ posts }: { posts: PostListDocument[] }) {
@@ -66,17 +65,18 @@ export function WritingIndex({ posts }: { posts: PostListDocument[] }) {
             <CarouselContent className="v2-writing-track" id={carouselId}>
               {posts.map((post, index) => {
                 const item = post.frontmatter;
+                const tone = getRecordTone(item.slug, item.ink);
                 return (
                   <CarouselItem
                     key={post.path}
-                    className={`v2-writing-slide v2-tone-${previewTones[index % previewTones.length]}`}
+                    className={`v2-writing-slide v2-tone-${tone}`}
                     aria-label={`${index + 1} of ${total}`}
                     aria-hidden={index !== activeIndex}
                   >
                     <Link to={`/blog/${item.slug}`} tabIndex={index === activeIndex ? 0 : -1}>
                       <div className="v2-writing-slide-top">
-                        <span>{item.category}</span>
-                        <span>{formatDate(item.publishedAt)}</span>
+                        <span>N–{String(index + 1).padStart(2, '0')} / {item.category}</span>
+                        <span>{createRevision(item.updatedAt)} / INK {tone}</span>
                       </div>
                       <div className="v2-writing-slide-copy">
                         <h3>{item.title}</h3>

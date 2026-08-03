@@ -4,25 +4,26 @@
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 42px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 .admin-stat {
   position: relative;
-  min-height: 165px;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--surface);
+  min-height: 178px;
+  padding: 18px 22px;
+  background: transparent;
 }
-.stat-icon {
-  display: grid;
-  place-items: center;
-  width: 29px;
-  height: 29px;
-  border-radius: 0;
-  background: var(--surface-soft);
-  color: var(--ink-soft);
+.admin-stat + .admin-stat {
+  border-left: 1px solid var(--line);
+}
+.stat-record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font: 9px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.06em;
 }
 .admin-stat strong {
   display: block;
@@ -49,12 +50,14 @@
 .overview-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 .admin-panel {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--surface);
+  background: transparent;
+}
+.admin-panel + .admin-panel {
+  border-left: 1px solid var(--line);
 }
 .panel-heading {
   display: flex;
@@ -86,15 +89,12 @@
 .file-row:last-child {
   border-bottom: 0;
 }
-.file-icon {
-  display: grid;
-  place-items: center;
-  width: 27px;
-  height: 27px;
+.file-record-code {
+  width: 46px;
   flex: 0 0 auto;
-  border-radius: 0;
-  background: var(--surface-soft);
-  color: var(--ink-soft);
+  color: var(--accent);
+  font: 10px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.04em;
 }
 .file-row > div {
   min-width: 0;
@@ -157,27 +157,27 @@
   font-size: 11px;
 }
 .quick-actions {
-  margin-top: 18px;
-  padding: 20px 22px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--surface);
+  margin-top: 54px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
 }
 .quick-actions > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   margin-top: 15px;
+  border-bottom: 1px solid var(--line);
 }
 .quick-actions a {
   display: flex;
+  min-height: 64px;
   align-items: center;
   gap: 8px;
   padding: 11px 13px;
-  border: 1px solid var(--line);
-  border-radius: 0;
   color: var(--ink-soft);
   font-size: 11px;
+}
+.quick-actions a + a {
+  border-left: 1px solid var(--line);
 }
 .quick-actions a:hover {
   border-color: var(--accent);

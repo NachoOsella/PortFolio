@@ -62,6 +62,24 @@
   color: var(--v2-muted);
 }
 
+.v2-error-reload {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--v2-line-strong);
+  padding: 11px 15px;
+  color: var(--v2-text);
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.v2-error-reload:hover {
+  border-color: var(--v2-yellow);
+  color: var(--v2-yellow);
+}
+
 .v2-content-error {
   display: flex;
   min-height: 50dvh;

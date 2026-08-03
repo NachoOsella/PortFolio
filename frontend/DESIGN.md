@@ -127,7 +127,7 @@ components:
 
 **OWN-WORLD:** Gruvbox Material Dark Hard is the permanent public ground: hard dark surfaces, warm type, precise hairlines, angular IO geometry, project-specific system diagrams, and full-field semantic colors. Arch and terminal culture appear as subtle material references through monospace metadata, command-like labels, square controls, and system language. The page never pretends to be a terminal.
 
-**STORY:** Meet the developer, move through selected systems, understand the practice, read the thinking, and contact Ignacio. The route system supports home, projects, project stories, blog, articles, about, contact, and the private workspace entry without changing the public visual world.
+**STORY:** Meet the developer, move through selected systems, understand the practice, read the thinking, and close with a compact correspondence register. The route system supports home, projects, project stories, blog, articles, about, contact, and the private workspace entry without changing the public visual world.
 
 **FIRST VIEWPORT:** A two-line kinetic title reads "Full-stack products," and "built to last." A pointer-draggable product-systems cube rotates beside it with slow auto-rotation when idle and arrow-key support. The explanatory copy, View work action, and Contact action remain visible in the first viewport.
 
@@ -141,7 +141,7 @@ components:
 
 ## Colors
 
-The public palette is a Gruvbox Material Dark Hard field. Yellow is the primary action and reading accent. Blue, green, orange, aqua, purple, and red carry semantic or project-specific meaning. The dark neutrals establish depth without shadows.
+The public palette is a Gruvbox Material Dark Hard field. Yellow is the primary action and reading accent. Blue, green, orange, aqua, purple, and red carry semantic or project-specific meaning. Projects and notes can set an explicit `ink` frontmatter value; documents without one use a stable slug-based fallback. The dark neutrals establish depth without shadows.
 
 ### Primary
 - **Warm Yellow:** `colors.yellow` is the primary action, active link, focus, reading progress, and signature accent.
@@ -192,7 +192,7 @@ The public palette is a Gruvbox Material Dark Hard field. Yellow is the primary 
 
 ## Layout
 
-The public shell is fluid and capped at `1380px` through `--v2-max`. Desktop shell width is `calc(100% - 72px)`, giving a `36px` minimum gutter on each side. At `980px` and below it becomes `calc(100% - 40px)` with a `20px` gutter. At `768px` and below it becomes `calc(100% - 32px)` with a `16px` gutter.
+The public shell is fluid and capped at `1380px` through `--v2-max`. Desktop shell width is `calc(100% - 72px)`, giving a `36px` minimum gutter on each side. A fixed 25px archive rail identifies the current route, document family, and copy state on wide screens. At `980px` and below the rail disappears and the shell becomes `calc(100% - 40px)` with a `20px` gutter. At `768px` and below it becomes `calc(100% - 32px)` with a `16px` gutter.
 
 The fixed navigation is `72px` tall on desktop and `64px` on mobile. Home and full-height route surfaces account for the navigation height. The desktop home hero fills the remaining viewport and centers its title block. The project gallery occupies one viewport and uses a full-width horizontal track. Practice and writing use asymmetric two-column grids with large fluid gaps. Reading pages use a `180px` table of contents rail and a `780px` reading column within a `1034px` layout. Individual project pages move directly from metadata into the reading surface; large decorative case-study artwork is not used.
 
@@ -254,8 +254,8 @@ The public components are restrained, outlined, and stateful. Every interactive 
 - **Textarea:** the shared textarea keeps a `130px` minimum height, `12px` top padding, vertical resize, and `1.5` line-height.
 - **Error and status:** form errors use the red semantic token and `role="alert"`. Successful contact submission becomes a `role="status"` state with a Send another action.
 
-### Project Gallery
-- **Character:** a pinned, full-height sequence of selected systems, not a card grid. It opens with an intro panel, followed by project panels with full-field artwork and a copy column.
+### Project Gallery and Register
+- **Character:** the home uses a pinned, full-height sequence of selected systems, not a card grid. It opens with an intro panel, followed by project panels with full-field artwork and a copy column. The projects route uses an asymmetric vertical register with stable project codes, factual update stamps, and alternating artwork proportions.
 - **Desktop structure:** the outer height is `100svh + measured travel`; the sticky stage is `100svh`. The intro panel is `min(70vw, 980px)` wide. Project panels are `min(88vw, 1280px)` wide with a `1.3fr / 0.7fr` artwork and copy split.
 - **Artwork:** artwork height is `min(72vh, 720px)` and cycles through yellow, blue, green, orange, purple, and aqua fields. Each field contains a project-specific diagram, three signal nodes, and a technology sweep.
 - **Interaction:** vertical progress moves only the horizontal track transform. Panels gain focus through centered scale and opacity ranges, the title baseline moves by `20px`, and the active artwork follows fine-pointer movement by at most `8px`. Hover expands the monogram, offsets diagram nodes, and lifts the open icon.
@@ -278,8 +278,13 @@ The public components are restrained, outlined, and stateful. Every interactive 
 - **Mobile:** both surfaces stack with `24px` form padding and retain full keyboard access.
 
 ### Footer
-- **Shape:** a top hairline, large Archivo prompt, underlined Contact action, and a ruled metadata row.
-- **Behavior:** the footer repeats the brand mark and provides email access. It collapses to a stacked action layout on mobile.
+- **Shape:** a compact ruled metadata register with brand, route code, copy state, location, year, and email access.
+- **Behavior:** the footer never repeats a page-level manifesto. Project and article routes close through their own next-record links; the global footer remains deliberately quiet.
+
+### Private Studio Ledger
+- **Character:** the admin is the operational side of the same archive. It uses coded navigation, continuous ruled metrics, file-first rows, revision labels, and unboxed work surfaces instead of a SaaS card mosaic.
+- **Hierarchy:** paths, filenames, revisions, hashes, dates, and repository states use monospace; task headings remain Archivo and explanatory text remains Manrope.
+- **Surfaces:** tables, file trees, settings, messages, and Git views share the hard ground with hairline division. The Markdown editor remains the one intentionally bounded work surface.
 
 ### Accessibility
 - **Landmarks:** the mounted layout uses a labelled header navigation, a `main` region with `id="main-content"`, and a footer. The mobile menu has its own labelled navigation.

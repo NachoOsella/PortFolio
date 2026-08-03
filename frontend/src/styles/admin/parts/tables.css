@@ -1,8 +1,8 @@
 .admin-table-wrap {
   overflow: auto;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: transparent;
 }
 .admin-table {
   width: 100%;
@@ -33,8 +33,19 @@
 .table-file {
   display: flex;
   align-items: center;
-  gap: 9px;
-  min-width: 230px;
+  gap: 14px;
+  min-width: 250px;
+}
+.table-record-code {
+  display: grid;
+  width: 48px;
+  min-height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-right: 1px solid var(--line);
+  color: var(--accent);
+  font: 10px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.04em;
 }
 .table-file strong,
 .table-file small {

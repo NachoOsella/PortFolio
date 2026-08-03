@@ -38,6 +38,8 @@ const toolbar = [
 ] as const;
 
 type EditorMode = 'split' | 'write' | 'preview';
+const inkOptions = ['yellow', 'blue', 'green', 'orange', 'purple', 'aqua'] as const;
+
 export function MarkdownEditor({
   document,
   collection,
@@ -218,6 +220,18 @@ export function MarkdownEditor({
               <option>archived</option>
             </select>
           </Field>
+          {(collection === 'projects' || collection === 'posts') && (
+            <Field label="Presentation ink" hint="Used for the public artwork and archive marker.">
+              <select
+                className="field"
+                value={String(data.ink ?? '')}
+                onChange={(event) => updateField('ink', event.target.value || undefined)}
+              >
+                <option value="">Automatic fallback</option>
+                {inkOptions.map((ink) => <option key={ink} value={ink}>{ink}</option>)}
+              </select>
+            </Field>
+          )}
           {collection === 'posts' && (
             <Field label="Category">
               <Input

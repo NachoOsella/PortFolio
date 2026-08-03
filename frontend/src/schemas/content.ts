@@ -1,12 +1,14 @@
 import { z } from 'zod';
 
 export const publicationStatusSchema = z.enum(['draft', 'published', 'scheduled', 'archived']);
+export const inkToneSchema = z.enum(['yellow', 'blue', 'green', 'orange', 'purple', 'aqua']);
 
 const baseFrontmatter = {
   title: z.string().min(1, 'Title is required'),
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use lowercase words separated by hyphens'),
   description: z.string().min(1, 'Description is required'),
   status: publicationStatusSchema,
+  ink: inkToneSchema.optional(),
   updatedAt: z.coerce.string(),
 };
 

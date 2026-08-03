@@ -1,7 +1,11 @@
 import {
+  cloneElement,
   forwardRef,
+  isValidElement,
+  useId,
   type ComponentProps,
   type InputHTMLAttributes,
+  type ReactElement,
   type ReactNode,
   type TextareaHTMLAttributes,
 } from 'react';
@@ -118,19 +122,35 @@ export function Field({
   error,
   hint,
   children,
+  controlId,
 }: {
   label: string;
   error?: string;
   hint?: string;
   children: ReactNode;
+  controlId?: string;
 }) {
+  const generatedId = useId();
+  const resolvedControlId = controlId ?? generatedId;
+  const descriptionId = hint || error ? `${generatedId}-description` : undefined;
+  const controlElement = isValidElement(children)
+    ? children as ReactElement<Record<string, unknown>>
+    : null;
+  const control = controlElement && !controlId
+    ? cloneElement(controlElement, {
+        id: controlElement.props.id ?? resolvedControlId,
+        'aria-describedby': controlElement.props['aria-describedby'] ?? descriptionId,
+        'aria-invalid': controlElement.props['aria-invalid'] ?? Boolean(error),
+      })
+    : children;
+
   return (
     <div className="field-wrap">
-      <Label className="field-label">{label}</Label>
-      {children}
-      {hint && !error && <span className="field-hint">{hint}</span>}
+      <Label className="field-label" htmlFor={resolvedControlId}>{label}</Label>
+      {control}
+      {hint && !error && <span id={descriptionId} className="field-hint">{hint}</span>}
       {error && (
-        <span className="field-error" aria-live="polite">
+        <span id={descriptionId} className="field-error" aria-live="polite">
           {error}
         </span>
       )}

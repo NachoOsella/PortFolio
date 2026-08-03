@@ -3,6 +3,7 @@ title: Designing routes around the question being asked
 slug: route-design
 description: Why navigation becomes calmer when each route has one clear promise.
 status: archived
+ink: blue
 category: React
 tags:
   - React Router

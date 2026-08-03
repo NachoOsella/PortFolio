@@ -3,6 +3,7 @@ title: Lembas Academic Platform
 slug: lembas
 description: A focused academic workspace for organizing classes, resources, and learning momentum.
 status: published
+ink: purple
 featured: true
 projectType: Product prototype
 role: Product engineer
