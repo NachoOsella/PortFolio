@@ -13,7 +13,7 @@ tags:
 publishedAt: 2026-07-28
 updatedAt: 2026-08-03
 seoTitle: Building a browser image-processing pipeline in TypeScript
-seoDescription: Inside Gruvboxitator's browser-only pixel pipeline: cubic tonal mapping, deterministic grain, OffscreenCanvas processing, and accessible before-and-after comparison.
+seoDescription: "Inside Gruvboxitator's browser-only pixel pipeline: cubic tonal mapping, deterministic grain, OffscreenCanvas processing, and accessible before-and-after comparison."
 ---
 
 # A color converter that never sees your files

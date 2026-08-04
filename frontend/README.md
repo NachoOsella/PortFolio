@@ -75,19 +75,20 @@ Every content file begins with YAML frontmatter followed by a Markdown body. The
 
 ```md
 ---
-title: Modular ERP Platform
-slug: modular-erp
-description: A reusable ERP foundation designed for small and medium businesses.
+title: Dietetica Lembas
+slug: lembas
+description: Integrated commercial management system with built-in e-commerce for a health food store.
 status: published
 featured: true
-projectType: Full-stack application
-role: Full-stack developer
-duration: Ongoing
+projectType: Full-stack thesis project
+role: Backend-leaning full-stack developer
+duration: 3 months, ongoing
 technologies:
-  - React
-  - TypeScript
-  - Spring Boot
-updatedAt: 2026-07-28
+  - Java 21
+  - Spring Boot 3.5
+  - Angular 21
+  - PostgreSQL 16
+updatedAt: 2026-08-03
 ---
 
 # Overview
@@ -99,17 +100,17 @@ Markdown content goes here.
 
 ```md
 ---
-title: Building reusable feature modules in React
-slug: react-feature-architecture
-description: A practical approach to organizing maintainable React applications.
+title: One order model for the counter and the web
+slug: lembas-modular-monolith
+description: The design decisions behind Lembas and its shared POS and e-commerce model.
 status: published
-featured: true
-category: React
+category: Architecture
 tags:
-  - React
-  - TypeScript
-publishedAt: 2026-07-20
-updatedAt: 2026-07-25
+  - Java
+  - Spring Boot
+  - System design
+publishedAt: 2026-07-25
+updatedAt: 2026-08-03
 ---
 ```
 
@@ -121,9 +122,9 @@ Blog posts with `draft`, `archived`, or future `scheduled` statuses never appear
 ---
 title: About
 slug: about
-description: More about Ignacio Osella and his development approach.
+description: Ignacio Osella is a backend developer focused on Java, Spring Boot, and dependable software.
 status: published
-updatedAt: 2026-07-25
+updatedAt: 2026-08-03
 ---
 ```
 
