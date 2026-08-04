@@ -45,14 +45,14 @@ For a real domain, set `SITE_ADDRESS=portfolio.example.com`, point DNS at the ho
 
 ## Deploy on Dokploy
 
-The repository ships a Dokploy-tuned Compose file at [`docker-compose.dokploy.yml`](../docker-compose.dokploy.yml). Compared with the local file it removes host port bindings (Dokploy's reverse proxy routes traffic), makes Caddy listen on an internal port, and replaces the local content bind mount with a persistent named volume so Studio edits survive redeploys.
+The repository ships a Dokploy-tuned Compose file at [`docker-compose.dokploy.yml`](../docker-compose.dokploy.yml). Compared with the local file it removes host port bindings (Dokploy's reverse proxy routes traffic), makes Caddy listen on an internal port, and replaces the local content bind mount with a persistent named volume so Studio edits survive redeploys. Use the root [`.env.example`](../.env.example) as a checklist for the Dokploy Environment tab.
 
 1. Push the repository to GitHub (it is already public at `NachoOsella/portfolio`).
 2. In Dokploy, create a **Docker Compose** service (not Docker Stack) inside your project.
 3. Set the Git source: repository `NachoOsella/portfolio`, branch `main`, Compose path `./docker-compose.dokploy.yml`.
 4. In the **Environment** tab add:
    - `APP_CORS_ALLOWED_ORIGIN=https://your-domain.example.com`
-   - `APP_AUTH_USERS='ignacio@example.com|$2a$12$your-bcrypt-hash|Ignacio Osella'` — dollar signs pass through unchanged; without this variable `/admin` accepts no logins. Generate a hash with `docker run --rm httpd:2.4-alpine htpasswd -bnBC 12 "" 'a-strong-password' | tr -d ':\n'` (Spring accepts `$2y` hashes too).
+   - `APP_AUTH_USERS='ignacio@example.com|$2a$12$your-bcrypt-hash|Ignacio Osella'` — this is required; the deployment stops with a clear error if it is missing. Dollar signs pass through unchanged. Generate a hash with `docker run --rm httpd:2.4-alpine htpasswd -bnBC 12 "" 'a-strong-password' | tr -d ':\n'` (Spring accepts `$2y` hashes too).
    - `APP_AUTH_COOKIE_SECURE=true` (already the default in this file)
    - Optional GitHub backup: `GITHUB_TOKEN` (fine-grained PAT with Contents read/write on the repository). The other `GITHUB_*` variables already default to this repository.
 5. In the **Domains** tab add your domain: select service `web`, container port `8080`, HTTPS on (Let's Encrypt), and point a DNS `A` record at the Dokploy server. Open inbound ports 80 and 443.
@@ -60,8 +60,9 @@ The repository ships a Dokploy-tuned Compose file at [`docker-compose.dokploy.ym
 
 Notes:
 
+- On its first creation, the `content` volume is seeded from the repository's `frontend/content` directory. After that, Studio edits survive image rebuilds and redeploys; Docker does not overwrite an existing volume. Use the Studio GitHub backup action to publish later content changes.
 - Content written through `/admin` lives in the `content` volume (prefixed with the app name) and is covered by Dokploy's volume backup feature. The GitHub repository remains the durable source of truth for Markdown.
-- The local `docker-compose.yml` is intentionally untouched: local dev still bind-mounts `frontend/content`.
+- The local `docker-compose.yml` still bind-mounts `frontend/content`, while its backend image also receives the same first-run seed for parity with production.
 
 ## Useful commands
 

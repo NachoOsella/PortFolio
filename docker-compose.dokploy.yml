@@ -15,15 +15,16 @@
 
 services:
   backend:
+    # Include frontend/content so Docker seeds the named volume on its first creation.
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       # Origin that the browser sends requests from (set to your public domain).
       APP_CORS_ALLOWED_ORIGIN: ${APP_CORS_ALLOWED_ORIGIN:-http://localhost:5173}
       # Comma-separated entries: email|bcryptHash|displayName.
       # Without this the /admin login has no users. Dollar signs are fine as-is.
-      APP_AUTH_USERS: ${APP_AUTH_USERS:-}
+      APP_AUTH_USERS: ${APP_AUTH_USERS:?Set APP_AUTH_USERS in Dokploy Environment}
       APP_AUTH_COOKIE_SECURE: ${APP_AUTH_COOKIE_SECURE:-true}
       APP_AUTH_SESSION_TTL: ${APP_AUTH_SESSION_TTL:-PT12H}
       # Optional: GitHub backup pushes from the Studio. Leave token empty to disable.

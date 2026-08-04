@@ -1,8 +1,9 @@
 services:
   backend:
+    # The root context lets the backend image seed its content directory on first run.
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     env_file:
       - path: ./backend/.env
         required: false
