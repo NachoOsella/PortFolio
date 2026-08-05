@@ -7,14 +7,7 @@ import { relativeDate } from '@/lib/content';
 import { useContentFiles } from '@/hooks/useRepositories';
 import { contentRepository, exportDocument } from '@/repositories/contentRepository';
 import { downloadMarkdown } from '@/services/download';
-import {
-  Badge,
-  EmptyState,
-  LinkButton,
-  LoadingState,
-  SearchField,
-  StatusDot,
-} from '@/components/ui';
+import { Badge, EmptyState, LinkButton, LoadingState, StatusDot } from '@/components/ui';
 import type { ContentCollection, ContentFileSummary, PublicationStatus } from '@/types';
 
 export function AdminStat({
@@ -81,10 +74,9 @@ export function ContentList({
   newLabel: string;
   excludeSlugs?: string[];
 }) {
-  const [search, setSearch] = useState('');
   const [status, setStatus] = useState<'all' | PublicationStatus>('all');
   const [sort, setSort] = useState<'updated' | 'title'>('updated');
-  const { data: files, isLoading } = useContentFiles({ collection, search, status });
+  const { data: files, isLoading } = useContentFiles({ collection, status });
   const queryClient = useQueryClient();
   const remove = useMutation({
     mutationFn: (path: string) => contentRepository.deleteFile(path),
@@ -131,7 +123,6 @@ export function ContentList({
         </LinkButton>
       </div>
       <div className="admin-list-toolbar">
-        <SearchField value={search} onChange={setSearch} placeholder={`Search ${collection}`} />
         <select
           className="field compact-select"
           value={status}
@@ -184,10 +175,14 @@ export function ContentList({
                 <tr key={file.path}>
                   <td>
                     <Link className="table-file" to={editPath(file)}>
-                      <span className="table-record-code">{createRecordCode(file.title, 0, collection.slice(0, 1).toUpperCase())}</span>
+                      <span className="table-record-code">
+                        {createRecordCode(file.title, 0, collection.slice(0, 1).toUpperCase())}
+                      </span>
                       <span>
                         <strong>{file.title}</strong>
-                        <small>{file.filename} · {createRevision(file.updatedAt)}</small>
+                        <small>
+                          {file.filename} · {createRevision(file.updatedAt)}
+                        </small>
                       </span>
                     </Link>
                   </td>

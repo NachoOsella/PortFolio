@@ -12,6 +12,7 @@ describe('MarkdownRenderer', () => {
     // Block code goes through the pre override into a single code-block.
     const blocks = container.querySelectorAll('.code-block');
     expect(blocks.length).toBe(1);
+    expect(container.querySelector('.hljs-keyword')).not.toBeNull();
     expect(screen.getByRole('button', { name: 'Copy code' })).toBeDefined();
   });
 

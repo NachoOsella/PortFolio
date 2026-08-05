@@ -1,4 +1,18 @@
 import { isValidElement, useMemo, useRef, useState, type ReactNode } from 'react';
+import hljs from 'highlight.js/lib/core';
+import bash from 'highlight.js/lib/languages/bash';
+import css from 'highlight.js/lib/languages/css';
+import dockerfile from 'highlight.js/lib/languages/dockerfile';
+import java from 'highlight.js/lib/languages/java';
+import javascript from 'highlight.js/lib/languages/javascript';
+import json from 'highlight.js/lib/languages/json';
+import lua from 'highlight.js/lib/languages/lua';
+import markdown from 'highlight.js/lib/languages/markdown';
+import python from 'highlight.js/lib/languages/python';
+import sql from 'highlight.js/lib/languages/sql';
+import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml';
+import yaml from 'highlight.js/lib/languages/yaml';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Check, Copy } from 'lucide-react';
@@ -7,10 +21,10 @@ import { Check, Copy } from 'lucide-react';
   react-markdown v9 removed the `inline` prop on custom `code` components.
   Block code is always `<pre><code>`, so we override `pre` for blocks and use
   the presence of a `language-*`/similar className on `code` to tell inline
-  apart. rehype-highlight was dropped: it bundled ~100 kB gzip of highlight.js
-  and shipped zero styling for it, so code renders in a calm monochrome panel
-  that fits the system. Heading ids are assigned by a tiny rehype plugin with a
-  per-parse slugger, so duplicates are disambiguated and TOC links stay anchored.
+  apart. Only languages used by the portfolio are registered to keep the
+  highlighter statically analyzable and avoid shipping every grammar. Heading
+  ids are assigned by a tiny rehype plugin with a per-parse slugger, so
+  duplicates are disambiguated and TOC links stay anchored.
 */
 
 function slugifyHeading(text: string) {
@@ -58,6 +72,53 @@ function rehypeHeadingIds() {
   };
 }
 
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('dockerfile', dockerfile);
+hljs.registerLanguage('java', java);
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('lua', lua);
+hljs.registerLanguage('markdown', markdown);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('sql', sql);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('yaml', yaml);
+
+const languageAliases: Record<string, string> = {
+  js: 'javascript',
+  jsx: 'javascript',
+  sh: 'bash',
+  shell: 'bash',
+  ts: 'typescript',
+  tsx: 'typescript',
+  html: 'xml',
+  md: 'markdown',
+  yml: 'yaml',
+};
+
+function escapeHtml(value: string) {
+  const entities: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  };
+  return value.replace(/[&<>"']/g, (character) => entities[character]);
+}
+
+function highlightedCode(source: string, language: string) {
+  const normalized = languageAliases[language.toLowerCase()] ?? language.toLowerCase();
+  if (!normalized || normalized === 'code' || normalized === 'text' || normalized === 'plaintext') {
+    return escapeHtml(source);
+  }
+  if (normalized === 'yaml' && !hljs.getLanguage('yaml')) return escapeHtml(source);
+  if (!hljs.getLanguage(normalized)) return escapeHtml(source);
+  return hljs.highlight(source, { language: normalized, ignoreIllegals: true }).value;
+}
+
 function childCodeElement(children: ReactNode) {
   const node = Array.isArray(children) ? children[0] : children;
   if (isValidElement(node)) return node.props as { className?: string; children?: ReactNode };
@@ -67,6 +128,8 @@ function childCodeElement(children: ReactNode) {
 function CodeBlock({ language, children }: { language: string; children: ReactNode }) {
   const codeRef = useRef<HTMLElement>(null);
   const [copied, setCopied] = useState(false);
+  const source = String(children ?? '').replace(/\n$/, '');
+  const highlighted = useMemo(() => highlightedCode(source, language), [language, source]);
   const onCopy = () => {
     const text = codeRef.current?.textContent ?? '';
     void navigator.clipboard?.writeText(text);
@@ -83,9 +146,11 @@ function CodeBlock({ language, children }: { language: string; children: ReactNo
         </button>
       </div>
       <pre>
-        <code ref={codeRef} className={language ? `language-${language}` : undefined}>
-          {children}
-        </code>
+        <code
+          ref={codeRef}
+          className={language ? `language-${language}` : undefined}
+          dangerouslySetInnerHTML={{ __html: highlighted }}
+        />
       </pre>
     </div>
   );

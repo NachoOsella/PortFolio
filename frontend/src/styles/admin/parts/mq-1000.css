@@ -22,5 +22,17 @@
   .frontmatter-panel {
     grid-template-columns: 1fr 1fr;
   }
-}
 
+  .project-metadata-grid > .field-wrap,
+  .project-metadata-grid > .field-wrap:nth-child(2),
+  .project-metadata-grid > .field-wrap:nth-child(3),
+  .metadata-checkbox {
+    grid-column: span 6;
+  }
+
+  .project-metadata-grid > .field-wrap:nth-child(4),
+  .metadata-field-wide,
+  .metadata-section-label {
+    grid-column: 1 / -1;
+  }
+}

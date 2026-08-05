@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
-  ChevronRight,
-  ExternalLink,
   FileText,
   FolderKanban,
   GitBranch,
@@ -63,7 +61,11 @@ export function AdminLayout() {
   };
   return (
     <div className={`admin-app ${collapsed ? 'sidebar-collapsed' : ''}`}>
-      <aside id="admin-sidebar" className={`admin-sidebar ${mobileOpen ? 'mobile-open' : ''}`} aria-label="Admin workspace navigation">
+      <aside
+        id="admin-sidebar"
+        className={`admin-sidebar ${mobileOpen ? 'mobile-open' : ''}`}
+        aria-label="Admin workspace navigation"
+      >
         <div className="admin-brand">
           <Link to="/" className="admin-brand-link" aria-label="Return to Ignacio Osella portfolio">
             <SignatureMark className="admin-brand-mark" />
@@ -99,10 +101,20 @@ export function AdminLayout() {
           ))}
         </div>
         <div className="admin-side-bottom">
-          <NavLink to="/" title={collapsed ? 'View website' : undefined}>
-            <ExternalLink size={17} />
-            {!collapsed && <span>View website</span>}
-          </NavLink>
+          <div className="admin-account">
+            <div className="admin-user">
+              <span className="user-avatar">IO</span>
+              {!collapsed && <span>{session?.name ?? 'Ignacio'}</span>}
+            </div>
+            <button
+              className="collapse-button"
+              onClick={() => setCollapsed((value) => !value)}
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+            </button>
+          </div>
           <button onClick={exit} title={collapsed ? 'Log out' : undefined}>
             <LogOut size={17} />
             {!collapsed && <span>Log out</span>}
@@ -128,7 +140,9 @@ export function AdminLayout() {
             <Menu size={19} />
           </button>
           <div className="admin-header-record">
-            <p className="admin-breadcrumb">Private studio / <span>Content ledger</span></p>
+            <p className="admin-breadcrumb">
+              Private studio / <span>Content ledger</span>
+            </p>
             <h1>{title}</h1>
             <span>WORKING / LOCAL</span>
           </div>
@@ -141,18 +155,6 @@ export function AdminLayout() {
                   : 'All synced'}
               </span>
             </div>
-            <div className="admin-user">
-              <span className="user-avatar">IO</span>
-              <span>{session?.name ?? 'Ignacio'}</span>
-              <ChevronRight size={14} />
-            </div>
-            <button
-              className="collapse-button"
-              onClick={() => setCollapsed((value) => !value)}
-              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-            </button>
           </div>
         </header>
         <main id="main-content" className="admin-content">

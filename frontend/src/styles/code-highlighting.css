@@ -1,0 +1,78 @@
+/* Highlight.js emits token classes; this palette keeps them legible in both shells. */
+.v2-app .code-block,
+.admin-app .code-block {
+  --code-fg: var(--v2-fg, var(--ink, #d4be98));
+  --code-muted: var(--v2-muted, var(--muted, #a89984));
+  --code-yellow: var(--v2-yellow, var(--accent, #d8a657));
+  --code-green: var(--v2-green, var(--green, #a9b665));
+  --code-aqua: var(--v2-aqua, var(--aqua, #89b482));
+  --code-blue: var(--v2-blue, var(--blue, #7daea3));
+  --code-orange: var(--v2-orange, var(--amber, #e78a4e));
+  --code-purple: var(--v2-purple, var(--purple, #d3869b));
+  --code-red: var(--v2-red, var(--red, #ea6962));
+}
+
+.code-block code {
+  color: var(--code-fg, #d4be98);
+}
+
+.code-block .hljs-comment,
+.code-block .hljs-quote,
+.code-block .hljs-doctag {
+  color: var(--code-muted, #a89984);
+  font-style: italic;
+}
+
+.code-block .hljs-keyword,
+.code-block .hljs-selector-tag,
+.code-block .hljs-literal,
+.code-block .hljs-section,
+.code-block .hljs-link {
+  color: var(--code-purple, #d3869b);
+}
+
+.code-block .hljs-string,
+.code-block .hljs-meta .hljs-string,
+.code-block .hljs-regexp {
+  color: var(--code-green, #a9b665);
+}
+
+.code-block .hljs-number,
+.code-block .hljs-symbol,
+.code-block .hljs-bullet {
+  color: var(--code-orange, #e78a4e);
+}
+
+.code-block .hljs-title,
+.code-block .hljs-title.class_,
+.code-block .hljs-title.class_.inherited__,
+.code-block .hljs-title.function_ {
+  color: var(--code-yellow, #d8a657);
+}
+
+.code-block .hljs-built_in,
+.code-block .hljs-type,
+.code-block .hljs-variable,
+.code-block .hljs-template-variable {
+  color: var(--code-blue, #7daea3);
+}
+
+.code-block .hljs-attr,
+.code-block .hljs-attribute,
+.code-block .hljs-property,
+.code-block .hljs-selector-class,
+.code-block .hljs-selector-id {
+  color: var(--code-aqua, #89b482);
+}
+
+.code-block .hljs-name,
+.code-block .hljs-tag,
+.code-block .hljs-meta,
+.code-block .hljs-addition {
+  color: var(--code-red, #ea6962);
+}
+
+.code-block .hljs-operator,
+.code-block .hljs-punctuation {
+  color: var(--code-muted, #a89984);
+}

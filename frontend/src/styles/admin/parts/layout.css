@@ -21,7 +21,7 @@
   font-weight: 720;
   letter-spacing: -0.03em;
 }
-.admin-brand { 
+.admin-brand {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -81,7 +81,11 @@
   width: 34px;
   flex: 0 0 auto;
   color: var(--muted);
-  font: 8px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font:
+    8px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
   letter-spacing: 0.04em;
 }
 .admin-nav-group a.active .admin-nav-code {
@@ -96,6 +100,34 @@
 .admin-side-bottom button {
   font: inherit;
 }
+.admin-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 38px;
+}
+.admin-account .admin-user {
+  min-width: 0;
+}
+.admin-account .admin-user > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-account .collapse-button {
+  display: grid;
+  place-items: center;
+  width: auto;
+  min-width: 38px;
+  min-height: 38px;
+  flex: 0 0 auto;
+  padding: 0;
+}
+.admin-account .collapse-button:hover {
+  background: var(--surface-soft);
+  color: var(--ink);
+}
 .sidebar-collapsed .admin-sidebar {
   width: 74px;
 }
@@ -104,9 +136,15 @@
 }
 .sidebar-collapsed .admin-nav-group a,
 .sidebar-collapsed .admin-side-bottom a,
-.sidebar-collapsed .admin-side-bottom button {
+.sidebar-collapsed .admin-side-bottom > button {
   justify-content: center;
   padding-inline: 0;
+}
+.sidebar-collapsed .admin-account {
+  justify-content: center;
+}
+.sidebar-collapsed .admin-account .admin-user > span:last-child {
+  display: none;
 }
 .sidebar-collapsed .admin-nav-group > p {
   display: none;
@@ -164,7 +202,11 @@
 }
 .admin-header-record > span {
   color: var(--muted);
-  font: 8px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font:
+    8px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
   letter-spacing: 0.06em;
 }
 .admin-header-record .admin-breadcrumb {

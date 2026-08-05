@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { buildMarkdown, parseMarkdown, readingTime, slugify } from '@/lib/content';
 import { MarkdownRenderer } from './MarkdownRenderer';
+import { ProjectMetadataForm } from './ProjectMetadataForm';
 import { Badge, Button, Field, Input, SaveState, Textarea } from './ui';
 import { getDraft, removeDraft, saveDraft } from '@/services/drafts';
 import type { ContentCollection, MarkdownDocument } from '@/types';
@@ -69,9 +70,13 @@ export function MarkdownEditor({
     [collection, document?.path, raw],
   );
   const body = parsed.parsed.content.trim();
-  const data: Record<string, unknown> = parsed.result.success
-    ? parsed.result.data
-    : parsed.parsed.data;
+  const metadata: Record<string, unknown> =
+    parsed.parsed.data &&
+    typeof parsed.parsed.data === 'object' &&
+    !Array.isArray(parsed.parsed.data)
+      ? parsed.parsed.data
+      : {};
+  const data: Record<string, unknown> = parsed.result.success ? parsed.result.data : metadata;
   const stats = `${body.split(/\s+/).filter(Boolean).length} words · ${raw.length} characters · ${readingTime(body)} min read`;
   useEffect(() => {
     if (!document) return;
@@ -93,8 +98,9 @@ export function MarkdownEditor({
     return () => window.removeEventListener('keydown', onKey);
   }, [onSave, raw]);
   const updateField = (key: string, value: unknown) => {
-    if (!parsed.result.success) return;
-    setRaw(buildMarkdown({ ...parsed.result.data, [key]: value }, body));
+    const nextMetadata = { ...metadata, [key]: value };
+    if (value === undefined) delete nextMetadata[key];
+    setRaw(buildMarkdown(nextMetadata, body));
   };
   const insert = (kind: string) => {
     const textarea = textareaRef.current;
@@ -132,159 +138,168 @@ export function MarkdownEditor({
     }
   };
   return (
-    <div className={`editor-shell ${fullscreen ? 'editor-fullscreen' : ''}`}>
-      <div className="editor-toolbar">
-        <div className="editor-toolbar-left">
-          {toolbar.map(([key, label, Icon]) => (
-            <button key={key} title={label} aria-label={label} onClick={() => insert(key)}>
-              <Icon size={16} />
+    <div className="editor-workspace">
+      {collection === 'projects' && (
+        <ProjectMetadataForm data={data} valid={parsed.result.success} onChange={updateField} />
+      )}
+      <div className={`editor-shell ${fullscreen ? 'editor-fullscreen' : ''}`}>
+        <div className="editor-toolbar">
+          <div className="editor-toolbar-left">
+            {toolbar.map(([key, label, Icon]) => (
+              <button key={key} title={label} aria-label={label} onClick={() => insert(key)}>
+                <Icon size={16} />
+              </button>
+            ))}
+          </div>
+          <div className="editor-toolbar-right">
+            <button className={mode === 'write' ? 'active' : ''} onClick={() => setMode('write')}>
+              <FileCode2 size={15} />
+              Write
             </button>
-          ))}
-        </div>
-        <div className="editor-toolbar-right">
-          <button className={mode === 'write' ? 'active' : ''} onClick={() => setMode('write')}>
-            <FileCode2 size={15} />
-            Write
-          </button>
-          <button className={mode === 'split' ? 'active' : ''} onClick={() => setMode('split')}>
-            <Table2 size={15} />
-            Split
-          </button>
-          <button className={mode === 'preview' ? 'active' : ''} onClick={() => setMode('preview')}>
-            <Eye size={15} />
-            Preview
-          </button>
-          <button
-            title="Fullscreen"
-            aria-label="Fullscreen"
-            onClick={() => setFullscreen((value) => !value)}
-          >
-            {fullscreen ? <X size={16} /> : <Maximize2 size={16} />}
-          </button>
-        </div>
-      </div>
-      {draftAvailable && (
-        <div className="draft-banner">
-          <span>There is a newer local draft for this file.</span>
-          <div>
-            <Button size="sm" variant="ghost" onClick={restore}>
-              Restore draft
-            </Button>
+            <button className={mode === 'split' ? 'active' : ''} onClick={() => setMode('split')}>
+              <Table2 size={15} />
+              Split
+            </button>
             <button
-              onClick={() => {
-                if (document) removeDraft(document.path);
-                setDraftAvailable(false);
-              }}
+              className={mode === 'preview' ? 'active' : ''}
+              onClick={() => setMode('preview')}
             >
-              Discard
+              <Eye size={15} />
+              Preview
+            </button>
+            <button
+              title="Fullscreen"
+              aria-label="Fullscreen"
+              onClick={() => setFullscreen((value) => !value)}
+            >
+              {fullscreen ? <X size={16} /> : <Maximize2 size={16} />}
             </button>
           </div>
         </div>
-      )}
-      <div className="editor-meta-toggle">
-        <button onClick={() => setShowMetadata((value) => !value)}>
-          <span>Frontmatter</span>
-          <Badge tone={parsed.result.success ? 'success' : 'danger'}>
-            {parsed.result.success ? 'Valid' : 'Needs attention'}
-          </Badge>
-        </button>
-        {!parsed.result.success && (
-          <span className="frontmatter-error">
-            {parsed.result.error.issues[0]?.message ?? 'Invalid metadata'}
-          </span>
-        )}
-      </div>
-      {showMetadata && (
-        <div className="frontmatter-panel">
-          <Field label="Title">
-            <Input
-              value={String(data.title ?? '')}
-              onChange={(event) => updateField('title', event.target.value)}
-            />
-          </Field>
-          <Field label="Slug">
-            <Input
-              value={String(data.slug ?? '')}
-              onChange={(event) => updateField('slug', slugify(event.target.value))}
-            />
-          </Field>
-          <Field label="Status">
-            <select
-              className="field"
-              value={String(data.status ?? 'draft')}
-              onChange={(event) => updateField('status', event.target.value)}
-            >
-              <option>draft</option>
-              <option>published</option>
-              <option>scheduled</option>
-              <option>archived</option>
-            </select>
-          </Field>
-          {(collection === 'projects' || collection === 'posts') && (
-            <Field label="Presentation ink" hint="Used for the public artwork and archive marker.">
-              <select
-                className="field"
-                value={String(data.ink ?? '')}
-                onChange={(event) => updateField('ink', event.target.value || undefined)}
+        {draftAvailable && (
+          <div className="draft-banner">
+            <span>There is a newer local draft for this file.</span>
+            <div>
+              <Button size="sm" variant="ghost" onClick={restore}>
+                Restore draft
+              </Button>
+              <button
+                onClick={() => {
+                  if (document) removeDraft(document.path);
+                  setDraftAvailable(false);
+                }}
               >
-                <option value="">Automatic fallback</option>
-                {inkOptions.map((ink) => <option key={ink} value={ink}>{ink}</option>)}
-              </select>
-            </Field>
-          )}
-          {collection === 'posts' && (
-            <Field label="Category">
-              <Input
-                value={String(data.category ?? '')}
-                onChange={(event) => updateField('category', event.target.value)}
-              />
-            </Field>
-          )}
-          {collection === 'projects' && (
-            <Field label="Project type">
-              <Input
-                value={String(data.projectType ?? '')}
-                onChange={(event) => updateField('projectType', event.target.value)}
-              />
-            </Field>
-          )}
-          {'featured' in data && (
-            <label className="checkbox-field">
-              <input
-                type="checkbox"
-                checked={Boolean(data.featured)}
-                onChange={(event) => updateField('featured', event.target.checked)}
-              />
-              Featured content
-            </label>
-          )}
-        </div>
-      )}
-      <div className={`editor-pane ${mode}`}>
-        <div className="source-pane">
-          <div className="pane-label">Markdown source</div>
-          <Textarea
-            ref={textareaRef}
-            value={raw}
-            onChange={(event) => setRaw(event.target.value)}
-            spellCheck={false}
-          />
-        </div>
-        <div className="preview-pane">
-          <div className="pane-label">Rendered preview</div>
-          <div className="preview-scroll">
-            <MarkdownRenderer content={body || '_Start writing to see a preview._'} />
+                Discard
+              </button>
+            </div>
+          </div>
+        )}
+        {collection !== 'projects' && (
+          <>
+            <div className="editor-meta-toggle">
+              <button onClick={() => setShowMetadata((value) => !value)}>
+                <span>Frontmatter</span>
+                <Badge tone={parsed.result.success ? 'success' : 'danger'}>
+                  {parsed.result.success ? 'Valid' : 'Needs attention'}
+                </Badge>
+              </button>
+              {!parsed.result.success && (
+                <span className="frontmatter-error">
+                  {parsed.result.error.issues[0]?.message ?? 'Invalid metadata'}
+                </span>
+              )}
+            </div>
+            {showMetadata && (
+              <div className="frontmatter-panel">
+                <Field label="Title">
+                  <Input
+                    value={String(data.title ?? '')}
+                    onChange={(event) => updateField('title', event.target.value)}
+                  />
+                </Field>
+                <Field label="Slug">
+                  <Input
+                    value={String(data.slug ?? '')}
+                    onChange={(event) => updateField('slug', slugify(event.target.value))}
+                  />
+                </Field>
+                <Field label="Status">
+                  <select
+                    className="field"
+                    value={String(data.status ?? 'draft')}
+                    onChange={(event) => updateField('status', event.target.value)}
+                  >
+                    <option>draft</option>
+                    <option>published</option>
+                    <option>scheduled</option>
+                    <option>archived</option>
+                  </select>
+                </Field>
+                <Field
+                  label="Presentation ink"
+                  hint="Used for the public artwork and archive marker."
+                >
+                  <select
+                    className="field"
+                    value={String(data.ink ?? '')}
+                    onChange={(event) => updateField('ink', event.target.value || undefined)}
+                  >
+                    <option value="">Automatic fallback</option>
+                    {inkOptions.map((ink) => (
+                      <option key={ink} value={ink}>
+                        {ink}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                {collection === 'posts' && (
+                  <Field label="Category">
+                    <Input
+                      value={String(data.category ?? '')}
+                      onChange={(event) => updateField('category', event.target.value)}
+                    />
+                  </Field>
+                )}
+                {'featured' in data && (
+                  <label className="checkbox-field">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(data.featured)}
+                      onChange={(event) => updateField('featured', event.target.checked)}
+                    />
+                    Featured content
+                  </label>
+                )}
+              </div>
+            )}
+          </>
+        )}
+        <div className={`editor-pane ${mode}`}>
+          <div className="source-pane">
+            <div className="pane-label">Markdown source</div>
+            <Textarea
+              ref={textareaRef}
+              value={raw}
+              onChange={(event) => setRaw(event.target.value)}
+              spellCheck={false}
+            />
+          </div>
+          <div className="preview-pane">
+            <div className="pane-label">Rendered preview</div>
+            <div className="preview-scroll">
+              <MarkdownRenderer content={body || '_Start writing to see a preview._'} />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="editor-footer">
-        <span>{stats}</span>
-        <div className="editor-footer-actions">
-          <SaveState saved={Boolean(document && document.synchronizationStatus === 'synced')} />
-          <Button size="sm" onClick={() => onSave(raw)} disabled={saving}>
-            <Save size={14} />
-            {saving ? 'Saving…' : 'Save changes'}
-          </Button>
+        <div className="editor-footer">
+          <span>{stats}</span>
+          <div className="editor-footer-actions">
+            <SaveState saved={Boolean(document && document.synchronizationStatus === 'synced')} />
+            <Button size="sm" onClick={() => onSave(raw)} disabled={saving}>
+              <Save size={14} />
+              {saving ? 'Saving…' : 'Save changes'}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

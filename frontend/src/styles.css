@@ -4,6 +4,7 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import 'tailwindcss/utilities.css';
+@import './styles/code-highlighting.css';
 /*
   ---break---
 */
@@ -152,7 +153,11 @@ svg {
   justify-content: center;
   gap: 8px;
   color: var(--v2-muted, #a89984);
-  font: 11px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+  font:
+    11px/1.5 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
 }
 
 .loading-label {
