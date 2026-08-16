@@ -2,6 +2,8 @@ package com.ignacio.portfolio.error;
 
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,6 +18,9 @@ import com.ignacio.portfolio.github.GitHubApiException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
 
     @ExceptionHandler(NotFoundException.class)
     ResponseEntity<ApiError> notFound(NotFoundException exception) {
@@ -61,6 +66,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     ResponseEntity<ApiError> unexpected(Exception exception) {
+        log.error("Unhandled exception while serving a request", exception);
         return response(HttpStatus.INTERNAL_SERVER_ERROR, "The server could not complete the request");
     }
 

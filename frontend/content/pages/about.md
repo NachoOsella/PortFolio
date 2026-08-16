@@ -1,20 +1,24 @@
 ---
 title: About
 slug: about
-description: Ignacio Osella is a backend developer from Córdoba, Argentina, focused on Java, Spring Boot, relational systems, and dependable software.
+description: "Ignacio Osella is a full-stack developer from Córdoba, Argentina, who prefers the backend: Java, Spring Boot, and dependable systems."
 status: published
-updatedAt: 2026-08-03
+updatedAt: 2026-08-15
 ---
 
 # About me
 
-I am Ignacio Osella, a backend developer from Córdoba, Argentina. I specialize in Java and Spring Boot, with a focus on REST APIs, application security, relational persistence, and modular architectures that remain understandable as a product grows.
+I am Ignacio Osella, a full-stack developer from Córdoba, Argentina, who prefers the backend. I specialize in Java and Spring Boot, with a focus on REST APIs, application security, relational persistence, and modular architectures that remain understandable as a product grows.
 
-I am most comfortable on the backend, but I work across the whole path to production. I have built Angular interfaces with standalone components and Signals, PostgreSQL schemas and Flyway migrations, multi-service Docker Compose environments, and Nginx deployments. Knowing the full system helps me make better backend decisions.
+I am most comfortable on the backend, and I work across the whole path to production: Angular interfaces with standalone components and Signals, PostgreSQL schemas and Flyway migrations, and multi-service Docker Compose environments. Knowing the full stack helps me make better backend decisions.
 
 ## What I am looking for
 
 I am looking for a backend opportunity where I can contribute with Java and Spring Boot, learn from experienced engineers, and help build reliable, maintainable, high-performance software. I care about clear domain boundaries, predictable behavior, and code the next person can understand without archaeology.
+
+## Contact
+
+You can reach me at **nachoosella7@gmail.com** — preferably about backend work.
 
 ## Experience
 

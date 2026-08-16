@@ -27,10 +27,15 @@ import com.ignacio.portfolio.config.AppProperties;
 public class AuthController {
 
     private final SessionService sessionService;
+    private final LoginRateLimiter loginRateLimiter;
     private final AppProperties properties;
 
-    public AuthController(SessionService sessionService, AppProperties properties) {
+    public AuthController(
+            SessionService sessionService,
+            LoginRateLimiter loginRateLimiter,
+            AppProperties properties) {
         this.sessionService = sessionService;
+        this.loginRateLimiter = loginRateLimiter;
         this.properties = properties;
     }
 
@@ -42,7 +47,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @Valid @RequestBody LoginRequest request,
+            HttpServletRequest httpRequest,
             HttpServletResponse response) {
+        if (!loginRateLimiter.allow(request.email(), clientIp(httpRequest))) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(new AuthError("Too many sign-in attempts. Try again in a few minutes."));
+        }
+
         SessionService.LoginResult result = sessionService.authenticate(
                 request.email(), request.password(), request.remember());
         if (result == null) {
@@ -66,6 +77,15 @@ public class AuthController {
         sessionService.revoke(cookieValue(request));
         response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie());
         return ResponseEntity.noContent().build();
+    }
+
+    private String clientIp(HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (forwarded != null && !forwarded.isBlank()) {
+            // Caddy runs in front of the backend; take the leftmost entry.
+            return forwarded.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 
     private String cookieValue(HttpServletRequest request) {

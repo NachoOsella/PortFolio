@@ -390,9 +390,10 @@ public class ContentService {
                 String.valueOf(frontmatter.get("slug")),
                 statusOf(frontmatter).value(),
                 frontmatter.get("featured") instanceof Boolean value ? value : null,
-                frontmatter.get("category") == null ? null : String.valueOf(frontmatter.get("category")),
+        frontmatter.get("category") == null ? null : String.valueOf(frontmatter.get("category")),
                 technologies.isEmpty() ? null : technologies,
                 document.updatedAt(),
+                frontmatter.get("publishedAt") == null ? null : String.valueOf(frontmatter.get("publishedAt")),
                 document.size(),
                 document.synchronizationStatus(),
                 change == null ? null : change.value());
@@ -491,6 +492,7 @@ public class ContentService {
             String category,
             List<String> technologies,
             String updatedAt,
+            String publishedAt,
             int size,
             String synchronizationStatus,
             String gitStatus) {

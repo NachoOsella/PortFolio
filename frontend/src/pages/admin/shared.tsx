@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Archive, ArrowUpRight, Copy, Download, Plus, Trash2 } from 'lucide-react';
+import { Archive, ArrowUpRight, Copy, Download, Plus, Trash2, X } from 'lucide-react';
 import { createRecordCode, createRevision } from '@/lib/archive';
 import { relativeDate } from '@/lib/content';
 import { useContentFiles } from '@/hooks/useRepositories';
@@ -98,6 +98,10 @@ export function ContentList({
       ),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['content-files'] }),
   });
+  const actionError =
+    remove.error ?? duplicate.error ?? rename.error ?? null;
+  const errorMessage =
+    actionError instanceof Error ? actionError.message : 'The operation could not be completed.';
   const rows = (files ?? [])
     .filter((file) => !excludeSlugs.includes(file.slug))
     .slice()
@@ -122,6 +126,14 @@ export function ContentList({
           {newLabel}
         </LinkButton>
       </div>
+      {actionError && (
+        <div className="notice-banner">
+          {errorMessage}
+          <button onClick={() => { remove.reset(); duplicate.reset(); rename.reset(); }}>
+            <X size={14} />
+          </button>
+        </div>
+      )}
       <div className="admin-list-toolbar">
         <select
           className="field compact-select"
@@ -208,7 +220,9 @@ export function ContentList({
                       )}
                     </td>
                   )}
-                  {collection === 'posts' && <td>{file.updatedAt.slice(0, 10)}</td>}
+                  {collection === 'posts' && (
+                    <td>{(file.publishedAt ?? file.updatedAt).slice(0, 10)}</td>
+                  )}
                   <td>{relativeDate(file.updatedAt)}</td>
                   <td>
                     <span className="table-state">

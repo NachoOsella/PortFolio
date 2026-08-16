@@ -122,7 +122,7 @@ export function PublicLayout() {
           <span>{routeRecord.code} / CURRENT COPY</span>
           <span>Córdoba, AR / UTC−03</span>
           <span>© {new Date().getFullYear()}</span>
-          <a href="mailto:hello@ignacioosella.dev">Email <ArrowUpRight size={13} /></a>
+          <a href="mailto:nachoosella7@gmail.com">Email <ArrowUpRight size={13} /></a>
         </div>
       </footer>
     </div>

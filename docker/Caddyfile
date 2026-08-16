@@ -1,6 +1,19 @@
 {$SITE_ADDRESS} {
     encode gzip
 
+    # TLS is terminated by the platform proxy in production (Dokploy), so HSTS
+    # belongs there. If Caddy ever terminates TLS directly, add:
+    #   header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    header {
+        # React uses inline style attributes and the shell carries a fallback
+        # <style> block; nonces are not worth the complexity for static assets.
+        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    }
+
     handle /api/* {
         reverse_proxy backend:8080
     }

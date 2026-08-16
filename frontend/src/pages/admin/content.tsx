@@ -33,7 +33,7 @@ export function AdminContent() {
         <div>
           <span className="principle-number">03</span>
           <h3>Sync deliberately</h3>
-          <p>Save locally, sync to the mock server, then review and commit changes explicitly.</p>
+          <p>Save locally, review the working tree, then push changes to GitHub explicitly.</p>
         </div>
       </div>
       <section className="admin-panel">

@@ -70,7 +70,9 @@ export function EditorPage({
           {saved && (
             <span className="saved-feedback">
               <Check size={15} />
-              {apiEnabled ? 'Saved to GitHub' : 'Saved to mock server'}
+              {apiEnabled
+                ? 'Saved to local content — push to GitHub from Git when ready'
+                : 'Saved to mock server'}
             </span>
           )}
         </div>

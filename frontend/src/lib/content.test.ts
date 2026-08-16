@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildMarkdown, isPubliclyVisible, parseMarkdown, readingTime, slugify } from './content';
+import { buildMarkdown, detectCollection, isPubliclyVisible, parseMarkdown, readingTime, slugify } from './content';
 
 const project = `---\ntitle: A project\nslug: a-project\ndescription: Clear work\nstatus: published\nfeatured: true\nprojectType: Product\nrole: Developer\nduration: Ongoing\ntechnologies:\n  - React\nupdatedAt: 2026-07-01\n---\n\n# Overview\n\nA useful project.`;
 
@@ -51,5 +51,17 @@ describe('content utilities', () => {
     expect(buildMarkdown({ title: 'Test', slug: 'test', custom: 'kept' }, 'Body')).toContain(
       'custom: kept',
     );
+  });
+
+  it('detects the collection from validated frontmatter, not string matching', () => {
+    expect(detectCollection(project)).toBe('projects');
+    expect(
+      detectCollection(`---\ntitle: A post\nslug: a-post\ndescription: Thoughts\nstatus: published\ncategory: Engineering\ntags:
+  - java\npublishedAt: 2026-08-01\nupdatedAt: 2026-08-01\n---\n\nA post.`),
+    ).toBe('posts');
+    expect(
+      detectCollection(`---\ntitle: A page\nslug: a-page\ndescription: About this site\nstatus: published\nupdatedAt: 2026-08-01\n---\n\nA page.`),
+    ).toBe('pages');
+    expect(detectCollection('---\ntitle: Unknown\nslug: x\n---\n\nBody')).toBeNull();
   });
 });

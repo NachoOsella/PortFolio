@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CircleAlert, GitCommitHorizontal, RefreshCw, Upload, X } from 'lucide-react';
+import { GitCommitHorizontal, RefreshCw, Upload, X } from 'lucide-react';
 import { relativeDate, suggestCommitMessage } from '@/lib/content';
 import { useGitAction, useGitHistory, useGitStatus } from '@/hooks/useRepositories';
 import { apiEnabled } from '@/repositories/apiClient';
@@ -79,29 +79,6 @@ export function AdminGit() {
           <button onClick={() => setNotice('')}>
             <X size={14} />
           </button>
-        </div>
-      )}
-      {status.conflict && (
-        <div className="conflict-card">
-          <div>
-            <CircleAlert size={17} />
-            <div>
-              <strong>Remote changes need review</strong>
-              <p>
-                A remote version differs from your local Markdown. Compare the local, server, and
-                last synchronized versions before choosing a resolution.
-              </p>
-            </div>
-          </div>
-          <div>
-            <Button variant="secondary" size="sm">
-              Keep local
-            </Button>
-            <Button variant="secondary" size="sm">
-              Keep remote
-            </Button>
-            <Button size="sm">Open merge view</Button>
-          </div>
         </div>
       )}
       <div className="git-overview">

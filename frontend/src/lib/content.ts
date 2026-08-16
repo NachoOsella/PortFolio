@@ -115,6 +115,20 @@ export function toFrontmatter(raw: string) {
   return splitFrontmatter(raw).data as Record<string, unknown>;
 }
 
+/**
+ * Detects the content collection from the parsed frontmatter by validating
+ * against each collection schema. Collection schemas require distinct fields
+ * (projects: projectType/technologies/featured; posts: category/tags/
+ * publishedAt), so the most specific schema that validates wins.
+ */
+export function detectCollection(raw: string): ContentCollection | null {
+  const { data } = splitFrontmatter(raw);
+  if (schemaForCollection('projects').safeParse(data).success) return 'projects';
+  if (schemaForCollection('posts').safeParse(data).success) return 'posts';
+  if (schemaForCollection('pages').safeParse(data).success) return 'pages';
+  return null;
+}
+
 export function buildMarkdown(frontmatter: Record<string, unknown>, body: string) {
   const yaml = stringifyYaml(frontmatter).trimEnd();
   return `---\n${yaml}\n---\n\n${body.trim()}\n`;

@@ -1,16 +1,14 @@
-import { useState } from 'react';
-import { Check, CircleAlert, Settings2 } from 'lucide-react';
-import { Button, Field, Input } from '@/components/ui';
+import { CircleAlert, Settings2 } from 'lucide-react';
+import { metadata } from '@/app/metadata';
 
 export function AdminSettings() {
-  const [saved, setSaved] = useState(false);
   return (
     <div className="admin-page">
       <div className="admin-intro">
         <div>
           <p className="admin-eyebrow">Workspace / Settings</p>
           <h2>Settings</h2>
-          <p>Configure the backend outside the browser and keep repository credentials server-side.</p>
+          <p>Identity and security are configured in code and in the backend environment, not from this page.</p>
         </div>
       </div>
       <div className="settings-grid">
@@ -23,33 +21,26 @@ export function AdminSettings() {
             <Settings2 size={18} />
           </div>
           <div className="settings-form">
-            <Field label="Name">
-              <Input defaultValue="Ignacio Osella" />
-            </Field>
-            <Field label="Role">
-              <Input defaultValue="Full-stack developer" />
-            </Field>
-            <Field label="Location">
-              <Input defaultValue="Córdoba, Argentina" />
-            </Field>
-            <Field label="Email">
-              <Input defaultValue="hello@ignacioosella.dev" />
-            </Field>
-            <Button
-              onClick={() => {
-                setSaved(true);
-                window.setTimeout(() => setSaved(false), 1600);
-              }}
-            >
-              {saved ? (
-                <>
-                  <Check size={15} />
-                  Saved
-                </>
-              ) : (
-                'Save settings'
-              )}
-            </Button>
+            <div className="settings-readonly">
+              <span>Name</span>
+              <strong>{metadata.name}</strong>
+            </div>
+            <div className="settings-readonly">
+              <span>Role</span>
+              <strong>{metadata.role}</strong>
+            </div>
+            <div className="settings-readonly">
+              <span>Location</span>
+              <strong>{metadata.location}</strong>
+            </div>
+            <div className="settings-readonly">
+              <span>Email</span>
+              <strong>nachoosella7@gmail.com</strong>
+            </div>
+            <p className="settings-note">
+              These values are defined in <code>src/app/metadata.ts</code> and the content files. To
+              change them, edit the source and redeploy.
+            </p>
           </div>
         </section>
         <section className="admin-panel security-panel">
