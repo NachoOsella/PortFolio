@@ -1,7 +1,7 @@
 ---
-title: Getting structured project plans out of an LLM with Spring AI
+title: I gave an LLM a hierarchy to fill, not a blank chat window
 slug: spring-ai-structured-plans
-description: How PlanAI turns a conversation with Llama 3.3 into a validated hierarchy of epics, user stories, and tasks in PostgreSQL — and why the model is a parser, not a database.
+description: "I explain how PlanAI sends project context to a Spring AI chat flow, extracts a hierarchy from conversation history, and exposes the limits of the current implementation."
 status: published
 ink: purple
 category: AI engineering
@@ -12,83 +12,65 @@ tags:
   - PostgreSQL
 publishedAt: 2026-01-20
 updatedAt: 2026-08-03
-seoTitle: Structured LLM output with Spring AI and PostgreSQL
-seoDescription: PlanAI integrates Groq (Llama 3.3) via Spring AI to parse conversations into epics, stories, and tasks — validated by Jakarta constraints before anything reaches the database.
+seoTitle: I built a conversational planning flow with Spring AI and PostgreSQL
+seoDescription: "I built PlanAI around Spring AI, Groq, PostgreSQL, and a Project-to-Epic-to-Story-to-Task model, then documented where generated JSON still needs stronger validation."
 ---
 
-# A chatbot was not the goal
+# I wanted the conversation to leave a structure behind
 
-PlanAI started with a specific itch: every "AI planning tool" demo I tried produced beautiful prose that evaporated when you closed the tab. I wanted the opposite — a conversation that lands in a relational model with constraints, states, and a hierarchy you can actually work with. Describe an idea, get back a persisted project plan: epics, user stories, and tasks.
+I built PlanAI because many AI planning demos end where the useful work should begin. They produce polished prose, then lose it when the tab closes. I wanted a conversation that could become a persisted project plan: epics, user stories, tasks, statuses, priorities, and a history I could revisit.
 
-This post is about the backend decisions that made that work, because the API call to the model turned out to be the easy 10%.
+The AI call turned out to be the easy part. The harder part was deciding how much context to send, when to persist it, and what to do when a model returns something that looks structured but does not deserve to touch my database yet.
 
-## The shape of the problem
+## I gave the model a narrow shape to talk about
 
-The domain is a strict hierarchy:
+The domain is a four-level hierarchy:
 
 ```text
 Project
-└── Epic            "Authentication module"
-    └── User Story  "As a user, I can reset my password"
-        └── Task    "Add POST /auth/reset endpoint"
+└── Epic
+    └── User story
+        └── Task
 ```
 
-Four levels of one-to-many, each with status and priority, queried as trees. PostgreSQL 16 with JPA/Hibernate handles this comfortably once the indexes are in the right place — a composite index on each child's parent foreign key, so loading a project tree is a handful of indexed lookups instead of a scan.
+I persist that tree with JPA entities and keep conversations and messages alongside it. Each level carries its own status or priority where it makes sense. I use DTOs and mappers at the HTTP boundary, so the model behind the API remains separate from the JSON contract I show to the frontend.
 
-The hard part is that the source of truth for new structure is a language model, and language models do not respect your foreign keys.
+The shape matters because I do not want an assistant that only writes. I want an assistant that can discuss a project and eventually produce something I can sort, edit, and inspect as data.
 
-## The rule: the model proposes, the backend disposes
+## I made chat and extraction separate operations
 
-The architectural rule that made PlanAI reliable: **the LLM is a parser, never a writer.** It reads conversation context and proposes structured changes; the backend validates every proposal against Jakarta constraints and the current state of the plan before anything is persisted.
+When I receive a message at `POST /api/v1/projects/{projectId}/chat`, I load the project with its hierarchy, recover the ten most recent messages from the current conversation, save the new user message, build the planning prompt with the current project context, call `ChatClient`, and save the assistant response.
 
-```java
-@Service
-public class PlanRefinementService {
+I return the conversation id with both messages so the frontend can continue the same thread. The chat response itself does not mutate the project plan. That distinction prevents a friendly sentence from silently becoming a database change.
 
-    private final ChatClient chatClient;
-    private final PlanCommandValidator validator;
+Extraction is explicit at `POST /api/v1/projects/{projectId}/extract-plan`. I gather every conversation for the project, assemble the history, load a second prompt that asks for the `epics`, `userStories`, and `tasks` hierarchy, and pass the model response to the extraction path.
 
-    public PlanUpdate refine(Project project, String userMessage) {
-        PlanProposal proposal = chatClient.prompt()
-            .system("""
-                You convert planning conversations into JSON commands.
-                Allowed commands: ADD_EPIC, ADD_STORY, ADD_TASK,
-                UPDATE_STATUS, UPDATE_PRIORITY.
-                Reference existing items only by the ids provided.
-                """)
-            .user(contextFor(project, userMessage))
-            .call()
-            .entity(PlanProposal.class);
+## I learned that JSON is not validation
 
-        // The model's output is untrusted input until proven otherwise.
-        PlanUpdate update = validator.validate(project, proposal);
-        return apply(update);
-    }
-}
-```
+The current extraction path finds the first `{` and the last `}` in the response, parses that substring with Jackson, clears the project's existing epics, and rebuilds the tree. If a title is empty, I supply an “Untitled” default. If a priority is invalid, I use `MEDIUM`. New entities start at `TODO`, and missing estimates fall back to four hours.
 
-Three things are doing the heavy lifting here:
+That implementation is intentionally visible in the repository, and it is not a schema-safe command pipeline. I do not have a `PlanProposal` type, a closed command vocabulary, or a domain validator that checks references and state transitions before persistence. If I were hardening this flow, I would validate a typed proposal first and only then apply a transactionally safe update.
 
-1. **Spring AI's structured output.** `.entity(PlanProposal.class)` maps the response onto a Java record. When parsing fails, that is a normal error path — not a corrupted database row.
-2. **A closed command vocabulary.** The model cannot emit arbitrary mutations; it picks from six commands with typed payloads. Rejecting an unknown command is trivial.
-3. **Validation after generation.** `PlanCommandValidator` checks that referenced ids exist in this project, that statuses are legal transitions, and that the hierarchy stays four levels deep. Jakarta Validation annotations cover the payload shapes; the service covers the relational rules.
+The honest lesson is more valuable than the fashionable one: a model can produce valid JSON and still produce invalid product behavior.
 
-## Why Groq and Llama 3.3
+## I kept the rest of the backend conventional
 
-The feature lives or dies on perceived latency: refining a plan has to feel like editing, not like submitting a form. Groq's inference on Llama 3.3 returns structured responses fast enough that the chat view and the plan view can update in the same gesture. For this workload — short prompts, constrained JSON output, no need for 128k tokens of context — a fast mid-size model beat a slow brilliant one.
+I built the backend as a layered Spring Boot application: controllers receive requests, services own behavior, repositories own persistence, and mappers keep entities away from the API. I added global error handling, validation annotations on request DTOs, SpringDoc OpenAPI, CORS configuration, and a custom Spring AI setup for Groq's OpenAI-compatible endpoint.
 
-## Keeping two views consistent
+The current model configuration uses `meta-llama/llama-4-scout-17b-16e-instruct`. I load the planning prompts from resources rather than burying them in Java strings, which makes the behavioral contract easier to read and change.
 
-PlanAI shows the same state twice: the conversation and the plan tree. The naive approach — let the chat drive the plan and hope they agree — drifts immediately. Instead, both views read from the same persisted plan, and every accepted AI proposal produces two artifacts at once: the domain mutation and a system message in the chat describing it ("Added 3 tasks to 'Authentication module'"). The chat is a log of what the system did, not a separate source of truth.
+## I treated the frontend as an experiment
 
-## The frontend experiment, honestly
+I built the Angular interface with standalone components, Signals, Tailwind CSS, project and chat stores, a project list, a split detail view, and a hierarchical plan view. I also used AI agents heavily while building the frontend, then reviewed the output by hand.
 
-The Angular 21 UI was built mostly by orchestrating AI agents and then reviewing by hand — a deliberate test of how far agent-generated frontend code goes. Verdict: signals and standalone components came out clean; accessibility details and empty states needed human passes. The backend, where the invariants live, I wrote myself. That division of labor felt right, and it is a workflow I would repeat.
+That division taught me something specific. Generated code was useful for scaffolding and repetitive UI, but empty states, accessibility details, and the boundaries between asynchronous states still needed deliberate human review. I kept the backend and its invariants in my own hands.
 
-## What I would tell past me
+## What I would strengthen next
 
-- Define the command schema before writing a single prompt. The prompt is just documentation for the schema.
-- Treat every model response as untrusted input. You would never `INSERT` a raw request body — do not do it with LLM output either.
-- Budget your effort inversely to the demo: 10% calling the model, 90% deciding what it is allowed to decide.
+I would add authentication, versioned database migrations instead of relying on `ddl-auto: update`, integration tests around the AI service, and a validator that prevents extraction from replacing an existing plan with untrusted structure. I would also align the frontend and backend conversation endpoints so the public contract describes one API rather than two nearby assumptions.
 
-The model makes PlanAI feel magical on the first message. The validator is why it still works on the fiftieth.
+## What I learned
+
+AI features do not remove ordinary software engineering. They make ordinary engineering more important. Context assembly, persistence boundaries, error semantics, and validation decide whether a model is a useful collaborator or an unpredictable write path.
+
+PlanAI makes the model feel like the feature. The real feature is the boundary I still have to own after the model finishes talking.

@@ -1,7 +1,7 @@
 ---
-title: Eleven steps over a Uint8ClampedArray
+title: I built an image pipeline one pixel at a time
 slug: gruvboxitator-pixel-pipeline
-description: How I built Gruvboxitator's browser-only image pipeline — tonal mapping, unsharp masks, deterministic grain, responsive processing, and an accessible comparison slider.
+description: "I explain how I built Gruvboxitator's browser-only pipeline: tonal mapping, sharpening, seeded grain, responsive progress, and an accessible comparison control."
 status: published
 ink: orange
 category: Frontend engineering
@@ -12,87 +12,87 @@ tags:
   - React
 publishedAt: 2026-07-28
 updatedAt: 2026-08-03
-seoTitle: Building a browser image-processing pipeline in TypeScript
-seoDescription: "Inside Gruvboxitator's browser-only pixel pipeline: cubic tonal mapping, deterministic grain, OffscreenCanvas processing, and accessible before-and-after comparison."
+seoTitle: I built a browser image-processing pipeline in TypeScript
+seoDescription: "I walk through Gruvboxitator's local pixel pipeline: cubic tonal mapping, deterministic grain, canvas processing, and an accessible before-and-after comparison."
 ---
 
-# A color converter that never sees your files
+# I started with a privacy constraint
 
-Gruvboxitator converts images to the Gruvbox Material Dark Hard palette without uploading them anywhere. There is no server, account, or analytics pipeline between the file picker and the result. The browser decodes the image into an `ImageBitmap`, draws it to an `OffscreenCanvas`, and the processing function works directly over a `Uint8ClampedArray`.
+I built Gruvboxitator around a constraint that is also the product promise: the image stays in the browser. I use `createImageBitmap` to decode a local file, draw it into an `HTMLCanvasElement`, read the pixels as `ImageData`, and process a copied `Uint8ClampedArray`. I never send the file to a server because the browser already has everything I need to produce the result.
 
-The privacy argument is simple: if the browser already has everything needed to transform an image, sending it across the network would only add latency, cost, and a trust problem.
+That decision removed accounts, uploads, storage, and an entire class of trust questions. It also meant I had to respect the limits of a client-side computation instead of hiding them behind an API.
 
-The implementation was less simple. A strict palette conversion can destroy an image's depth; a cinematic filter can keep depth but stop looking like Gruvbox. The final pipeline uses eleven ordered transformations to preserve enough of both.
+## I made the pipeline an explicit sequence
 
-## The pipeline is an explicit sequence
+My processor applies eleven stages in order:
 
-Each pixel begins as RGBA data. The processor applies these stages in order:
+1. I enhance the initial linear contrast.
+2. I apply a Gaussian unsharp mask.
+3. I map luminance onto the Gruvbox Material Dark Hard ramp with cubic Hermite interpolation.
+4. I apply a radial cosine vignette.
+5. I move saturated colors toward the nearest Gruvbox accent on the hue wheel.
+6. I mix in a controlled amount of warmth toward Gruvbox yellow.
+7. I normalize the luminance range against percentile bounds.
+8. I clamp values below the `bg0` floor.
+9. I add seeded grain.
+10. I apply a final contrast pass and a softer unsharp mask.
+11. I clamp the black floor one last time.
 
-1. Initial linear contrast.
-2. Gaussian unsharp mask.
-3. Tonal mapping from `bg0` to `fg1` with cubic Hermite interpolation.
-4. Radial cosine vignette.
-5. Toning toward the nearest Gruvbox accent on the hue wheel.
-6. Warmth mixed toward Gruvbox yellow.
-7. Original-luminance range normalization.
-8. Clamp values below `bg0` to Gruvbox black.
-9. Deterministic grain.
-10. Final contrast and soft post-sharpening.
-11. Final black-floor clamp.
+The sequence carries more intent than any individual filter. Sharpening before tonal mapping preserves edges before I compress the image into the palette. Luminance normalization comes after toning because color changes perceived brightness. Grain belongs near the end because later interpolation would otherwise wash it out.
 
-The order is part of the design. Sharpening before tonal mapping preserves edge information; doing it only afterward exaggerates palette boundaries. Luminance normalization comes after warmth and toning because those stages alter perceived brightness. Grain goes near the end so later interpolation does not blur it away.
+## I used a continuous ramp instead of posterizing
 
-## Tonal mapping without flat posterization
-
-Mapping luminance directly to a short palette produces hard bands. Instead, Gruvboxitator treats the dark-to-light palette as a continuous ramp and interpolates between neighboring stops with a cubic Hermite curve:
+A palette converter can easily turn a photograph into a stack of hard bands. I wanted the image to feel like it belonged to Gruvbox without losing its depth, so I treat the dark-to-light palette as a continuous ramp. For each pixel, I find the neighboring stops and interpolate between them with a smooth cubic curve.
 
 ```ts
-function smoothStep(value: number) {
-  return value * value * (3 - 2 * value);
-}
-
-function interpolateChannel(from: number, to: number, amount: number) {
-  return Math.round(from + (to - from) * smoothStep(amount));
+function tonalColor(value: number): RGB {
+  const t = clamp01(value)
+  const [start, end] = neighboringStops(t)
+  const local = smoothStep((t - start.position) / (end.position - start.position))
+  return mix(start.color, end.color, local)
 }
 ```
 
-That small curve removes the mechanical edge of linear interpolation without inventing colors outside the two selected stops. Chroma is introduced separately by choosing the nearest accent hue and controlling the mix per preset.
+I introduce chroma separately by selecting the closest accent hue and limiting how strongly it can influence the tonal result. That separation lets me change warmth or color strength without rebuilding the luminance model.
 
-## Four presets that are measurably different
+## I made grain deterministic
 
-Dark Hard, Carbon, Cinema, and Soft are not renamed copies of one settings object. Each adjusts contrast, saturation, vignette, warmth, sharpening, and grain. I verified the distinction using a synthetic source image and calculated mean absolute pixel differences between every output pair; each pair had to stay above 6.
-
-That test caught a real design problem: an early Carbon preset looked different to me while tuning, but differed too little from Soft under neutral images. Lowering Carbon's color strength and adjusting its black floor made its identity survive beyond the hand-picked demo photo.
-
-## Reproducible texture
-
-Random grain creates a bad comparison slider: every re-render changes both sides and appears to shimmer. Gruvboxitator uses a linear congruential generator with a fixed seed:
+Unseeded noise creates a bad comparison: the output appears to shimmer whenever I process the same image again. I start the generator from `0x67727576`, the ASCII spelling of “gruv,” and advance it with integer operations:
 
 ```ts
-let seed = 0x67727576; // "gruv" in ASCII
-
-function random() {
-  seed = (1664525 * seed + 1013904223) >>> 0;
-  return seed / 0x100000000;
+const seededRandom = () => {
+  let state = 0x67727576
+  return () => {
+    state = (state + 0x6d2b79f5) | 0
+    let value = Math.imul(state ^ (state >>> 15), 1 | state)
+    value = value + Math.imul(value ^ (value >>> 7), 61 | value) ^ value
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296
+  }
 }
 ```
 
-The same image and preset therefore produce the same noise, byte for byte. Reproducibility also made tests and visual diffs useful instead of probabilistic.
+The same source image and preset now produce the same noise. That makes the visual comparison calmer and gives me a result I can reason about rather than a filter that changes its evidence every time it runs.
 
-## Keeping the browser responsive
+## I designed four distinct presets
 
-The calculation still runs on the client, so "local" does not automatically mean "fast." Decoding through `ImageBitmap` avoids unnecessary DOM image work, while `OffscreenCanvas` keeps the processing surface independent of what React renders. Between expensive phases, the pipeline yields with `requestAnimationFrame`. A large image may still take time, but the controls and progress state do not freeze.
+Dark Hard, Carbon, Cinema, and Soft share the same palette but make different trade-offs. Each changes contrast, color strength, warmth, grain, vignette, sharpening, and overall strength. Dark Hard aims for a balanced conversion, Carbon pulls color back, Cinema exaggerates contrast and atmosphere, and Soft lets more of the original survive.
 
-A future version could move the whole processor into a Web Worker. I kept that out of the first version because yielding between phases met the interaction target without introducing message serialization and a second execution boundary.
+I kept those settings in data rather than scattering them through the processor. A preset is a readable object with a name and a set of parameters, not a branch of special cases hidden inside a pixel loop.
 
-## The comparison control is still a control
+## I kept the browser honest about work
 
-The before-and-after view uses `clip-path`, but visually clipping an image does not make an accessible slider. Its handle has `role="slider"`, current/min/max values, visible focus, and keyboard behavior: arrows move one step, Shift+arrow moves ten, and Home/End jump to the limits. Pointer dragging calls `setPointerCapture`, so the handle keeps receiving movement even when the pointer escapes its narrow hit area. Reduced-motion preferences are respected.
+The processor still runs on the main thread. I do not pretend that “local” means “free,” especially for large images. I report progress, yield with `requestAnimationFrame` at two deliberate points, and show a clear error when a source is too demanding. A future Worker path would improve the ceiling, but I left that boundary out of the first version because it would also introduce message serialization and another lifecycle to manage.
 
-This was the most frontend-specific lesson in the project: custom visuals do not excuse custom semantics. If it behaves like a slider, assistive technology should meet a slider.
+## I treated the comparison handle as a real control
+
+The before-and-after stage uses `clip-path`, but clipping is only the visual layer. I built the handle as a button with `role="slider"`, a current value from 0 to 100, visible focus, pointer capture, arrow-key movement, `Shift` jumps, and `Home`/`End` shortcuts. I also respect reduced-motion preferences.
+
+I wanted the person using a keyboard or assistive technology to receive the same comparison as the person dragging a pointer. Custom visuals do not earn an exception from custom semantics.
 
 ## What I would change next
 
-I would add a Worker path for very large files and a small suite of golden-image tests in addition to the synthetic pixel-difference checks. I would not add a backend. Local processing is not an implementation detail here; it is the product promise.
+I would move processing into a Web Worker for very large files and add golden-image tests alongside the current build and lint checks. I would keep the rest of the architecture small: one client-side pipeline, four explainable presets, and no backend to maintain.
 
-The rewarding part of image processing is that vague visual words — "warmer," "deeper," "more cinematic" — eventually have to become numbers in a repeatable sequence. Once every random source is seeded and every preset is measured, the result stops being a filter that happened to look good and becomes a pipeline I can explain.
+## What I learned
+
+Image processing forced me to translate vague visual language into bounded, repeatable math. “Warmer,” “deeper,” and “more cinematic” became parameters, interpolation curves, and an ordered sequence. I enjoyed the result because I could explain the machinery underneath it.
