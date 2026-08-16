@@ -1,10 +1,6 @@
-import type { UserSession } from '@/types';
-import { safeStorage } from '@/lib/storage';
 import { apiAuthRepository } from './apiRepositories';
 import { apiEnabled } from './apiClient';
-
-const SESSION_KEY = 'ignacio-session-v1';
-const wait = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
+import type { UserSession } from '@/types';
 
 export interface AuthRepository {
   login(email: string, password: string, remember: boolean): Promise<UserSession>;
@@ -12,32 +8,17 @@ export interface AuthRepository {
   session(): Promise<UserSession | null>;
 }
 
-const mockAuthRepository: AuthRepository = {
-  async login(email, password, remember) {
-    await wait();
-    if (!email.includes('@') || password.length < 6)
-      throw new Error('Enter a valid email and a password with at least 6 characters.');
-    const session = {
-      email,
-      name: 'Ignacio Osella',
-      remember,
-      createdAt: new Date().toISOString(),
-    };
-    // This mock is intentionally not secure. Spring Boot should own auth with HttpOnly cookies in production.
-    safeStorage(remember ? 'local' : 'session').setItem(SESSION_KEY, JSON.stringify(session));
-    return session;
-  },
-  async logout() {
-    await wait(180);
-    safeStorage('local').removeItem(SESSION_KEY);
-    safeStorage('session').removeItem(SESSION_KEY);
-  },
-  async session() {
-    await wait(120);
-    const raw =
-      safeStorage('local').getItem(SESSION_KEY) ?? safeStorage('session').getItem(SESSION_KEY);
-    return raw ? (JSON.parse(raw) as UserSession) : null;
-  },
-};
+/**
+ * The mock auth repository only loads in development builds without
+ * VITE_API_URL; production builds resolve to the Spring Boot adapter and
+ * never include the localStorage simulation.
+ */
+async function loadRepository(): Promise<AuthRepository> {
+  if (import.meta.env.DEV && !apiEnabled) {
+    const { mockAuthRepository } = await import('./mockAuthRepository');
+    return mockAuthRepository;
+  }
+  return apiAuthRepository;
+}
 
-export const authRepository: AuthRepository = apiEnabled ? apiAuthRepository : mockAuthRepository;
+export const authRepository = await loadRepository();

@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { Download, Folder, Server, Upload, X } from 'lucide-react';
 import { useContentFiles, useImportContent } from '@/hooks/useRepositories';
 import { contentRepository, exportDocument } from '@/repositories/contentRepository';
+import { apiEnabled } from '@/repositories/apiClient';
+import { detectCollection } from '@/lib/content';
 import { downloadMockArchive } from '@/services/download';
 import { Button, LoadingState, SearchField } from '@/components/ui';
 import { FileRow } from './shared';
@@ -28,11 +30,14 @@ export function AdminFiles() {
       return;
     }
     const raw = await file.text();
-    const collection = raw.includes('projectType:')
-      ? 'projects'
-      : raw.includes('category:')
-        ? 'posts'
-        : 'pages';
+    const collection = detectCollection(raw);
+    if (!collection) {
+      setNotice(
+        'Could not detect the collection from the frontmatter. Add the required fields (projectType for projects, category for posts) and try again.',
+      );
+      event.target.value = '';
+      return;
+    }
     try {
       await importContent.mutateAsync({ collection, filename: file.name, raw });
       setNotice(`Imported ${file.name} into ${collection}.`);
@@ -95,11 +100,19 @@ export function AdminFiles() {
           ))}
           <div className="tree-note">
             <Server size={15} />
-            <p>
-              Mock server state
-              <br />
-              <strong>Persisted locally</strong>
-            </p>
+            {apiEnabled ? (
+              <p>
+                Spring Boot backend
+                <br />
+                <strong>Local content directory</strong>
+              </p>
+            ) : (
+              <p>
+                Mock server state
+                <br />
+                <strong>Persisted locally</strong>
+              </p>
+            )}
           </div>
         </aside>
         <section className="admin-panel file-manager-panel">

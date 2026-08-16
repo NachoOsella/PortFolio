@@ -72,3 +72,20 @@ docker compose logs -f backend
 docker compose logs -f web
 docker compose down
 ```
+
+## Content backup strategy
+
+The content is Markdown, and the repository is its source of truth:
+
+1. **GitHub is the durable backup.** Studio pushes (`/admin/git`) commit every content change to the `NachoOsella/portfolio` repository. A push performed through the Studio is an off-site, versioned copy of the content volume.
+2. **The named volume is the working copy.** In Dokploy, `content` is a persistent volume. Enable Dokploy's volume backup (scheduled archive to object storage) as an extra safety net — the Studio only writes to disk on explicit saves, so archives between pushes capture un-pushed drafts.
+3. **One-liner manual backup** (from any machine with Docker):
+
+```bash
+docker run --rm -v portfolio_content:/content -v "$PWD":/backup alpine \
+  sh -c 'tar czf /backup/content-$(date +%F).tgz /content'
+```
+
+4. **Disaster recovery:** create the service again (the image re-seeds `frontend/content` on a fresh volume), or restore a Dokploy volume backup / copy the tarball into the volume.
+
+No database exists, so there is nothing else to back up: sessions are ephemeral in memory and reset on restart by design.

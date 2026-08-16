@@ -1,7 +1,7 @@
 ---
-title: Files are the feature — why this portfolio is Markdown-first
+title: I kept this portfolio as a set of Markdown files
 slug: markdown-first-portfolio
-description: How this site keeps projects, writing, and pages in validated Markdown files while a React Studio and Spring Boot API remain replaceable adapters around them.
+description: "I explain why I made Markdown the source of truth here, then built React, Spring Boot, a local Studio, and GitHub backups around it."
 status: published
 ink: yellow
 category: Architecture
@@ -12,92 +12,62 @@ tags:
   - Spring Boot
 publishedAt: 2026-08-03
 updatedAt: 2026-08-03
-seoTitle: Building a Markdown-first portfolio with React and Spring Boot
-seoDescription: Content files as the source of truth, Zod-validated frontmatter, a private React editor, local drafts, and explicit GitHub backups.
+seoTitle: I built a Markdown-first portfolio with React and Spring Boot
+seoDescription: "I keep content in validated Markdown files and use a React Studio, a Spring Boot API, local drafts, and explicit GitHub backups as replaceable adapters."
 ---
 
 # I wanted content I could keep
 
-Portfolio rewrites often begin with a new component library and end with the same stale project descriptions trapped in another application. I wanted the opposite: content durable enough to outlive this frontend.
+I have rebuilt enough small sites to recognize the pattern: a new interface arrives, the project descriptions get copied into it, and six months later the writing is trapped inside the thing that was supposed to present it. I wanted the opposite.
 
-Every project, article, and static page on this site is a plain Markdown file with YAML frontmatter. React renders it, a private Studio edits it, Spring Boot validates and saves it, and GitHub can back it up — but none of those layers owns it.
+Every project, article, and page on this site is a Markdown file with YAML frontmatter. React renders it, the Studio edits it, Spring Boot validates and writes it, and GitHub can receive a backup. None of those layers is allowed to become the only place where the work exists.
 
-```text
-frontend/content/
-  pages/
-    about.md
-    now.md
-    uses.md
-  posts/
-    lembas-modular-monolith.md
-    ...
-  projects/
-    lembas.md
-    ...
-```
+If I remove the interface, I still want to own the words.
 
-That decision sounds small. It simplified almost everything that followed.
+## I made frontmatter an API contract
 
-## Frontmatter is an API
+Markdown gives me a flexible body, but an index needs reliable metadata. A project needs a title, slug, publication state, technology list, and dates. A post needs a category, tags, and a publication date. I validate those shapes at the boundary instead of making each component guess what a field means today.
 
-Markdown bodies are flexible; a project index is not. It needs a title, slug, description, publication status, technology list, and predictable dates. I treat frontmatter as an API contract and validate it with Zod:
+The frontend uses Zod in `parseMarkdown()`. The backend uses an independent Jackson YAML parser and Java validation rules. They do not share one executable schema, so I treat the contract as something I must keep aligned across both sides. The duplication is intentional and visible; the alternative would be pretending the browser is the only parser that matters.
 
-```ts
-const projectFrontmatterSchema = z.object({
-  title: z.string().min(1),
-  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-  description: z.string().min(1),
-  status: z.enum(['draft', 'published', 'scheduled', 'archived']),
-  technologies: z.array(z.string()).min(1),
-  featured: z.boolean(),
-  repositoryUrl: z.string().url().optional(),
-  updatedAt: z.coerce.string(),
-});
-```
+I also preserve unknown frontmatter keys when I edit known metadata. Content grows faster than editors do, and an editor should not erase a field merely because its form has not learned about it yet.
 
-Invalid content fails at the boundary with a useful message. Components never need to guess whether `technologies` is a comma-separated string this week or an array next week. The editor uses the same schema as the public repository adapter, so preview and production agree.
+## I made the Studio an adapter
 
-## The Studio is an adapter
+The private Studio can create, edit, rename, delete, import, export, and preview Markdown. Page components do not decide whether a document came from the API, the local mock, an imported file, or the filesystem during prerendering. They ask repository interfaces for content and let the adapter answer.
 
-The private `/admin` workspace can create and edit projects, posts, and pages; preview rendered Markdown; validate YAML; import and export files; inspect changes; and push selected updates to GitHub when the backend is enabled.
+When `VITE_API_URL` is present, the frontend uses the Spring Boot API. When it is absent, the mock repository persists documents in versioned browser storage and simulates the same CRUD boundary for development and tests. During the static build, the repository reads real files with Node so the generated HTML reflects the content I actually committed.
 
-It is intentionally not a CMS database. If the API is unavailable, the Studio falls back to browser-local drafts. If the Studio disappears forever, every article remains editable in Neovim. Export produces the same file the repository expects, not a proprietary document shape.
+That separation keeps the UI honest. A draft is a draft regardless of which adapter served it, and a parser error is a content problem rather than a component problem.
 
-That distinction changed how I designed features. Autosave writes a draft, not "the content." Preview parses the current text through the production parser. Rename is a filesystem operation with slug validation, not an update against a hidden row id.
+## I put the filesystem behind a guarded backend
 
-## Why Spring Boot is involved at all
+The backend has no database. It reads and writes a configured local content directory, restricts logical paths to the three collections, rejects unsafe traversal, enforces a 512 KB document limit, validates frontmatter, stamps `updatedAt`, and calculates SHA-256 hashes to detect local changes.
 
-A static site could import the Markdown at build time, and the public experience effectively does. The backend exists for the private workflow: authenticated writes, local file persistence, validation, status inspection, and explicit GitHub Contents API backups.
+I keep authentication on that same boundary. Users are configured with bcrypt hashes; sessions use opaque random tokens held in memory and delivered through `HttpOnly` cookies; mutating requests require CSRF protection; login attempts are rate-limited; and CORS is restricted to the configured origin. The browser never sees repository credentials or password hashes.
 
-Credentials stay on that boundary. Users are configured as bcrypt hashes through environment variables; repository tokens never enter the browser bundle. The frontend asks for a session and receives authorization decisions, not secrets.
+Those details are not an attempt to turn a portfolio into a security product. They are the minimum I wanted before giving a browser the ability to write files.
 
-GitHub is a backup target rather than the live database. Pushing is an explicit action with a selected set of changed Markdown files. Local writing remains fast and does not fail because a third-party API is unavailable.
+## I made GitHub an explicit backup
 
-## Repository interfaces keep the UI honest
+I use the GitHub Contents API only when I explicitly push from the Studio. The backend compares local hashes, sends added, modified, and deleted Markdown files to the configured branch, and marks the local baseline as synchronized. Public rendering does not ask GitHub for content.
 
-The React application talks to repository interfaces, with an HTTP adapter for the Spring Boot API and an in-memory Markdown-backed fallback for development and tests. TanStack Query handles remote state, but components do not know whether a project came from `fetch`, an imported file, or a bundled seed.
+I also made pull a no-op. Local Markdown remains the working source for the running application, so a remote update cannot silently overwrite a local edit. The current push operation sends all detected local changes together, and its process-local history disappears on restart; GitHub remains the durable history rather than a fake history reconstructed by the API.
 
-This also made the private workspace demonstrable without handing out admin credentials. The mock implementation supports the same create, rename, delete, and list operations; tests exercise behavior rather than networking details.
+## I made the build part of the content system
 
-## Rendering is the last step, not the source
+The production build first creates the Vite bundle, then prerenders every public route with React 19 streaming. The prerender pass reads the real Markdown through the repository contract, writes route-level HTML, generates `robots.txt` and `sitemap.xml`, and creates the social preview image. Caddy serves the static surface and proxies `/api` to Spring Boot.
 
-The public side uses React Markdown with GitHub-flavored Markdown and syntax highlighting. Rendering only happens after parsing and schema validation. Raw HTML is not required for the content I write, which keeps the trust model smaller.
+That gives me a useful property: a reader or crawler can receive meaningful content before client-side JavaScript finishes loading. It also gives me one rendering path to maintain instead of a special build-only copy of every page.
 
-Publication states are content data, not route tricks:
+## What this architecture costs
 
-- `published` appears publicly.
-- `draft` stays in Studio.
-- `scheduled` carries editorial intent.
-- `archived` remains available for history without filling the public index.
+Files are not free. Renames affect paths, concurrent editing needs a clearer conflict strategy, and searching thousands of documents would eventually deserve an index. The backend currently returns a conflict when the remote file changes rather than resolving it, and the API intentionally does not pretend to be a full Git client.
 
-## What this architecture cost
+For a personal portfolio, I prefer those limits to a content database I cannot easily leave. My scale is dozens of documents and one author. The lowest exit cost is more valuable to me than an abstraction designed for a newsroom I do not have.
 
-Files are not free. Concurrent editing needs conflict handling; renames affect paths; searching thousands of documents would eventually need an index; and a mounted local directory makes deployment constraints explicit. For one author and dozens of documents, those are better problems than schema migrations, content exports, and a database that exists only to store Markdown strings.
+## What I learned
 
-I would choose differently for a newsroom. A personal portfolio benefits from the lowest possible exit cost.
+A content platform becomes calmer when the file format wins every argument. Once I made Markdown the source of truth, drafts, previews, validation, exports, static rendering, authentication, and backups became adapter problems with clear edges.
 
-## The test for ownership
-
-My rule became: if I delete the interface, do I still own the work? Here the answer is yes. The projects are readable files, Git tracks every revision, and any text editor can change them.
-
-The files are not a storage implementation hidden behind the product. They are the feature. Everything else is a replaceable, hopefully useful adapter.
+The files are not a storage implementation hidden behind the product. They are the product. Everything else is a replaceable way of reading, editing, validating, or backing them up.

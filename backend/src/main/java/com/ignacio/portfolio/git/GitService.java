@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ignacio.portfolio.content.ContentPath;
@@ -13,6 +15,9 @@ import com.ignacio.portfolio.github.GitHubClient;
 
 @Service
 public class GitService {
+
+    private static final Logger log = LoggerFactory.getLogger(GitService.class);
+
 
     private final GitHubClient githubClient;
     private final ContentService contentService;
@@ -47,6 +52,8 @@ public class GitService {
         if (changes.isEmpty()) {
             return new GitPushResult(true, 0, "Local content is already synchronized.");
         }
+        log.info("Pushing {} content change(s) to GitHub: {}", changes.size(),
+                changes.stream().map(ContentService.LocalChange::path).toList());
 
         githubClient.requireWriteAccess();
         List<String> synchronizedPaths = new ArrayList<>();

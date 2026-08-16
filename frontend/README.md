@@ -178,8 +178,8 @@ The backend, not the browser, parses and validates Markdown, owns authentication
 ## Production build
 
 ```bash
-pnpm build
+VITE_API_URL=/api pnpm build
 pnpm preview
 ```
 
-The Vite SPA is structured so a prerendering layer can add route metadata later. `Seo` updates document title, description, and canonical URL on the client while keeping the abstraction ready for server or prerendered metadata.
+`VITE_API_URL` is required: production builds must target the Spring Boot backend, and the build fails fast without it. The `postbuild` step (`scripts/prerender.ts`) then renders every public route to static HTML via `src/ssr.tsx` (React 19 streaming with a memory router and prefetched content), writes it under `dist/`, and generates `robots.txt`, `sitemap.xml`, and `og-image.png` from the real Markdown content. Caddy serves those files directly and falls back to `index.html` for unknown paths.

@@ -80,3 +80,10 @@
   color: var(--v2-muted);
 }
 
+.v2-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 8px;
+}
+

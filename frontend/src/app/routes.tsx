@@ -1,20 +1,35 @@
 import { lazy, Suspense, type ReactNode } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { PublicLayout } from '@/layouts/PublicLayout';
-import {
-  HomePage,
-  ProjectsPage,
-  ProjectPage,
-  BlogPage,
-  BlogPostPage,
-  AboutPage,
-  StaticPage,
-  ContactPage,
-  LoginPage,
-} from '@/pages/public';
+import { HomePage } from '@/pages/public/home';
 import { ApplicationError, NotFound } from '@/components/RouteStates';
 import { LoadingState } from '@/components/ui';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
+
+const ProjectsPage = lazy(() =>
+  import('@/pages/public/projects').then((module) => ({ default: module.ProjectsPage })),
+);
+const ProjectPage = lazy(() =>
+  import('@/pages/public/projects').then((module) => ({ default: module.ProjectPage })),
+);
+const BlogPage = lazy(() =>
+  import('@/pages/public/blog').then((module) => ({ default: module.BlogPage })),
+);
+const BlogPostPage = lazy(() =>
+  import('@/pages/public/blog').then((module) => ({ default: module.BlogPostPage })),
+);
+const AboutPage = lazy(() =>
+  import('@/pages/public/staticPages').then((module) => ({ default: module.AboutPage })),
+);
+const StaticPage = lazy(() =>
+  import('@/pages/public/staticPages').then((module) => ({ default: module.StaticPage })),
+);
+const ContactPage = lazy(() =>
+  import('@/pages/public/contact').then((module) => ({ default: module.ContactPage })),
+);
+const LoginPage = lazy(() =>
+  import('@/pages/public/login').then((module) => ({ default: module.LoginPage })),
+);
 
 const AdminLayout = lazy(() =>
   import('@/layouts/AdminLayout').then((module) => ({ default: module.AdminLayout })),
@@ -57,22 +72,25 @@ function deferred(element: ReactNode) {
   return <Suspense fallback={<LoadingState label="Loading workspace" />}>{element}</Suspense>;
 }
 
-export const router = createBrowserRouter([
-  {
+function deferredPublic(element: ReactNode) {
+  return <Suspense fallback={<LoadingState label="Loading page" />}>{element}</Suspense>;
+}
+
+export const routes: RouteObject[] = [  {
     path: '/',
     element: <PublicLayout />,
     errorElement: <ApplicationError />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: 'projects', element: <ProjectsPage /> },
-      { path: 'projects/:slug', element: <ProjectPage /> },
-      { path: 'blog', element: <BlogPage /> },
-      { path: 'blog/:slug', element: <BlogPostPage /> },
-      { path: 'about', element: <AboutPage /> },
-      { path: 'now', element: <StaticPage slug="now" /> },
-      { path: 'uses', element: <StaticPage slug="uses" /> },
-      { path: 'contact', element: <ContactPage /> },
-      { path: 'login', element: <LoginPage /> },
+      { path: 'projects', element: deferredPublic(<ProjectsPage />) },
+      { path: 'projects/:slug', element: deferredPublic(<ProjectPage />) },
+      { path: 'blog', element: deferredPublic(<BlogPage />) },
+      { path: 'blog/:slug', element: deferredPublic(<BlogPostPage />) },
+      { path: 'about', element: deferredPublic(<AboutPage />) },
+      { path: 'now', element: deferredPublic(<StaticPage slug="now" />) },
+      { path: 'uses', element: deferredPublic(<StaticPage slug="uses" />) },
+      { path: 'contact', element: deferredPublic(<ContactPage />) },
+      { path: 'login', element: deferredPublic(<LoginPage />) },
     ],
   },
   {
@@ -108,4 +126,15 @@ export const router = createBrowserRouter([
     ],
   },
   { path: '*', element: <NotFound /> },
-]);
+];
+
+let browserRouter: ReturnType<typeof createBrowserRouter> | null = null;
+
+/**
+ * Created lazily so the module can also be imported in SSR, where
+ * `document` does not exist. The prerender pass uses `routes` with a
+ * memory router instead.
+ */
+export function getBrowserRouter() {
+  return (browserRouter ??= createBrowserRouter(routes));
+}

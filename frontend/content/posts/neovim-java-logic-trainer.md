@@ -1,7 +1,7 @@
 ---
-title: I built a Neovim plugin that teaches Java — with tests, not AI
+title: I built a Neovim plugin that teaches Java with tests
 slug: neovim-java-logic-trainer
-description: Why java-logic-trainer.nvim checks 187+ exercises with real Maven and JUnit 5 runs instead of an LLM judge, and what writing a Neovim plugin in Lua taught me about UX.
+description: "I explain why java-logic-trainer.nvim uses Maven and JUnit for 187 exercises, how its editor loop works, and where I still want to strengthen it."
 status: published
 ink: blue
 category: Developer tools
@@ -12,70 +12,65 @@ tags:
   - JUnit
 publishedAt: 2026-05-21
 updatedAt: 2026-08-03
-seoTitle: A Neovim plugin that teaches Java with JUnit, not AI
-seoDescription: java-logic-trainer.nvim ships 187+ exercises across 5 levels with visible and hidden JUnit tests, progressive hints, and persistent progress — all deterministic by design.
+seoTitle: I built a Neovim plugin that teaches Java with JUnit
+seoDescription: "I built java-logic-trainer.nvim with 187 exercises, visible and full-check test modes, progressive hints, asynchronous Maven runs, and persistent progress."
 ---
 
-# The checker does not use AI
+# I did not want another AI judge
 
-That sentence is in the README of java-logic-trainer.nvim for a reason. When I started building a plugin to teach Java logic from absolute zero, the obvious 2026 move was to have an LLM grade the solutions. I went the other way: every exercise is validated by a real Maven build running real JUnit 5 tests.
+I built `java-logic-trainer.nvim` to teach Java logic from inside Neovim. The obvious shortcut would have been to ask an LLM whether a solution looked correct. I chose a less glamorous contract: write a local Java workspace, run Maven, and let JUnit decide.
 
-This post explains why, and what the plugin actually does.
+That decision shaped the product more than the language did. A beginner should not have to wonder whether a failing grade came from a subtle logic error, a generous model, or a model that changed its mind. A test result is narrower, but its narrowness is exactly what makes it useful.
 
-## Why deterministic beats clever for beginners
+## I built the curriculum from the first method outward
 
-An LLM judge is a moving target. It can pass a subtly wrong solution on a generous day and reject a correct one for using a `while` instead of a `for`. For someone who barely knows Java syntax, that noise is devastating — they cannot tell the difference between "my logic is wrong" and "the grader is moody."
-
-JUnit has no moods. The same input produces the same verdict, a red bar means exactly one thing, and a beginner builds trust in the feedback loop. Trust in the feedback loop is the entire product.
-
-## The curriculum
-
-187+ exercises across 5 levels, each with a statement, starter code, visible tests, hidden tests, and three progressive hints:
+The plugin contains exactly 187 exercises across five levels:
 
 | Level | Focus | Exercises |
-|---|---|---|
-| 0 — Basics | Return values, parameters, arithmetic, booleans, chars, string basics | 62 |
-| 1 — Beginner | Conditionals, simple loops, counting, summing, simple arrays | 41 |
-| 2 — Beginner+ | Nested conditionals, loop edge cases, string normalization, validation | 36 |
-| 3 — Intermediate | Hash maps, sets, frequency counting, two pointers, matrix basics | 35 |
-| 4 — Advanced | Recursion, backtracking, dynamic programming intro, graph basics | 13 |
+| --- | --- | ---: |
+| 0 | Values, parameters, arithmetic, booleans, chars, strings | 62 |
+| 1 | Conditionals, loops, counting, and simple arrays | 41 |
+| 2 | Edge cases, normalization, traversal, and validation | 36 |
+| 3 | Maps, sets, frequency counting, two pointers, and matrices | 35 |
+| 4 | Recursion, backtracking, dynamic programming, and graph basics | 13 |
 
-Level 0 assumes the learner can barely write a method signature. The ramp is deliberate — nobody should meet two pointers before they have summed an array with a loop.
+I wanted Level 0 to assume almost nothing. The sequence moves from returning a value to choosing an algorithm, with enough repetition that the learner can build fluency before the problem starts asking for technique.
 
-## The two-tier test system
+Every exercise carries a statement, starter code, visible assertions, a full-check fixture, and three hints. The catalog loader validates required fields and duplicate ids at startup because a broken exercise is a broken lesson.
 
-Every exercise has two suites:
+## I separated practice from proof
 
-- **Visible tests** (`:JavaLogicRunVisible`) — straightforward cases shown in the UI. These are for debugging; the learner reads them, runs them, and iterates.
-- **Hidden tests** (`:JavaLogicCheck`) — edge cases that are never displayed. They run together with the visible ones for the final verdict.
+The beginner loop is intentionally small:
 
-The split makes practice feel like a real platform (think LeetCode's "Run" vs "Submit") without leaking the answers. A solution that hardcodes the visible cases fails the hidden ones — which is itself a lesson.
+1. I open `STATEMENT.md` on the left and `Exercise.java` on the right.
+2. I edit the method.
+3. I run `:JavaLogicRunVisible` while I am still exploring.
+4. I ask for `:JavaLogicHint` when I need a nudge.
+5. I run `:JavaLogicCheck` when I believe the solution is ready.
+6. I use `:JavaLogicNext` to continue.
 
-## Progressive hints, never solutions
+Visible mode generates an `ExerciseTest.java` from the assertions shown in the exercise. Full mode writes the exercise's full-check fixture and runs `mvn -q test`. I keep the two actions separate so the learner can debug with useful information without turning the final edge cases into a checklist.
 
-`:JavaLogicHint` reveals one clue at a time, three per exercise. The first restates the problem in plainer words; the second sketches an approach; the third is close to pseudocode. Getting unstuck never means reading a finished solution, because there isn't one in the UI. The hint counter is tracked per exercise, so the stats page can show which topics needed the most help.
+The full-check data is hidden from the interface, not protected as a secret. It lives in the repository's Lua definitions and is written into the local workspace when the check runs. That is the honest boundary for a local teaching tool.
 
-## The plugin mechanics
+## I kept Maven asynchronous
 
-The exercise view is a vertical split: `STATEMENT.md` on the left, `Exercise.java` on the right. Checks run Maven asynchronously — Neovim stays responsive while JUnit does its thing — and results land where a Neovim user already lives:
+The runner creates or reuses a Maven workspace, writes the active test file, launches Maven asynchronously, and renders the result in a floating buffer. Neovim stays available while Java works. When compilation fails, I parse the output into the quickfix list. When the friendly summary is not enough, `:JavaLogicLastOutput` exposes the raw output.
 
-- Compile errors open in the **quickfix list** (`:JavaLogicErrors`), navigable with the usual muscle memory.
-- Raw test output is one command away (`:JavaLogicLastOutput`) for when the summary is not enough.
-- Progress persists to `~/.local/share/nvim/java-logic-trainer/progress.json`: opens, runs, failures, hints used, timestamps, and the last failure kind (`compile`, `test`, `timeout`).
+I split the plugin into focused modules: commands, catalog loading, workspace management, the runner, feedback parsing, progress, exercise selection, and UI. That structure keeps the integration points visible and makes the learning loop easier to change without turning `init.lua` into a control tower.
 
-```lua
-{
-  "NachoOsella/java-logic-trainer.nvim",
-  config = function()
-    require("java-logic-trainer").setup({ keymaps = true })
-  end,
-}
-```
+## I made progress a small file
 
-The beginner path is deliberately small: `:JavaLogicBeginner`, read the statement, edit the method, `:JavaLogicRunVisible`, `:JavaLogicHint` if stuck, `:JavaLogicCheck` when green, `:JavaLogicNext`. Eight commands cover the whole loop; the rest (`:JavaLogicReview`, `:JavaLogicStats`, filters in `:JavaLogicList`) exist for when the habit has formed.
+I persist progress at `stdpath("data")/java-logic-trainer/progress.json`. For each exercise I store openings, runs, failures, successes, hint usage, timestamps, and the last failure category. `:JavaLogicStats` summarizes it, `:JavaLogicList` filters it, and `:JavaLogicReview` chooses a next candidate.
 
-## What writing a Neovim plugin taught me
+The review mode is a prioritization heuristic, not a full spaced-repetition engine. It gives weight to incomplete exercises, repeated failures, and used hints, but it does not yet apply a real elapsed-time threshold to completed exercises.
 
-Most of the work was not Lua — it was bookkeeping. Curriculum state, buffer lifecycle, async job handles, the boundary between what the UI shows and what the filesystem owns. Lua's small surface area helped: the plugin is a handful of focused modules, not a framework with a plugin inside.
+## What I would improve next
 
-The deeper lesson is the one I keep relearning on every project: **pick the boring source of truth and build trust around it.** For Lembas it was one order model; for this plugin it is a JUnit verdict. The clever parts — hints, stats, review scheduling — only work because the foundation never lies.
+I would add automated tests for the Lua modules, implement a real execution timeout, and make solution preservation safer when switching between exercises. I would also consider how much of the workspace should be visible to a learner who wants to inspect the mechanics behind the checks.
+
+## What I learned
+
+The hard part was bookkeeping: buffer ownership, asynchronous job state, test-fixture selection, progress migration, and turning Maven output into a location I could act on. Lua gave me a small surface area, but good editor tooling still depends on careful state transitions.
+
+I keep coming back to the same principle: choose a boring source of truth and build trust around it. In this plugin, that source is a JUnit verdict.

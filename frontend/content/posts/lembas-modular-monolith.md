@@ -1,7 +1,7 @@
 ---
-title: One order model for the counter and the web
+title: I chose one order model for the counter and the web
 slug: lembas-modular-monolith
-description: The design decisions behind Lembas, my thesis project — why a modular monolith, why POS and e-commerce share one order model, and why stock only moves when payment confirms.
+description: "I explain why I designed Lembas as a modular monolith, unified POS and online orders, and delayed stock deduction until payment confirmation."
 status: published
 ink: green
 category: Architecture
@@ -12,91 +12,71 @@ tags:
   - PostgreSQL
 publishedAt: 2026-07-25
 updatedAt: 2026-08-03
-seoTitle: Designing Lembas as a modular monolith
-seoDescription: One order model for POS and e-commerce, FEFO stock by lot, and stock deducted on payment confirmation — the decisions behind a thesis project for a real store.
+seoTitle: I designed Lembas as a modular monolith
+seoDescription: "I walk through my decisions for Lembas: one order model for POS and e-commerce, FEFO stock by lot, pessimistic locking, and payment-confirmed deduction."
 ---
 
-# The store sells everything twice
+# I refused to create a reconciliation problem
 
-A dietetica — a small Argentine health food store — sells the same jar of honey across the counter and through an online catalog. Most small-business software models that as two systems with a sync problem in the middle. When I started Lembas, my thesis project at UTN FRC, the first decision was to refuse that split entirely:
+A health food store sells the same jar of honey across the counter and through an online catalog. When I started Lembas as my thesis project, I could have modeled those channels as two applications and promised to synchronize them later. I recognized that promise for what it was: a permanent source of mismatched totals.
 
-**The POS and the online store use the same products, stock, orders, payments, and customers. The sales channel is a field on the order, not a separate system.**
+I chose one commercial core instead. The store and the online catalog share products, stock, orders, payments, and customers. The sales channel is `OrderType.POS` or `OrderType.ONLINE`, not a reason to duplicate the domain.
 
-That one sentence shaped the whole backend. This post walks through the decisions that followed.
+That sentence became the first architectural constraint. The rest of the system followed from it.
 
-## Decision 1: a modular monolith, on purpose
+## I chose a modular monolith on purpose
 
-The tech-industry instinct is to reach for microservices the moment a domain has more than three nouns. For a thesis built by one person, that would have been a way to feel productive while never finishing. Lembas is a single Spring Boot deployable with modules by domain:
+I built one Spring Boot application and separated it into modules by business capability: authentication, users, catalog, inventory, orders, payments, cash, POS, suppliers, reports, audit, and shared infrastructure.
 
-```text
-backend/src/main/java/com/dietetica/lembas/
-  auth/ users/ catalog/ inventory/ orders/ payments/ cash/
-  suppliers/ reports/ audit/ shared/
-```
+I did not choose a modular monolith because boundaries stop mattering once everything ships together. I chose it because one deployable unit gives me simple local development, one transaction model, and a smaller operational surface. I still enforce ownership through package structure, `api/` contracts, DTOs, and ArchUnit rules.
 
-The discipline that matters is not the deployment unit — it is the boundary. Each module owns its entities and exposes what others need through DTOs and services, never through shared tables. The MVP deliberately excludes queues, Redis, and every "we might need it later" component. Writing that exclusion list down, in an ADR, was the most productive hour of the project.
+For a thesis built by one person, microservices would have added network failure and deployment coordination before they added useful isolation. I wanted the discipline of domain boundaries without paying for infrastructure I could not yet justify.
 
-## Decision 2: unified orders
+## I made the order model do the unifying work
 
-Every order in Lembas — a walk-in sale at the register, an online purchase picked up at the branch — is the same aggregate with a `channel` discriminator:
+An in-store sale and an online pickup share the same order entity. The type tells me where the order came from; the order state tells me what I can do with it. I use the same payment table for cash, cards, transfers, QR, and Mercado Pago, which gives reports one language for money that arrived through different paths.
 
-```java
-public enum OrderChannel { POS, ONLINE }
+The benefit is not just fewer classes. I get one place to capture order-item snapshots, one cancellation path, one reporting vocabulary, and one audit trail for the commercial lifecycle. I do not need a reconciliation job to explain why the counter and the web disagree.
 
-@Entity
-public class Order {
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OrderChannel channel;
+## I made stock a set of lots
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items = new ArrayList<>();
+I do not store inventory as a single integer on a product. I store active lots with decimal quantities, expiration dates, unit costs, branches, statuses, and stock movements. When I need to deduct units, I select the lots with a pessimistic write lock, sort them by expiration, and apply FEFO: first expired, first out. Lots without an expiration date come last.
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OrderStatus status;
-}
-```
+I also made a timing decision that matters more than the acronym. Creating an online order does not move stock. The order begins as `PENDING_PAYMENT`; a pending cart should not reserve the last unit for someone who may never pay.
 
-The payoff compounds everywhere downstream: one stock deduction path, one payment state machine, one reports query. The alternative — two order models with a reconciliation job — is how small systems grow a permanent part-time job called "why don't these numbers match."
+The online flow is:
 
-## Decision 3: stock by lot, deducted FEFO, moved only on payment
+1. I create the order and a pending payment.
+2. I create or reuse a Mercado Pago Checkout Pro preference.
+3. I receive the provider webhook and verify its signature.
+4. I ask Mercado Pago for the real payment state instead of trusting the notification body.
+5. If the payment is approved, I lock the relevant lots and deduct stock in the transaction.
+6. I record the movement and mark the order paid.
 
-Food expires, so inventory is not a counter on the product — it is rows of lots:
+If Mercado Pago sends the same approval twice, I recognize the terminal payment state and do nothing the second time. If an approved payment finds insufficient stock, I mark the order `STOCK_CONFLICT` for manual review instead of writing an impossible inventory number.
 
-```java
-@Entity
-public class StockLot {
-    @ManyToOne(optional = false)
-    private Product product;
+For POS, payment and FEFO deduction happen immediately in the sale transaction. I do not force a web checkout rule onto a cashier standing in front of an open register.
 
-    @ManyToOne(optional = false)
-    private Branch branch;
+## I made cancellation reversible
 
-    @Column(nullable = false)
-    private int quantity;
+A cancellation should not ask me to guess which lot supplied the original sale. I keep stock movements tied to the order and reverse the original deduction path. That gives me a traceable answer to three questions: what moved, why it moved, and which cancellation returned it.
 
-    private LocalDate expirationDate; // nullable: non-perishables
-}
-```
+The same principle shapes purchase receipts. A purchase order expresses intent; only a confirmed receipt creates stock lots and an entry movement. I prefer the database to reflect what physically happened, not what someone once planned to receive.
 
-Deduction follows FEFO — first expired, first out — with lots that have no expiration consumed last. It is the rule a careful shopkeeper applies by hand; the system just makes it non-negotiable.
+## I designed the cash register around physical cash
 
-The subtler decision is **when** stock moves. An online cart reserving units sounds friendly until an abandoned cart locks the last unit of something a person at the counter is trying to buy. So Lembas deducts stock only when payment is confirmed:
+At closing, I care first about the amount that should be in the drawer. I calculate it from the opening amount, cash payments, and explicit cash-in or cash-out movements. QR payments, transfers, and cards remain useful report data, but they do not belong in the physical cash discrepancy.
 
-- POS sale: confirmation is immediate, stock moves with the sale.
-- Online sale: Mercado Pago Checkout Pro collects, an **idempotent webhook** confirms, and only then does FEFO deduction run. If the webhook arrives twice, the second one is a no-op.
+That sounds obvious until a model mixes every payment method into one total. I kept the distinction explicit because the software is meant to support a real closing ritual, not merely produce an attractive dashboard.
 
-That single invariant — *no confirmed payment, no stock movement* — eliminated an entire category of race conditions I did not have to solve.
+## I test the rules where they can fail
 
-## Decision 4: the cash register reconciles cash, not payment methods
+I test FEFO ordering, lot locking, POS sales, online payment callbacks, duplicate webhooks, stock conflicts, cancellations, cash discrepancies, security policies, and module boundaries. The backend suite combines unit tests, MVC tests, PostgreSQL Testcontainers, concurrency scenarios, and ArchUnit. The Angular side has Vitest coverage across the public store and the administrative workflows.
 
-At close, the system asks one question: does the physical cash in the drawer match what the register says? QR payments, transfers, and cards are informational at close because that money is never in the drawer. Modeling the close as "count the cash, compare, record the discrepancy" keeps the daily ritual to minutes — which is the real requirement for software a shopkeeper uses after a long day.
+I have not added a dedicated browser E2E suite yet. I would rather name that gap than imply that component and integration tests are the same thing.
 
-## What held up, three months in
+## What I learned
 
-The ADRs did their job: the hard conversations (stock timing, pickup-only scope, DTO boundaries) happened while they were cheap. The unified order model has absorbed every new requirement — reports, audit logging, cash movements — without a fork.
+The architecture decisions that saved me the most time were sentences, not diagrams: one order model, no stock movement before payment, pickup-only MVP, and one source of truth for lots. Once those rules were explicit, the code had fewer places to hide ambiguity.
 
-If I were starting over, I would write the integration tests against Testcontainers even earlier. Running the webhook-confirmation flow against real PostgreSQL from the first week would have caught two transaction-boundary bugs that surfaced later than they should have.
-
-The strongest abstraction in Lembas turned out to be a boundary, not a component. And the most valuable feature is a sentence in an ADR that starts with "The MVP excludes…".
+The strongest abstraction in Lembas is a boundary. A boundary tells me where a rule belongs, what another module may ask for, and which shortcut I will regret when the business grows.

@@ -79,10 +79,10 @@ export function HeroScene() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.02, ease }}
           >
-            IGNACIO OSELLA / FULL-STACK DEVELOPER / CÓRDOBA
+            IGNACIO OSELLA / BACKEND DEVELOPER / CÓRDOBA
           </motion.p>
           <h1 className="v2-hero-title">
-            {['Full-stack', 'products,', 'built to', 'last.'].map((line, index) => (
+            {['Backend', 'systems,', 'built to', 'last.'].map((line, index) => (
               <span className="v2-title-mask" key={line}>
                 <motion.span
                   initial={reduceMotion ? false : { y: '108%', rotate: index % 2 === 0 ? 1.5 : -1.5 }}

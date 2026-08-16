@@ -80,6 +80,7 @@ export interface ContentFileSummary {
   category?: string;
   technologies?: string[];
   updatedAt: string;
+  publishedAt?: string;
   size: number;
   synchronizationStatus: SynchronizationStatus;
   gitStatus?: GitFileStatus;
@@ -169,12 +170,3 @@ export interface ContactMessage {
   createdAt: string;
 }
 
-export interface SiteSettings {
-  name: string;
-  role: string;
-  location: string;
-  email: string;
-  linkedin: string;
-  github: string;
-  availability: boolean;
-}

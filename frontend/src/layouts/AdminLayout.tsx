@@ -18,6 +18,7 @@ import { useAuth } from '@/context/AuthContext';
 import { StatusDot } from '@/components/ui';
 import { SignatureMark } from '@/components/SignatureMark';
 import { useGitStatus } from '@/hooks/useRepositories';
+import '@/styles/admin/index.css';
 
 const navGroups = [
   {
